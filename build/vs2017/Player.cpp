@@ -1,0 +1,138 @@
+#include "Player.h"
+#include <input/keyboard.h>
+#include <maths/vector2.h>
+#include <maths/math_utils.h>
+
+void Player::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder) {
+	set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y, size_z)));
+
+	physics_world_ = world;
+
+	b2BodyDef body_def;
+	body_def.type = b2_dynamicBody;
+	body_def.position = b2Vec2(pos_x, pos_y);
+
+	b2PolygonShape shape;
+	shape.SetAsBox(size_x, size_y);
+
+	b2FixtureDef fixture;
+	fixture.shape = &shape;
+	fixture.density = 1.f;
+	fixture.friction = 0.7f;
+
+	physics_body_ = world->CreateBody(&body_def);
+	physics_body_->CreateFixture(&fixture);
+	physics_body_->GetUserData().pointer = (uintptr_t)this;
+	physics_body_->SetSleepingAllowed(false);
+
+	UpdateBox2d();
+}
+
+void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder) {
+	set_mesh(builder->CreateBoxMesh(size));
+
+	physics_world_ = world;
+
+	b2BodyDef body_def;
+	body_def.type = b2_dynamicBody;
+	body_def.position = b2Vec2(pos.x(), pos.y());
+
+	b2PolygonShape shape;
+	shape.SetAsBox(size.x(), size.y());
+
+	b2FixtureDef fixture;
+	fixture.shape = &shape;
+	fixture.density = 1.f;
+	fixture.friction = 0.5f;
+
+	physics_body_ = world->CreateBody(&body_def);
+	physics_body_->CreateFixture(&fixture);
+	physics_body_->GetUserData().pointer = (uintptr_t)this;
+	physics_body_->SetSleepingAllowed(false);
+
+	UpdateBox2d();
+}
+
+
+void Player::Update(gef::InputManager* input, float frame_time) {
+
+	// Movement
+	switch (player_gravity_direction_)
+	{
+	case GRAVITY_VERTICAL:
+		if (input->keyboard()->IsKeyDown(gef::Keyboard::KC_A)) {
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(-8 * frame_time, 0), 0);
+		}
+		if (input->keyboard()->IsKeyDown(gef::Keyboard::KC_D)) {
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(8 * frame_time, 0), 0);
+		}
+		break;
+	case GRAVITY_LEFT:
+		if (input->keyboard()->IsKeyDown(gef::Keyboard::KC_A)) {
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), 0);
+		}
+		if (input->keyboard()->IsKeyDown(gef::Keyboard::KC_D)) {
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), 0);
+		}
+		break;
+	case GRAVITY_RIGHT:
+		if (input->keyboard()->IsKeyDown(gef::Keyboard::KC_A)) {
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), 0);
+		}
+		if (input->keyboard()->IsKeyDown(gef::Keyboard::KC_D)) {
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), 0);
+		}
+		break;
+	default:
+		break;
+	}
+
+	if (input->keyboard()->IsKeyPressed(gef::Keyboard::KC_F)) {
+		gravity_lock_ = !gravity_lock_;
+		if (gravity_lock_) physics_body_->SetGravityScale(0);
+		else {
+			physics_body_->SetGravityScale(1);
+			b2Vec2 grav = physics_world_->GetGravity();
+			grav *= 0.01;
+			physics_body_->ApplyLinearImpulseToCenter(grav, true);
+			player_gravity_direction_ = world_gravity_direction_;
+		}
+	}
+
+	if (input->keyboard()->IsKeyPressed(gef::Keyboard::KC_SPACE) && !gravity_lock_) {
+		b2Vec2 grav = physics_world_->GetGravity();
+		grav *= 0.6;
+		physics_body_->ApplyLinearImpulseToCenter(-grav, true);
+	}
+
+	if (input->keyboard()->IsKeyPressed(gef::Keyboard::KC_UP)) {
+		physics_world_->SetGravity(b2Vec2(0, 9.8f));
+		physics_world_->SetAllowSleeping(false);
+		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(180));
+		world_gravity_direction_ = GRAVITY_VERTICAL;
+		if (!gravity_lock_) player_gravity_direction_ = GRAVITY_VERTICAL;
+	}
+	else if (input->keyboard()->IsKeyPressed(gef::Keyboard::KC_DOWN)) {
+		physics_world_->SetGravity(b2Vec2(0, -9.8f));
+		physics_world_->SetAllowSleeping(false);
+		physics_body_->SetTransform(physics_body_->GetPosition(), 0);
+		world_gravity_direction_ = GRAVITY_VERTICAL;
+		if (!gravity_lock_) player_gravity_direction_ = GRAVITY_VERTICAL;
+	}
+	else if (input->keyboard()->IsKeyPressed(gef::Keyboard::KC_LEFT)) {
+		physics_world_->SetGravity(b2Vec2(-9.8f, 0));
+		physics_world_->SetAllowSleeping(false);
+		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(90));
+		world_gravity_direction_ = GRAVITY_LEFT;
+		if (!gravity_lock_) player_gravity_direction_ = GRAVITY_LEFT;
+	}
+	else if (input->keyboard()->IsKeyPressed(gef::Keyboard::KC_RIGHT)) {
+		physics_world_->SetGravity(b2Vec2(9.8f, 0));
+		physics_world_->SetAllowSleeping(false);
+		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(-90));
+		world_gravity_direction_ = GRAVITY_RIGHT;
+		if (!gravity_lock_) player_gravity_direction_ = GRAVITY_RIGHT;
+	}
+
+	UpdateBox2d();
+}

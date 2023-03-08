@@ -5,6 +5,8 @@
 #include <system/debug_log.h>
 #include <graphics/renderer_3d.h>
 #include <maths/math_utils.h>
+#include <input/input_manager.h>
+#include <input/keyboard.h>
 
 SceneApp::SceneApp(gef::Platform& platform) :
 	Application(platform),
@@ -22,11 +24,25 @@ void SceneApp::Init()
 	// create the renderer for draw 3D geometry
 	renderer_3d_ = gef::Renderer3D::Create(platform_);
 
+	// create input manager
+	input_ = gef::InputManager::Create(platform_);
+
 	// initialise primitive builder to make create some 3D geometry easier
 	primitive_builder_ = new PrimitiveBuilder(platform_);
 
-	// setup the mesh for the player
-	player_.set_mesh(primitive_builder_->GetDefaultCubeMesh());
+	// initialise box2d world
+	b2_world_ = new b2World(b2Vec2(0.f, -9.8));
+	//b2_world_->SetAllowSleeping(false);
+
+	// setup the player
+	player_.Init(0.5f, 0.5f, 0.5f, 0, 4, b2_world_, primitive_builder_);
+
+	// setup feasibility demo level
+	ground_.Init(10.f, 0.5f, 0.5f, 0, -5.f, b2_world_, primitive_builder_);
+	ceiling_.Init(10.f, 0.5f, 0.5f, 0, 5.f, b2_world_, primitive_builder_);
+	wall_left_.Init(0.5f, 5.5f, 0.5f, -10.5f, 0, b2_world_, primitive_builder_);
+	wall_right_.Init(0.5f, 5.5f, 0.5f, 10.5f, 0, b2_world_, primitive_builder_);
+	crate_.Init(0.3f, 0.3f, 0.3f, 5, 4, b2_world_, primitive_builder_, true);
 
 	InitFont();
 	SetupLights();
@@ -48,12 +64,17 @@ void SceneApp::CleanUp()
 
 bool SceneApp::Update(float frame_time)
 {
+	input_->Update();
+	if (input_->keyboard()->IsKeyDown(gef::Keyboard::KC_ESCAPE)) return false;
+
 	fps_ = 1.0f / frame_time;
 
-	gef::Matrix44 player_transform;
-	player_transform.SetIdentity();
-	player_.set_transform(player_transform);
+	b2_world_->Step(1.f / 165.f, 6, 2);
 
+	player_.Update(input_, frame_time);
+	crate_.Update();
+
+	b2_world_->SetAllowSleeping(true);
 	return true;
 }
 
@@ -69,7 +90,7 @@ void SceneApp::Render()
 	renderer_3d_->set_projection_matrix(projection_matrix);
 
 	// view
-	gef::Vector4 camera_eye(-2.0f, 2.0f, 5.0f);
+	gef::Vector4 camera_eye(0, 0, 20.0f);
 	gef::Vector4 camera_lookat(0.0f, 0.0f, 0.0f);
 	gef::Vector4 camera_up(0.0f, 1.0f, 0.0f);
 	gef::Matrix44 view_matrix;
@@ -82,6 +103,16 @@ void SceneApp::Render()
 
 	renderer_3d_->set_override_material(&primitive_builder_->red_material());
 	renderer_3d_->DrawMesh(player_);
+
+	renderer_3d_->set_override_material(&primitive_builder_->blue_material());
+	renderer_3d_->DrawMesh(ground_);
+	renderer_3d_->DrawMesh(ceiling_);
+	renderer_3d_->DrawMesh(wall_left_);
+	renderer_3d_->DrawMesh(wall_right_);
+
+	renderer_3d_->set_override_material(&primitive_builder_->green_material());
+	renderer_3d_->DrawMesh(crate_);
+
 	renderer_3d_->set_override_material(NULL);
 
 	renderer_3d_->End();
@@ -109,6 +140,10 @@ void SceneApp::DrawHUD()
 	{
 		// display frame rate
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
+
+		// display if player gravity lock is on 
+		player_.GetGravityLock() ? gravity_lock_ = "On" : gravity_lock_ = "Off";
+		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width()/2, 510.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE, "F - Gravity lock: %s", gravity_lock_.c_str());
 	}
 }
 
