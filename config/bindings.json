@@ -1,0 +1,48 @@
+{
+  "keyboard":
+          [
+            {
+              "action": "MoveUp",
+              "key": "w"
+            },
+            {
+              "action": "MoveLeft",
+              "key": "a"
+            },
+            {
+              "action": "MoveDown",
+              "key": "s"
+            },
+            {
+              "action": "MoveRight",
+              "key": "d"
+            },
+            {
+              "action": "Jump",
+              "key": "space"
+            }
+          ],
+  "controller": 
+          [
+            {
+                "action": "MoveUp",
+                "key": "LeftStickUp"
+            },
+            {
+                "action": "MoveLeft",
+                "key": "LeftStickLeft"
+            },
+            {
+                "action": "MoveDown",
+                "key": "LeftStickDown"
+            },
+            {
+                "action": "MoveRight",
+                "key": "LeftStickRight"
+            },
+            {
+                "action": "Jump",
+                "key": "A"
+            }
+          ]
+}
