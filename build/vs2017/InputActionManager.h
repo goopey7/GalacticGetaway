@@ -9,7 +9,7 @@ namespace gef
 	class InputManager;
 }
 
-using nlohmann::json;
+using json = nlohmann::json;
 
 #define DEFINE_ACTIONS(...) \
 	enum Action { __VA_ARGS__ }; \
@@ -21,6 +21,12 @@ DEFINE_ACTIONS(
 	MoveLeft,
 	MoveRight,
 	Jump,
+	GravityLock,
+	GravityUp,
+	GravityDown,
+	GravityLeft,
+	GravityRight,
+	Quit,
 )
 
 class InputActionManager

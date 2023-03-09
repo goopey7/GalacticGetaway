@@ -7,6 +7,7 @@
 #include <maths/math_utils.h>
 #include <input/input_manager.h>
 #include <input/keyboard.h>
+#include "InputActionManager.h"
 
 SceneApp::SceneApp(gef::Platform& platform) :
 	Application(platform),
@@ -24,9 +25,9 @@ void SceneApp::Init()
 	// create the renderer for draw 3D geometry
 	renderer_3d_ = gef::Renderer3D::Create(platform_);
 
-	// create input manager
-	input_ = gef::InputManager::Create(platform_);
-
+	// initialise input action manager
+	iam_ = new InputActionManager(platform_);
+	
 	// initialise primitive builder to make create some 3D geometry easier
 	primitive_builder_ = new PrimitiveBuilder(platform_);
 
@@ -64,14 +65,14 @@ void SceneApp::CleanUp()
 
 bool SceneApp::Update(float frame_time)
 {
-	input_->Update();
-	if (input_->keyboard()->IsKeyDown(gef::Keyboard::KC_ESCAPE)) return false;
+	iam_->Update();
+	if (iam_->isPressed(Quit)) return false;
 
 	fps_ = 1.0f / frame_time;
 
 	b2_world_->Step(1.f / 165.f, 6, 2);
 
-	player_.Update(input_, frame_time);
+	player_.Update(iam_, frame_time);
 	crate_.Update();
 
 	b2_world_->SetAllowSleeping(true);

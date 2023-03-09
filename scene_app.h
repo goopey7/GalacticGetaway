@@ -10,6 +10,8 @@
 #include "Player.h"
 #include <string>
 
+class InputActionManager;
+
 // FRAMEWORK FORWARD DECLARATIONS
 namespace gef
 {
@@ -34,8 +36,6 @@ private:
 	void DrawHUD();
 	void SetupLights();
 
-	gef::InputManager* input_;
-
 	gef::SpriteRenderer* sprite_renderer_;
 	gef::Font* font_;
 	gef::Renderer3D* renderer_3d_;
@@ -51,6 +51,9 @@ private:
 	GameObject wall_left_;
 	GameObject wall_right_;
 	GameObject crate_;
+
+	//Input Action Manager
+	InputActionManager* iam_;
 
 	float fps_;
 	std::string gravity_lock_;

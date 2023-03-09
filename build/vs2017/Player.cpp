@@ -3,6 +3,8 @@
 #include <maths/vector2.h>
 #include <maths/math_utils.h>
 
+#include "InputActionManager.h"
+
 void Player::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder) {
 	set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y, size_z)));
 
@@ -54,32 +56,32 @@ void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, Primitive
 }
 
 
-void Player::Update(gef::InputManager* input, float frame_time) {
-
+void Player::Update(InputActionManager* iam, float frame_time) {
+	
 	// Movement
 	switch (player_gravity_direction_)
 	{
 	case GRAVITY_VERTICAL:
-		if (input->keyboard()->IsKeyDown(gef::Keyboard::KC_A)) {
+		if(iam->isHeld(MoveLeft)) {
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(-8 * frame_time, 0), 0);
 		}
-		if (input->keyboard()->IsKeyDown(gef::Keyboard::KC_D)) {
+		if(iam->isHeld(MoveRight)) {
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(8 * frame_time, 0), 0);
 		}
 		break;
 	case GRAVITY_LEFT:
-		if (input->keyboard()->IsKeyDown(gef::Keyboard::KC_A)) {
+		if(iam->isHeld(MoveLeft)) {
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), 0);
 		}
-		if (input->keyboard()->IsKeyDown(gef::Keyboard::KC_D)) {
+		if(iam->isHeld(MoveRight)) {
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), 0);
 		}
 		break;
 	case GRAVITY_RIGHT:
-		if (input->keyboard()->IsKeyDown(gef::Keyboard::KC_A)) {
+		if(iam->isHeld(MoveLeft)) {
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), 0);
 		}
-		if (input->keyboard()->IsKeyDown(gef::Keyboard::KC_D)) {
+		if(iam->isHeld(MoveRight)) {
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), 0);
 		}
 		break;
@@ -87,7 +89,7 @@ void Player::Update(gef::InputManager* input, float frame_time) {
 		break;
 	}
 
-	if (input->keyboard()->IsKeyPressed(gef::Keyboard::KC_F)) {
+	if (iam->isPressed(GravityLock)) {
 		gravity_lock_ = !gravity_lock_;
 		if (gravity_lock_) physics_body_->SetGravityScale(0);
 		else {
@@ -99,34 +101,34 @@ void Player::Update(gef::InputManager* input, float frame_time) {
 		}
 	}
 
-	if (input->keyboard()->IsKeyPressed(gef::Keyboard::KC_SPACE) && !gravity_lock_) {
+	if (iam->isPressed(Jump) && !gravity_lock_) {
 		b2Vec2 grav = physics_world_->GetGravity();
 		grav *= 0.6;
 		physics_body_->ApplyLinearImpulseToCenter(-grav, true);
 	}
 
-	if (input->keyboard()->IsKeyPressed(gef::Keyboard::KC_UP)) {
+	if (iam->isPressed(GravityUp)) {
 		physics_world_->SetGravity(b2Vec2(0, 9.8f));
 		physics_world_->SetAllowSleeping(false);
 		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(180));
 		world_gravity_direction_ = GRAVITY_VERTICAL;
 		if (!gravity_lock_) player_gravity_direction_ = GRAVITY_VERTICAL;
 	}
-	else if (input->keyboard()->IsKeyPressed(gef::Keyboard::KC_DOWN)) {
+	else if (iam->isPressed(GravityDown)) {
 		physics_world_->SetGravity(b2Vec2(0, -9.8f));
 		physics_world_->SetAllowSleeping(false);
 		physics_body_->SetTransform(physics_body_->GetPosition(), 0);
 		world_gravity_direction_ = GRAVITY_VERTICAL;
 		if (!gravity_lock_) player_gravity_direction_ = GRAVITY_VERTICAL;
 	}
-	else if (input->keyboard()->IsKeyPressed(gef::Keyboard::KC_LEFT)) {
+	else if (iam->isPressed(GravityLeft)) {
 		physics_world_->SetGravity(b2Vec2(-9.8f, 0));
 		physics_world_->SetAllowSleeping(false);
 		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(90));
 		world_gravity_direction_ = GRAVITY_LEFT;
 		if (!gravity_lock_) player_gravity_direction_ = GRAVITY_LEFT;
 	}
-	else if (input->keyboard()->IsKeyPressed(gef::Keyboard::KC_RIGHT)) {
+	else if (iam->isPressed(GravityRight)) {
 		physics_world_->SetGravity(b2Vec2(9.8f, 0));
 		physics_world_->SetAllowSleeping(false);
 		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(-90));

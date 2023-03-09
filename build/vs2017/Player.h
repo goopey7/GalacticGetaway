@@ -2,11 +2,13 @@
 #include "GameObject.h"
 #include "input/input_manager.h"
 
+class InputActionManager;
+
 class Player : public GameObject {
 public:
 	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder);
 	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder);
-	void Update(gef::InputManager* input, float frame_time);
+	void Update(InputActionManager* iam, float frame_time);
 	bool GetGravityLock() { return gravity_lock_; }
 
 protected:

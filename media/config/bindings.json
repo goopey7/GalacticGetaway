@@ -20,6 +20,30 @@
             {
               "action": "Jump",
               "key": "SPACE"
+            },
+            {
+              "action": "GravityLock",
+              "key": "F"
+            },
+            {
+              "action": "GravityUp",
+              "key": "UP"
+            },
+            {
+              "action": "GravityLeft",
+              "key": "LEFT"
+            },
+            {
+              "action": "GravityDown",
+              "key": "DOWN"
+            },
+            {
+              "action": "GravityRight",
+              "key": "RIGHT"
+            },
+            {
+              "action": "Quit",
+              "key": "ESCAPE"
             }
           ],
   "controller": 
