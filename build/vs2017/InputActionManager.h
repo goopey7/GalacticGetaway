@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "json.h"
+#include "input/keyboard.h"
 
 using nlohmann::json;
 
@@ -24,9 +25,11 @@ public:
 	void initializeActions(const char* values);
 
 private:
-	json bindings;
+	json bindingsJson;
+	std::map<Action,gef::Keyboard::KeyCode> actionBindings;
 	std::map<Action,bool> actionMapPressed;
 	std::map<Action,bool> actionMapHeld;
 	std::map<Action,bool> actionMapReleased;
 	std::vector<std::string> actions;
+	std::map<std::string,Action> stringToAction;
 };

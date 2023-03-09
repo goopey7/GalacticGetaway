@@ -3,23 +3,23 @@
           [
             {
               "action": "MoveUp",
-              "key": "w"
+              "key": "KC_W"
             },
             {
               "action": "MoveLeft",
-              "key": "a"
+              "key": "KC_A"
             },
             {
               "action": "MoveDown",
-              "key": "s"
+              "key": "KC_S"
             },
             {
               "action": "MoveRight",
-              "key": "d"
+              "key": "KC_D"
             },
             {
               "action": "Jump",
-              "key": "space"
+              "key": "KC_SPACE"
             }
           ],
   "controller": 

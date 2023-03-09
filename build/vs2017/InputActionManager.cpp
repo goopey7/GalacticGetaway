@@ -1,5 +1,6 @@
 ﻿#include "InputActionManager.h"
 #include <fstream>
+#include <input/keyboard.h>
 
 InputActionManager::InputActionManager()
 {
@@ -12,8 +13,13 @@ InputActionManager::InputActionManager()
 	std::ifstream i("config/bindings.json");
 
 	// parse json into cpp object
-	bindings = json::parse(i);
+	bindingsJson = json::parse(i);
 
+	// setup action bindings
+	for(auto keyboardBinding : bindingsJson["keyboard"])
+	{
+		actionBindings[stringToAction[keyboardBinding["action"]]] = keyboardBinding["key"];
+	}
 }
 
 void InputActionManager::handleInputEvents()
@@ -22,6 +28,7 @@ void InputActionManager::handleInputEvents()
 
 void InputActionManager::initializeActions(const char* values)
 {
+	// parse string into vector of strings on the commas
 	for(int i = 0; values[i] != '\0'; i++) {
 		if(values[i] == ',') {
 			actions.push_back(std::string(values, i));
@@ -38,5 +45,8 @@ void InputActionManager::initializeActions(const char* values)
 		{
 			actions[i] = actions[i].substr(1);
 		}
+
+		// setup string to action map for easy lookup
+		stringToAction[actions[i]] = (Action)i;
 	}
 }
