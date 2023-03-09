@@ -1,11 +1,13 @@
 ﻿#include "InputActionManager.h"
 #include <fstream>
+#include <input/input_manager.h>
 #include <input/keyboard.h>
+#include "StringToKeyCode.h"
 
-InputActionManager::InputActionManager()
+InputActionManager::InputActionManager(gef::Platform& platform)
 {
 	// initialize actions vector from string
-	initializeActions(actionsStr);
+	initializeActions(actionsStr.c_str());
 
 	// TODO handle error if file not found
 	
@@ -18,12 +20,38 @@ InputActionManager::InputActionManager()
 	// setup action bindings
 	for(auto keyboardBinding : bindingsJson["keyboard"])
 	{
-		actionBindings[stringToAction[keyboardBinding["action"]]] = keyboardBinding["key"];
+		actionBindings[stringToKeyCode[keyboardBinding["key"]]] = stringToAction[keyboardBinding["action"]];
 	}
+
+	inputManager = gef::InputManager::Create(platform);
 }
 
-void InputActionManager::handleInputEvents()
+bool InputActionManager::isPressed(Action action)
 {
+	return actionMapPressed[action];
+}
+
+bool InputActionManager::isHeld(Action action)
+{
+	return actionMapHeld[action];
+}
+
+bool InputActionManager::isReleased(Action action)
+{
+	return actionMapReleased[action];
+}
+
+void InputActionManager::Update()
+{
+	auto kb = inputManager->keyboard();
+	kb->Update();
+	
+	for(auto binding : actionBindings)
+	{
+		actionMapPressed[binding.second] = kb->IsKeyPressed(binding.first);
+		actionMapHeld[binding.second] = kb->IsKeyDown(binding.first);
+		actionMapReleased[binding.second] = kb->IsKeyReleased(binding.first);
+	}
 }
 
 void InputActionManager::initializeActions(const char* values)
