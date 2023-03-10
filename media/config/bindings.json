@@ -1,72 +1,49 @@
 {
-  "keyboard":
+  "actions":
           [
             {
               "action": "MoveUp",
-              "key": "W"
+              "keys": ["W"]
             },
             {
               "action": "MoveLeft",
-              "key": "A"
+              "keys": ["A"]
             },
             {
               "action": "MoveDown",
-              "key": "S"
+              "keys": ["S"]
             },
             {
               "action": "MoveRight",
-              "key": "D"
+              "keys": ["D"]
             },
             {
               "action": "Jump",
-              "key": "SPACE"
+              "keys": ["SPACE", "J", "W"]
             },
             {
               "action": "GravityLock",
-              "key": "F"
+              "keys": ["F"]
             },
             {
               "action": "GravityUp",
-              "key": "UP"
+              "keys": ["UP"]
             },
             {
               "action": "GravityLeft",
-              "key": "LEFT"
+              "keys": ["LEFT"]
             },
             {
               "action": "GravityDown",
-              "key": "DOWN"
+              "keys": ["DOWN"]
             },
             {
               "action": "GravityRight",
-              "key": "RIGHT"
+              "keys": ["RIGHT"]
             },
             {
               "action": "Quit",
-              "key": "ESCAPE"
-            }
-          ],
-  "controller": 
-          [
-            {
-                "action": "MoveUp",
-                "key": "LeftStickUp"
-            },
-            {
-                "action": "MoveLeft",
-                "key": "LeftStickLeft"
-            },
-            {
-                "action": "MoveDown",
-                "key": "LeftStickDown"
-            },
-            {
-                "action": "MoveRight",
-                "key": "LeftStickRight"
-            },
-            {
-                "action": "Jump",
-                "key": "A"
+              "keys": ["ESCAPE"]
             }
           ]
 }
