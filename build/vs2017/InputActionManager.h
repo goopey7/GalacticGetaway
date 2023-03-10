@@ -36,6 +36,11 @@ public:
 	bool isReleased(Action action);
 	void Update();
 
+	float getLeftStickX();
+	float getLeftStickY();
+	float getRightStickX();
+	float getRightStickY();
+
 private:
 	void initializeActions(const char* values);
 	json bindingsJson;

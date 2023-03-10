@@ -100,7 +100,7 @@ void InputActionManager::Update()
 				actionMapPressed[action] = controller->buttons_pressed() & binding.first;
 				actionMapHeld[action] = controller->buttons_down() & binding.first;
 				actionMapReleased[action] = controller->buttons_released() & binding.first;
-				
+
 				if(oldMapPressed != actionMapPressed[action] || oldMapHeld != actionMapHeld[action] || oldMapReleased != actionMapReleased[action])
 				{
 					break;
@@ -108,6 +108,26 @@ void InputActionManager::Update()
 			}
 		}
 	}
+}
+
+float InputActionManager::getLeftStickX()
+{
+	return inputManager->controller_input()->GetController(0)->left_stick_x_axis();
+}
+
+float InputActionManager::getLeftStickY()
+{
+	return inputManager->controller_input()->GetController(0)->left_stick_y_axis();
+}
+
+float InputActionManager::getRightStickX()
+{
+	return inputManager->controller_input()->GetController(0)->right_stick_x_axis();
+}
+
+float InputActionManager::getRightStickY()
+{
+	return inputManager->controller_input()->GetController(0)->right_stick_y_axis();
 }
 
 void InputActionManager::initializeActions(const char* values)
