@@ -3,6 +3,8 @@
 #include <string>
 #include <input/keyboard.h>
 
+#include "input/sony_controller_input_manager.h"
+
 static std::map<std::string, gef::Keyboard::KeyCode> stringToKeyCode =
 {
 	{"0", gef::Keyboard::KeyCode::KC_0},
@@ -107,4 +109,24 @@ static std::map<std::string, gef::Keyboard::KeyCode> stringToKeyCode =
 	{"RIGHT", gef::Keyboard::KeyCode::KC_RIGHT},
 	{"PGUP", gef::Keyboard::KeyCode::KC_PGUP},
 	{"PGDN", gef::Keyboard::KeyCode::KC_PGDN},
+};
+
+static std::map<std::string, uint32_t> stringToControllerButton = 
+{
+	{"START", gef_SONY_CTRL_START},
+	{"SELECT", gef_SONY_CTRL_SELECT},
+	{"UP", gef_SONY_CTRL_UP},
+	{"DOWN", gef_SONY_CTRL_DOWN},
+	{"LEFT", gef_SONY_CTRL_LEFT},
+	{"RIGHT", gef_SONY_CTRL_RIGHT},
+	{"L3", gef_SONY_CTRL_L3},
+	{"R3", gef_SONY_CTRL_R3},
+	{"L2", gef_SONY_CTRL_L2},
+	{"R2", gef_SONY_CTRL_R2},
+	{"L1", gef_SONY_CTRL_L1},
+	{"R1", gef_SONY_CTRL_R1},
+	{"Y", gef_SONY_CTRL_TRIANGLE},
+	{"B", gef_SONY_CTRL_CIRCLE},
+	{"A", gef_SONY_CTRL_CROSS},
+	{"X", gef_SONY_CTRL_SQUARE},
 };

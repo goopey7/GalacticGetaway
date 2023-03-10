@@ -2,7 +2,7 @@
 #include <fstream>
 #include <input/input_manager.h>
 #include <input/keyboard.h>
-#include "StringToKeyCode.h"
+#include "StringToGefInputEnum.h"
 
 InputActionManager::InputActionManager(gef::Platform& platform)
 {
@@ -18,12 +18,17 @@ InputActionManager::InputActionManager(gef::Platform& platform)
 	bindingsJson = json::parse(i);
 
 	// setup action bindings
-	for(auto keyboardBinding : bindingsJson["actions"])
+	for(auto actionBinding : bindingsJson["actions"])
 	{
-		const Action action = stringToAction[keyboardBinding["action"]];
-		for(const auto& key : keyboardBinding["keys"])
+		const Action action = stringToAction[actionBinding["action"]];
+		for(const auto& key : actionBinding["keys"])
 		{
-			actionBindings[stringToKeyCode[key]] = action;
+			actionKeyBindings[stringToKeyCode[key]] = action;
+		}
+
+		for(const auto& controllerButton : actionBinding["buttons"])
+		{
+			actionControllerBindings[stringToControllerButton[controllerButton]] = action;
 		}
 	}
 
@@ -50,11 +55,16 @@ void InputActionManager::Update()
 	auto kb = inputManager->keyboard();
 	kb->Update();
 
+	auto controller = inputManager->controller_input()->GetController(0);
+	inputManager->controller_input()->Update();
+
 	for(auto actionStr : actions)
 	{
 		Action action = stringToAction[actionStr];
 
-		for(const auto binding : actionBindings)
+		bool breakOut = false;
+
+		for(const auto binding : actionKeyBindings)
 		{
 			if(action == binding.second)
 			{
@@ -65,6 +75,31 @@ void InputActionManager::Update()
 				actionMapPressed[action] = kb->IsKeyPressed(binding.first);
 				actionMapHeld[action] = kb->IsKeyDown(binding.first);
 				actionMapReleased[action] = kb->IsKeyReleased(binding.first);
+				
+				if(oldMapPressed != actionMapPressed[action] || oldMapHeld != actionMapHeld[action] || oldMapReleased != actionMapReleased[action])
+				{
+					breakOut = true;
+					break;
+				}
+			}
+		}
+
+		if(breakOut)
+		{
+			break;
+		}
+		
+		for(const auto binding : actionControllerBindings)
+		{
+			if(action == binding.second)
+			{
+				bool oldMapPressed = actionMapPressed[action];
+				bool oldMapHeld = actionMapHeld[action];
+				bool oldMapReleased = actionMapReleased[action];
+				
+				actionMapPressed[action] = controller->buttons_pressed() & binding.first;
+				actionMapHeld[action] = controller->buttons_down() & binding.first;
+				actionMapReleased[action] = controller->buttons_released() & binding.first;
 				
 				if(oldMapPressed != actionMapPressed[action] || oldMapHeld != actionMapHeld[action] || oldMapReleased != actionMapReleased[action])
 				{

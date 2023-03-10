@@ -11,31 +11,38 @@
             },
             {
               "action": "Jump",
-              "keys": ["SPACE", "W"]
+              "keys": ["SPACE", "W"],
+              "buttons": ["A"]
             },
             {
               "action": "GravityLock",
-              "keys": ["F"]
+              "keys": ["F"],
+              "buttons": ["Y"]
             },
             {
               "action": "GravityUp",
-              "keys": ["UP"]
+              "keys": ["UP"],
+              "buttons": ["UP", "X"]
             },
             {
               "action": "GravityLeft",
-              "keys": ["LEFT"]
+              "keys": ["LEFT"],
+              "buttons": ["LEFT"]
             },
             {
               "action": "GravityDown",
-              "keys": ["DOWN"]
+              "keys": ["DOWN"],
+              "buttons": ["DOWN", "B"]
             },
             {
               "action": "GravityRight",
-              "keys": ["RIGHT"]
+              "keys": ["RIGHT"],
+              "buttons": ["RIGHT"]
             },
             {
               "action": "Quit",
-              "keys": ["ESCAPE", "CAPSLOCK"]
+              "keys": ["ESCAPE", "CAPSLOCK"],
+              "buttons": ["START"]
             }
           ]
 }

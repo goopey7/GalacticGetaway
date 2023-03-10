@@ -39,7 +39,8 @@ public:
 private:
 	void initializeActions(const char* values);
 	json bindingsJson;
-	std::map<gef::Keyboard::KeyCode, Action> actionBindings;
+	std::map<gef::Keyboard::KeyCode, Action> actionKeyBindings;
+	std::map<uint32_t, Action> actionControllerBindings;
 	std::map<Action,bool> actionMapPressed;
 	std::map<Action,bool> actionMapHeld;
 	std::map<Action,bool> actionMapReleased;
