@@ -2,24 +2,16 @@
   "actions":
           [
             {
-              "action": "MoveUp",
-              "keys": ["W"]
-            },
-            {
               "action": "MoveLeft",
-              "keys": ["A"]
-            },
-            {
-              "action": "MoveDown",
-              "keys": ["S"]
+              "keys": ["A", "J"]
             },
             {
               "action": "MoveRight",
-              "keys": ["D"]
+              "keys": ["D", "L"]
             },
             {
               "action": "Jump",
-              "keys": ["SPACE", "J", "W"]
+              "keys": ["SPACE", "W"]
             },
             {
               "action": "GravityLock",
@@ -43,7 +35,7 @@
             },
             {
               "action": "Quit",
-              "keys": ["ESCAPE"]
+              "keys": ["ESCAPE", "CAPSLOCK"]
             }
           ]
 }

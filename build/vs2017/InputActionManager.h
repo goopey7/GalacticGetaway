@@ -16,8 +16,6 @@ using json = nlohmann::json;
 	const std::string actionsStr = {#__VA_ARGS__}; \
 
 DEFINE_ACTIONS(
-	MoveUp,
-	MoveDown,
 	MoveLeft,
 	MoveRight,
 	Jump,
