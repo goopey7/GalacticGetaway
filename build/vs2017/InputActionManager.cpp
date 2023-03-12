@@ -78,6 +78,7 @@ void InputActionManager::Update()
 				
 				if(oldMapPressed != actionMapPressed[action] || oldMapHeld != actionMapHeld[action] || oldMapReleased != actionMapReleased[action])
 				{
+					using_keyboard_ = true;
 					breakOut = true;
 					break;
 				}
@@ -86,7 +87,7 @@ void InputActionManager::Update()
 
 		if(breakOut)
 		{
-			break;
+			continue;
 		}
 		
 		for(const auto binding : actionControllerBindings)
@@ -103,6 +104,7 @@ void InputActionManager::Update()
 
 				if(oldMapPressed != actionMapPressed[action] || oldMapHeld != actionMapHeld[action] || oldMapReleased != actionMapReleased[action])
 				{
+					using_keyboard_ = false;
 					break;
 				}
 			}

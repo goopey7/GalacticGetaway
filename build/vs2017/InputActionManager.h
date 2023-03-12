@@ -41,6 +41,8 @@ public:
 	float getRightStickX();
 	float getRightStickY();
 
+	bool getUsingKeyboard() { return using_keyboard_; }
+
 private:
 	void initializeActions(const char* values);
 	json bindingsJson;
@@ -52,4 +54,5 @@ private:
 	std::vector<std::string> actions;
 	std::map<std::string,Action> stringToAction;
 	gef::InputManager* inputManager;
+	bool using_keyboard_ = true;
 };
