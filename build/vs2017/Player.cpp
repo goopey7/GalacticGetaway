@@ -7,6 +7,7 @@
 
 void Player::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder) {
 	set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y, size_z)));
+	gun_.set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y * 0.33, size_z * 1.5)));
 
 	physics_world_ = world;
 
@@ -26,12 +27,14 @@ void Player::Init(float size_x, float size_y, float size_z, float pos_x, float p
 	physics_body_->CreateFixture(&fixture);
 	physics_body_->GetUserData().pointer = (uintptr_t)this;
 	physics_body_->SetSleepingAllowed(false);
+	physics_body_->SetFixedRotation(true);
 
 	UpdateBox2d();
 }
 
 void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder) {
 	set_mesh(builder->CreateBoxMesh(size));
+	gun_.set_mesh(builder->CreateBoxMesh(gef::Vector4(size.x(), size.y() * 0.33, size.z() * 1.5)));
 
 	physics_world_ = world;
 
@@ -51,6 +54,7 @@ void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, Primitive
 	physics_body_->CreateFixture(&fixture);
 	physics_body_->GetUserData().pointer = (uintptr_t)this;
 	physics_body_->SetSleepingAllowed(false);
+	physics_body_->SetFixedRotation(true);
 
 	UpdateBox2d();
 }
@@ -137,4 +141,14 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 	}
 
 	UpdateBox2d();
+
+	gun_.Update(transform().GetTranslation());
+}
+
+void Player::Render(gef::Renderer3D* renderer, PrimitiveBuilder* builder) {
+	renderer->set_override_material(&builder->red_material());
+	renderer->DrawMesh(*this);
+	renderer->set_override_material(&builder->blue_material());
+	renderer->DrawMesh(gun_);
+
 }

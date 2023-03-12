@@ -1,6 +1,8 @@
 #pragma once
 #include "GameObject.h"
 #include "input/input_manager.h"
+#include <graphics/renderer_3d.h>
+#include "Gun.h"
 
 class InputActionManager;
 
@@ -11,8 +13,11 @@ public:
 	void Update(InputActionManager* iam, float frame_time);
 	bool GetGravityLock() { return gravity_lock_; }
 
+	void Render(gef::Renderer3D* renderer, PrimitiveBuilder* builder);
+
 protected:
 	int health_ = 10;
+	Gun gun_;
 
 	b2World* physics_world_;
 	bool gravity_lock_ = false;

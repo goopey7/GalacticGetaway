@@ -102,8 +102,9 @@ void SceneApp::Render()
 	// draw 3d geometry
 	renderer_3d_->Begin();
 
-	renderer_3d_->set_override_material(&primitive_builder_->red_material());
-	renderer_3d_->DrawMesh(player_);
+	/*renderer_3d_->set_override_material(&primitive_builder_->red_material());
+	renderer_3d_->DrawMesh(player_);*/
+	player_.Render(renderer_3d_, primitive_builder_);
 
 	renderer_3d_->set_override_material(&primitive_builder_->blue_material());
 	renderer_3d_->DrawMesh(ground_);
