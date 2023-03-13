@@ -15,8 +15,7 @@ InputActionManager::InputActionManager(gef::Platform& platform)
 	// handle error if file not found
 	if(i.fail())
 	{
-		std::exception fileNotFound = std::exception("bindings.json not found");
-		throw fileNotFound;
+		throw std::exception("bindings.json not found");
 	}
 
 	// parse json into cpp object
