@@ -9,10 +9,15 @@ InputActionManager::InputActionManager(gef::Platform& platform)
 	// initialize actions vector from string
 	initializeActions(actionsStr.c_str());
 
-	// TODO handle error if file not found
-	
 	// read bindings.json in config folder
 	std::ifstream i("config/bindings.json");
+
+	// handle error if file not found
+	if(i.fail())
+	{
+		std::exception fileNotFound = std::exception("bindings.json not found");
+		throw fileNotFound;
+	}
 
 	// parse json into cpp object
 	bindingsJson = json::parse(i);
