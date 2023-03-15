@@ -2,6 +2,7 @@
 
 #include "json.h"
 #include "input/keyboard.h"
+#include <maths/vector2.h>
 
 namespace gef
 {
@@ -25,9 +26,9 @@ DEFINE_ACTIONS(
 	GravityLeft,
 	GravityRight,
 	Quit,
-)
+	)
 
-class InputActionManager
+	class InputActionManager
 {
 public:
 	explicit InputActionManager(gef::Platform& platform);
@@ -40,6 +41,8 @@ public:
 	float getLeftStickY();
 	float getRightStickX();
 	float getRightStickY();
+	gef::Vector2 getMousePos() { return mouse_pos_; }
+	gef::InputManager* getInputManager() { return inputManager; }
 
 	bool getUsingKeyboard() { return using_keyboard_; }
 
@@ -48,11 +51,13 @@ private:
 	json bindingsJson;
 	std::map<gef::Keyboard::KeyCode, Action> actionKeyBindings;
 	std::map<uint32_t, Action> actionControllerBindings;
-	std::map<Action,bool> actionMapPressed;
-	std::map<Action,bool> actionMapHeld;
-	std::map<Action,bool> actionMapReleased;
+	std::map<Action, bool> actionMapPressed;
+	std::map<Action, bool> actionMapHeld;
+	std::map<Action, bool> actionMapReleased;
 	std::vector<std::string> actions;
-	std::map<std::string,Action> stringToAction;
+	std::map<std::string, Action> stringToAction;
 	gef::InputManager* inputManager;
+	gef::Platform* platform_;
+	gef::Vector2 mouse_pos_;
 	bool using_keyboard_ = true;
 };

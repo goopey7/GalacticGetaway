@@ -7,6 +7,7 @@
 #include <maths/math_utils.h>
 #include <input/input_manager.h>
 #include <input/keyboard.h>
+#include <input/touch_input_manager.h>
 #include "InputActionManager.h"
 
 SceneApp::SceneApp(gef::Platform& platform) :
@@ -27,7 +28,10 @@ void SceneApp::Init()
 
 	// initialise input action manager
 	iam_ = new InputActionManager(platform_);
-	
+	if (iam_->getInputManager() && iam_->getInputManager()->touch_manager() && (iam_->getInputManager()->touch_manager()->max_num_panels() > 0)) {
+		iam_->getInputManager()->touch_manager()->EnablePanel(0);
+	}
+
 	// initialise primitive builder to make create some 3D geometry easier
 	primitive_builder_ = new PrimitiveBuilder(platform_);
 
@@ -36,7 +40,7 @@ void SceneApp::Init()
 	//b2_world_->SetAllowSleeping(false);
 
 	// setup the player
-	player_.Init(0.5f, 0.5f, 0.5f, 0, 4, b2_world_, primitive_builder_);
+	player_.Init(0.5f, 0.5f, 0.5f, 0, 4, b2_world_, primitive_builder_, &platform_);
 
 	// setup feasibility demo level
 	ground_.Init(10.f, 0.5f, 0.5f, 0, -5.f, b2_world_, primitive_builder_);
@@ -101,9 +105,7 @@ void SceneApp::Render()
 
 	// draw 3d geometry
 	renderer_3d_->Begin();
-
-	/*renderer_3d_->set_override_material(&primitive_builder_->red_material());
-	renderer_3d_->DrawMesh(player_);*/
+	renderer_3d_->set_override_material(&primitive_builder_->red_material());
 	player_.Render(renderer_3d_, primitive_builder_);
 
 	renderer_3d_->set_override_material(&primitive_builder_->blue_material());
@@ -138,14 +140,14 @@ void SceneApp::CleanUpFont()
 
 void SceneApp::DrawHUD()
 {
-	if(font_)
+	if (font_)
 	{
 		// display frame rate
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 
 		// display if player gravity lock is on 
 		player_.GetGravityLock() ? gravity_lock_ = "On" : gravity_lock_ = "Off";
-		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width()/2, 510.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE, "F - Gravity lock: %s", gravity_lock_.c_str());
+		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2, 510.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE, "F - Gravity lock: %s", gravity_lock_.c_str());
 	}
 }
 

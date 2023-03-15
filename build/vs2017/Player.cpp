@@ -5,9 +5,14 @@
 
 #include "InputActionManager.h"
 
-void Player::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder) {
+void Player::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform) {
+	platform_ = platform;
 	set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y, size_z)));
-	gun_.set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y * 0.33, size_z * 1.5)));
+	//gun_.set_width(size_x);
+	//gun_.set_height(size_y * 0.33);
+	//gun_.set_width(15);
+	//gun_.set_height(35);
+	gun_.set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x * 0.33, size_y, size_z * 1.5)));
 
 	physics_world_ = world;
 
@@ -32,9 +37,10 @@ void Player::Init(float size_x, float size_y, float size_z, float pos_x, float p
 	UpdateBox2d();
 }
 
-void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder) {
+void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform) {
+	platform_ = platform;
 	set_mesh(builder->CreateBoxMesh(size));
-	gun_.set_mesh(builder->CreateBoxMesh(gef::Vector4(size.x(), size.y() * 0.33, size.z() * 1.5)));
+	//gun_.set_mesh(builder->CreateBoxMesh(gef::Vector4(size.x(), size.y() * 0.33, size.z() * 1.5)));
 
 	physics_world_ = world;
 
@@ -61,31 +67,31 @@ void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, Primitive
 
 
 void Player::Update(InputActionManager* iam, float frame_time) {
-	
+
 	// Movement
 	switch (player_gravity_direction_)
 	{
 	case GRAVITY_VERTICAL:
-		if(iam->isHeld(MoveLeft)) {
+		if (iam->isHeld(MoveLeft)) {
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(-8 * frame_time, 0), 0);
 		}
-		if(iam->isHeld(MoveRight)) {
+		if (iam->isHeld(MoveRight)) {
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(8 * frame_time, 0), 0);
 		}
 		break;
 	case GRAVITY_LEFT:
-		if(iam->isHeld(MoveLeft)) {
+		if (iam->isHeld(MoveLeft)) {
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), 0);
 		}
-		if(iam->isHeld(MoveRight)) {
+		if (iam->isHeld(MoveRight)) {
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), 0);
 		}
 		break;
 	case GRAVITY_RIGHT:
-		if(iam->isHeld(MoveLeft)) {
+		if (iam->isHeld(MoveLeft)) {
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), 0);
 		}
-		if(iam->isHeld(MoveRight)) {
+		if (iam->isHeld(MoveRight)) {
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), 0);
 		}
 		break;
@@ -142,13 +148,12 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 
 	UpdateBox2d();
 
-	gun_.Update(transform().GetTranslation());
+	gun_.Update(transform().GetTranslation(), iam, platform_);
 }
 
-void Player::Render(gef::Renderer3D* renderer, PrimitiveBuilder* builder) {
-	renderer->set_override_material(&builder->red_material());
-	renderer->DrawMesh(*this);
-	renderer->set_override_material(&builder->blue_material());
-	renderer->DrawMesh(gun_);
-
+void Player::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) {
+	renderer_3d->set_override_material(&builder->red_material());
+	renderer_3d->DrawMesh(*this);
+	renderer_3d->set_override_material(&builder->blue_material());
+	renderer_3d->DrawMesh(gun_);
 }
