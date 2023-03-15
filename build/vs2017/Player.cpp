@@ -148,7 +148,7 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 
 	UpdateBox2d();
 
-	gun_.Update(transform().GetTranslation(), iam, platform_);
+	gun_.Update(transform().GetTranslation(), iam, platform_, frame_time);
 }
 
 void Player::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) {

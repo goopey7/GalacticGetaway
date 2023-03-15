@@ -22,7 +22,7 @@
             {
               "action": "GravityUp",
               "keys": ["UP"],
-              "buttons": ["UP", "X"]
+              "buttons": ["UP"]
             },
             {
               "action": "GravityLeft",
@@ -40,9 +40,20 @@
               "buttons": ["RIGHT"]
             },
             {
+              "action": "Fire",
+              "keys": [],
+              "buttons": [ "RT" ]
+            },
+            {
+              "action": "Reload",
+              "keys": ["R"],
+              "buttons": [ "X" ]
+            },
+            {
               "action": "Quit",
-              "keys": ["ESCAPE", "CAPSLOCK"],
-              "buttons": ["START"]
+              "keys": [ "ESCAPE", "CAPSLOCK" ],
+              "buttons": [ "START" ]
             }
+
           ]
 }

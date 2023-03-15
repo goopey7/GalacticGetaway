@@ -4,9 +4,10 @@
 #include <input/touch_input_manager.h>
 #include <maths/math_utils.h>
 #include <cmath>
+#include <thread>
 #include <system/debug_log.h>
 
-void Gun::Update(gef::Vector4 translation, InputActionManager* input, gef::Platform* platform) {
+void Gun::Update(gef::Vector4 translation, InputActionManager* input, gef::Platform* platform, float dt) {
 
 	gef::Vector4 screenPos = WorldToScreen(translation, platform);
 
@@ -38,6 +39,45 @@ void Gun::Update(gef::Vector4 translation, InputActionManager* input, gef::Platf
 
 	rotation_z = translate1 * rotation_z * translate2;
 	set_transform(rotation_z);
+
+	if (input->getInputManager()->touch_manager()->is_button_down(0) || input->isHeld(Action::Fire)) {
+		Fire(dt);
+	}
+	if (input->isPressed(Action::Reload)) {
+		Reload();
+	}
+}
+
+void Gun::Fire(float dt) {
+	fire_time_ += dt;
+	if (fire_time_ >= 1.f / 15.f && ammo_loaded_ > 0) {
+		fire_time_ = 0;
+		ammo_loaded_--;
+		if (ammo_loaded_ == 0) Reload();
+	}
+}
+
+void Gun::Reload() {
+	std::thread reload_thread([this] { this->reloadThreadFunc(); });
+	reload_thread.detach();
+}
+
+void Gun::reloadThreadFunc() {
+	if (ammo_reserve_ > (30 - ammo_loaded_)) {
+		reloading_ = true;
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+		reloading_ = false;
+		ammo_reserve_ -= (30 - ammo_loaded_);
+		ammo_loaded_ = 30;
+	}
+	else if (ammo_reserve_ > 0 && ammo_reserve_ < (30 - ammo_loaded_)) {
+		reloading_ = true;
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+		reloading_ = false;
+		ammo_loaded_ += ammo_reserve_;
+		ammo_reserve_ = 0;
+	}
+	else return;
 }
 
 gef::Vector4 Gun::WorldToScreen(const gef::Vector4 pos, gef::Platform* platform) {

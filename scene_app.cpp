@@ -9,6 +9,7 @@
 #include <input/keyboard.h>
 #include <input/touch_input_manager.h>
 #include "InputActionManager.h"
+#include <string>
 
 SceneApp::SceneApp(gef::Platform& platform) :
 	Application(platform),
@@ -143,11 +144,17 @@ void SceneApp::DrawHUD()
 	if (font_)
 	{
 		// display frame rate
-		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
+		font_->RenderText(sprite_renderer_, gef::Vector4(0.f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 
 		// display if player gravity lock is on 
 		player_.GetGravityLock() ? gravity_lock_ = "On" : gravity_lock_ = "Off";
 		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2, 510.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE, "F - Gravity lock: %s", gravity_lock_.c_str());
+		
+		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2 + 400.f, 510.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, "Ammo: %i/%i", player_.GetGun()->getAmmoLoaded(), player_.GetGun()->getAmmoReserve());
+
+		std::string reloading = player_.GetGun()->getReloading() ? "Reloading" : "";
+		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2 + 400.f, 480.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, reloading.c_str());
+
 	}
 }
 
