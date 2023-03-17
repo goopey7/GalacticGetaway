@@ -8,11 +8,9 @@
 void Player::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform) {
 	platform_ = platform;
 	set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y, size_z)));
-	//gun_.set_width(size_x);
-	//gun_.set_height(size_y * 0.33);
-	//gun_.set_width(15);
-	//gun_.set_height(35);
+
 	gun_.set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x * 0.33, size_y, size_z * 1.5)));
+	gun_.getBulletManager()->Init(world, builder);
 
 	physics_world_ = world;
 
@@ -40,7 +38,8 @@ void Player::Init(float size_x, float size_y, float size_z, float pos_x, float p
 void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform) {
 	platform_ = platform;
 	set_mesh(builder->CreateBoxMesh(size));
-	//gun_.set_mesh(builder->CreateBoxMesh(gef::Vector4(size.x(), size.y() * 0.33, size.z() * 1.5)));
+	gun_.set_mesh(builder->CreateBoxMesh(gef::Vector4(size.x(), size.y() * 0.33, size.z() * 1.5)));
+	gun_.getBulletManager()->Init(world, builder);
 
 	physics_world_ = world;
 
@@ -156,4 +155,5 @@ void Player::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) {
 	renderer_3d->DrawMesh(*this);
 	renderer_3d->set_override_material(&builder->blue_material());
 	renderer_3d->DrawMesh(gun_);
+	gun_.getBulletManager()->Render(renderer_3d);
 }

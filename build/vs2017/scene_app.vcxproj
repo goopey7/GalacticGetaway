@@ -221,6 +221,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Gun.cpp" />
     <ClCompile Include="InputActionManager.cpp" />
@@ -229,6 +231,8 @@
   <ItemGroup>
     <ClInclude Include="..\..\primitive_builder.h" />
     <ClInclude Include="..\..\scene_app.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="BulletManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gun.h" />
     <ClInclude Include="InputActionManager.h" />

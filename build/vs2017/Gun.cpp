@@ -46,11 +46,15 @@ void Gun::Update(gef::Vector4 translation, InputActionManager* input, gef::Platf
 	if (input->isPressed(Action::Reload)) {
 		Reload();
 	}
+
+	bullet_manager_.Update();
 }
 
 void Gun::Fire(float dt) {
 	fire_time_ += dt;
 	if (fire_time_ >= 1.f / 15.f && ammo_loaded_ > 0) {
+		gef::Vector2 pos(transform().GetTranslation().x(), transform().GetTranslation().y());
+		bullet_manager_.Fire(target_vector_, pos);
 		fire_time_ = 0;
 		ammo_loaded_--;
 		if (ammo_loaded_ == 0) Reload();
