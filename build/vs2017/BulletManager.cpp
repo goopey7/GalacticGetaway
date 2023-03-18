@@ -12,16 +12,31 @@ void BulletManager::Init(b2World* world, PrimitiveBuilder* builder) {
 
 //Need to do iteration manually so can remove safely 
 void BulletManager::Update() {
-	for (Bullet* bullet : live_bullets_) {
-		if (!bullet->GetBody()->IsAwake()) {
-			
-			bullet->GetBody()->SetEnabled(false);
-			bullet->setAlive(false);
-			
-			continue;
+	std::list<Bullet*>::iterator bullet = live_bullets_.begin();
+
+	while (bullet != live_bullets_.end()) {
+		if (!(*bullet)->GetBody()->IsAwake()) {
+			(*bullet)->GetBody()->SetEnabled(false);
+			(*bullet)->setAlive(false);
+			if (dead_bullets_.size() < 30) {
+				dead_bullets_.push_back((*bullet));
+				live_bullets_.erase(bullet++);
+			}
+			else {
+				Bullet* temp = (*bullet);
+				bullet++;
+				delete temp;
+			}
 		}
-		bullet->Update();
+		else {
+			(*bullet)->Update();
+			bullet++;
+		}
 	}
+
+	/*if (dead_bullets_.size() > 30) {
+		std::list<Bullet*>::iterator bullet = dead_bullets_.;
+	}*/
 }
 
 void BulletManager::Fire(gef::Vector2 target_vector, gef::Vector2 start_pos) {
