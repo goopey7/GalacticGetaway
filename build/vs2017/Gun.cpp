@@ -44,40 +44,50 @@ void Gun::Update(gef::Vector4 translation, InputActionManager* input, gef::Platf
 		Fire(dt);
 	}
 	if (input->isPressed(Action::Reload)) {
-		Reload();
+		//reloading_ = true;
+		Reload(&reloading_);
+		//reloading_ = false;
 	}
 
 	bullet_manager_.Update();
 }
 
 void Gun::Fire(float dt) {
-	fire_time_ += dt;
-	if (fire_time_ >= 1.f / 15.f && ammo_loaded_ > 0) {
-		gef::Vector2 pos(transform().GetTranslation().x(), transform().GetTranslation().y());
-		bullet_manager_.Fire(target_vector_, pos);
-		fire_time_ = 0;
-		ammo_loaded_--;
-		if (ammo_loaded_ == 0) Reload();
+	if (!reloading_) {
+		fire_time_ += dt;
+		if (fire_time_ >= 1.f / 15.f && ammo_loaded_ > 0) {
+			gef::Vector2 pos(transform().GetTranslation().x(), transform().GetTranslation().y());
+			bullet_manager_.Fire(target_vector_, pos);
+			fire_time_ = 0;
+			ammo_loaded_--;
+			if (ammo_loaded_ == 0) Reload(&reloading_);
+		}
 	}
 }
 
-void Gun::Reload() {
-	std::thread reload_thread([this] { this->reloadThreadFunc(); });
-	reload_thread.detach();
+void Gun::Reload(bool* reloading) {
+	if (!reloading_) {
+		reloading_ = true;
+		//gef::DebugOut("hey\n");
+		std::thread reload_thread([this] { 
+
+			this->reloadThreadFunc(); 
+			//gef::DebugOut("hi\n");
+			this->setReloading(false);
+		});
+		reload_thread.detach();
+	}
 }
 
 void Gun::reloadThreadFunc() {
+	//gef::DebugOut(("loaded: " + std::to_string(ammo_loaded_) + " reserve: " + std::to_string(ammo_reserve_) + " delta: " + std::to_string(30 - ammo_loaded_) + "\n").c_str());
 	if (ammo_reserve_ > (30 - ammo_loaded_)) {
-		reloading_ = true;
 		std::this_thread::sleep_for(std::chrono::seconds(1));
-		reloading_ = false;
 		ammo_reserve_ -= (30 - ammo_loaded_);
 		ammo_loaded_ = 30;
 	}
 	else if (ammo_reserve_ > 0 && ammo_reserve_ < (30 - ammo_loaded_)) {
-		reloading_ = true;
 		std::this_thread::sleep_for(std::chrono::seconds(1));
-		reloading_ = false;
 		ammo_loaded_ += ammo_reserve_;
 		ammo_reserve_ = 0;
 	}

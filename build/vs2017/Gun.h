@@ -10,10 +10,11 @@ class Gun : public gef::MeshInstance {
 public:
 	void Update(gef::Vector4 translation, InputActionManager* input, gef::Platform* platform, float dt);
 	void Fire(float dt);
-	void Reload();
+	void Reload(bool* reloading);
 	int getAmmoLoaded() { return ammo_loaded_; }
 	int getAmmoReserve() { return ammo_reserve_; }
 	bool getReloading() { return reloading_; }
+	void setReloading(bool r) { reloading_ = r; }
 	BulletManager* getBulletManager() { return &bullet_manager_; }
 
 protected:

@@ -1,4 +1,5 @@
 #include "BulletManager.h"
+#include <system/debug_log.h>
 
 void BulletManager::Init(b2World* world, PrimitiveBuilder* builder) {
 	world_ = world;
@@ -9,8 +10,7 @@ void BulletManager::Init(b2World* world, PrimitiveBuilder* builder) {
 		dead_bullets_.back()->GetBody()->SetEnabled(false);
 	}
 }
-
-//Need to do iteration manually so can remove safely 
+ 
 void BulletManager::Update() {
 	std::list<Bullet*>::iterator bullet = live_bullets_.begin();
 
@@ -24,7 +24,7 @@ void BulletManager::Update() {
 			}
 			else {
 				Bullet* temp = (*bullet);
-				bullet++;
+				live_bullets_.erase(bullet++);
 				delete temp;
 			}
 		}
@@ -34,9 +34,11 @@ void BulletManager::Update() {
 		}
 	}
 
-	/*if (dead_bullets_.size() > 30) {
-		std::list<Bullet*>::iterator bullet = dead_bullets_.;
-	}*/
+	int deadNo = dead_bullets_.size();
+	if (deadNo > 30) {
+		gef::DebugOut(("dead bullets: " + std::to_string(deadNo)).c_str());
+		//std::list<Bullet*>::iterator bullet = dead_bullets_.;
+	}
 }
 
 void BulletManager::Fire(gef::Vector2 target_vector, gef::Vector2 start_pos) {
