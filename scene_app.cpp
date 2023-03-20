@@ -9,6 +9,7 @@
 #include <input/keyboard.h>
 #include <input/touch_input_manager.h>
 #include "InputActionManager.h"
+#include "obj_mesh_loader.h"
 #include <string>
 
 SceneApp::SceneApp(gef::Platform& platform) :
@@ -41,14 +42,27 @@ void SceneApp::Init()
 	//b2_world_->SetAllowSleeping(false);
 
 	// setup the player
-	player_.Init(0.5f, 0.5f, 0.5f, 0, 4, b2_world_, primitive_builder_, &platform_);
+	player_.Init(0.8f, 0.8f, 0.8f, 0, 4, b2_world_, primitive_builder_, &platform_);
 
 	// setup feasibility demo level
 	ground_.Init(10.f, 0.5f, 0.5f, 0, -5.f, b2_world_, primitive_builder_);
 	ceiling_.Init(10.f, 0.5f, 0.5f, 0, 5.f, b2_world_, primitive_builder_);
 	wall_left_.Init(0.5f, 5.5f, 0.5f, -10.5f, 0, b2_world_, primitive_builder_);
 	wall_right_.Init(0.5f, 5.5f, 0.5f, 10.5f, 0, b2_world_, primitive_builder_);
-	crate_.Init(0.3f, 0.3f, 0.3f, 5, 4, b2_world_, primitive_builder_, true);
+	crate_.Init(0.6f, 0.6f, 0.6f, 5, 4, b2_world_, primitive_builder_, true);
+
+	OBJMeshLoader obj_loader;
+	MeshMap mesh_map;
+	if (obj_loader.Load("Models/crate/crate.obj", platform_, mesh_map)) {
+		gef::Mesh* crate_mesh = mesh_map["scificrate_low_lambert2_0"];
+		if (crate_mesh) {
+			crate_.set_mesh(crate_mesh);
+		}
+	}
+	else {
+		gef::DebugOut(obj_loader.GetLastError().c_str());
+		gef::DebugOut("\n");
+	}
 
 	InitFont();
 	SetupLights();
@@ -115,10 +129,8 @@ void SceneApp::Render()
 	renderer_3d_->DrawMesh(wall_left_);
 	renderer_3d_->DrawMesh(wall_right_);
 
-	renderer_3d_->set_override_material(&primitive_builder_->green_material());
-	renderer_3d_->DrawMesh(crate_);
-
 	renderer_3d_->set_override_material(NULL);
+	renderer_3d_->DrawMesh(crate_);
 
 	renderer_3d_->End();
 

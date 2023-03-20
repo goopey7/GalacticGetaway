@@ -112,7 +112,7 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 
 	if (iam->isPressed(Jump) && !gravity_lock_) {
 		b2Vec2 grav = physics_world_->GetGravity();
-		grav *= 0.6;
+		grav *= 2;
 		physics_body_->ApplyLinearImpulseToCenter(-grav, true);
 	}
 

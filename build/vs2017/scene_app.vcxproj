@@ -211,6 +211,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|PSVita'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|PSVita'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\obj_mesh_loader.cpp" />
     <ClCompile Include="..\..\primitive_builder.cpp" />
     <ClCompile Include="..\..\scene_app.cpp" />
     <ClCompile Include="..\..\main_vita.cpp">
@@ -229,6 +230,7 @@
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\obj_mesh_loader.h" />
     <ClInclude Include="..\..\primitive_builder.h" />
     <ClInclude Include="..\..\scene_app.h" />
     <ClInclude Include="Bullet.h" />
