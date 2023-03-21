@@ -41,7 +41,7 @@ void Level::LoadFromFile(const char* filename)
 				for(const auto& obj : layer["objects"])
 				{
 					game_objects_.emplace_back(new GameObject());
-					game_objects_.back()->Init(obj["width"],obj["height"], 1.f,(float)obj["x"]+((float)obj["width"]/2.f), (-(float)obj["y"])-((float)obj["height"]/2.f),b2_world_, primitive_builder_);
+					game_objects_.back()->Init(obj["width"]/2.f,obj["height"] / 2.f, 1.f,(float)obj["x"]+((float)obj["width"]/2.f), (-(float)obj["y"])-((float)obj["height"]/2.f),b2_world_, primitive_builder_);
 				}
 			}
 		}
