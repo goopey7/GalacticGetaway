@@ -9,13 +9,13 @@
 
 void Gun::Update(gef::Vector4 translation, InputActionManager* input, gef::Platform* platform, float dt) {
 
-	gef::Vector4 screenPos = WorldToScreen(translation, platform);
+	//gef::Vector4 screenPos = WorldToScreen(translation, platform);
 
 	transform_.SetTranslation(translation);
 
 	if (input->getUsingKeyboard()) {
 		gef::Vector2 mouse_pos = input->getMousePos();
-		target_vector_ = mouse_pos - gef::Vector2(screenPos.x(), screenPos.y());
+		target_vector_ = mouse_pos - gef::Vector2(platform->width() * 0.5f, platform->height() * 0.5f);
 	}
 	else {
 		gef::Vector2 stick_vec = gef::Vector2(input->getRightStickX(), input->getRightStickY());
@@ -96,6 +96,7 @@ void Gun::reloadThreadFunc() {
 
 gef::Vector4 Gun::WorldToScreen(const gef::Vector4 pos, gef::Platform* platform) {
 	gef::Vector4 screen_pos = pos;
+	gef::DebugOut(("\npos: " + std::to_string(pos.x()) + ", " + std::to_string(pos.y())).c_str());
 	screen_pos *= 33;
 	screen_pos += gef::Vector4(platform->width() * 0.5f, -platform->height() * 0.5f, 0);
 	screen_pos.set_y(-screen_pos.y());

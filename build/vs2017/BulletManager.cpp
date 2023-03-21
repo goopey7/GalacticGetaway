@@ -34,11 +34,11 @@ void BulletManager::Update() {
 		}
 	}
 
-	int deadNo = dead_bullets_.size();
-	if (deadNo > 30) {
-		gef::DebugOut(("dead bullets: " + std::to_string(deadNo)).c_str());
-		//std::list<Bullet*>::iterator bullet = dead_bullets_.;
-	}
+	//int deadNo = dead_bullets_.size();
+	//if (deadNo > 30) {
+	//	gef::DebugOut(("dead bullets: " + std::to_string(deadNo)).c_str());
+	//	//std::list<Bullet*>::iterator bullet = dead_bullets_.;
+	//}
 }
 
 void BulletManager::Fire(gef::Vector2 target_vector, gef::Vector2 start_pos) {

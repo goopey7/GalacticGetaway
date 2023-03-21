@@ -106,7 +106,7 @@ void SceneApp::Render()
 
 	// view
 	gef::Vector2 player_pos(player_.transform().GetTranslation().x(), player_.transform().GetTranslation().y());
-	gef::Vector4 camera_eye(player_pos.x, player_pos.y, 40.0f);
+	gef::Vector4 camera_eye(player_pos.x, player_pos.y, 30.0f);
 	gef::Vector4 camera_lookat(player_pos.x, player_pos.y, 0.0f);
 	gef::Vector4 camera_up(0.0f, 1.0f, 0.0f);
 	gef::Matrix44 view_matrix;
