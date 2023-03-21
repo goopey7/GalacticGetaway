@@ -10,15 +10,14 @@
 #include "Player.h"
 #include <string>
 
+class Level;
 class InputActionManager;
 
 // FRAMEWORK FORWARD DECLARATIONS
 namespace gef
 {
-	class Platform;
-	class SpriteRenderer;
 	class Font;
-	class InputManager;
+	class Platform;
 	class Renderer3D;
 }
 
@@ -36,14 +35,6 @@ private:
 	void DrawHUD();
 	void SetupLights();
 
-	gef::SpriteRenderer* sprite_renderer_;
-	gef::Font* font_;
-	gef::Renderer3D* renderer_3d_;
-
-	PrimitiveBuilder* primitive_builder_;
-
-	b2World* b2_world_;
-
 	//Feasibility Demo player and level
 	Player player_;
 	GameObject ground_;
@@ -51,9 +42,15 @@ private:
 	GameObject wall_left_;
 	GameObject wall_right_;
 	GameObject crate_;
+	
+	gef::Font* font_;
+	gef::Renderer3D* renderer_3d_;
+	gef::SpriteRenderer* sprite_renderer_;
 
 	//Input Action Manager
 	InputActionManager* iam_;
+
+	Level* level_;
 
 	float fps_;
 	std::string gravity_lock_;

@@ -12,11 +12,12 @@
 #include "obj_mesh_loader.h"
 #include <string>
 
+#include "Level.h"
+
 SceneApp::SceneApp(gef::Platform& platform) :
 	Application(platform),
 	sprite_renderer_(NULL),
 	renderer_3d_(NULL),
-	primitive_builder_(NULL),
 	font_(NULL)
 {
 }
@@ -34,22 +35,24 @@ void SceneApp::Init()
 		iam_->getInputManager()->touch_manager()->EnablePanel(0);
 	}
 
-	// initialise primitive builder to make create some 3D geometry easier
-	primitive_builder_ = new PrimitiveBuilder(platform_);
+	level_ = new Level(platform_);
+	level_->LoadFromFile("level.json");
 
-	// initialise box2d world
-	b2_world_ = new b2World(b2Vec2(0.f, -9.8));
-	//b2_world_->SetAllowSleeping(false);
+	//level_->GetB2World()->SetAllowSleeping(false);
 
 	// setup the player
-	player_.Init(0.8f, 0.8f, 0.8f, 0, 4, b2_world_, primitive_builder_, &platform_);
+	player_.Init(0.8f, 0.8f, 0.8f, 0, 4, level_->GetB2World(), level_->GetPrimitiveBuilder(), &platform_);
 
 	// setup feasibility demo level
-	ground_.Init(10.f, 0.5f, 0.5f, 0, -5.f, b2_world_, primitive_builder_);
-	ceiling_.Init(10.f, 0.5f, 0.5f, 0, 5.f, b2_world_, primitive_builder_);
-	wall_left_.Init(0.5f, 5.5f, 0.5f, -10.5f, 0, b2_world_, primitive_builder_);
-	wall_right_.Init(0.5f, 5.5f, 0.5f, 10.5f, 0, b2_world_, primitive_builder_);
-	crate_.Init(0.6f, 0.6f, 0.6f, 5, 4, b2_world_, primitive_builder_, true);
+	
+	/*
+	ground_.Init(10.f, 0.5f, 0.5f, 0, -5.f, level_->GetB2World(), level_->GetPrimitiveBuilder());
+	ceiling_.Init(10.f, 0.5f, 0.5f, 0, 5.f, level_->GetB2World(), level_->GetPrimitiveBuilder());
+	wall_left_.Init(0.5f, 5.5f, 0.5f, -10.5f, 0, level_->GetB2World(), level_->GetPrimitiveBuilder());
+	wall_right_.Init(0.5f, 5.5f, 0.5f, 10.5f, 0, level_->GetB2World(), level_->GetPrimitiveBuilder());
+	*/
+	
+	crate_.Init(0.6f, 0.6f, 0.6f, 5, 4, level_->GetB2World(), level_->GetPrimitiveBuilder(), true);
 
 	OBJMeshLoader obj_loader;
 	MeshMap mesh_map;
@@ -72,8 +75,10 @@ void SceneApp::CleanUp()
 {
 	CleanUpFont();
 
-	delete primitive_builder_;
-	primitive_builder_ = NULL;
+	/*
+	delete level_->GetPrimitiveBuilder();
+	level_->GetPrimitiveBuilder() = NULL;
+	*/
 
 	delete renderer_3d_;
 	renderer_3d_ = NULL;
@@ -89,12 +94,12 @@ bool SceneApp::Update(float frame_time)
 
 	fps_ = 1.0f / frame_time;
 
-	b2_world_->Step(1.f / 165.f, 6, 2);
+	level_->GetB2World()->Step(1.f / 165.f, 6, 2);
 
 	player_.Update(iam_, frame_time);
 	crate_.Update();
 
-	b2_world_->SetAllowSleeping(true);
+	level_->GetB2World()->SetAllowSleeping(true);
 	return true;
 }
 
@@ -120,14 +125,23 @@ void SceneApp::Render()
 
 	// draw 3d geometry
 	renderer_3d_->Begin();
-	renderer_3d_->set_override_material(&primitive_builder_->red_material());
-	player_.Render(renderer_3d_, primitive_builder_);
 
-	renderer_3d_->set_override_material(&primitive_builder_->blue_material());
+	renderer_3d_->set_override_material(&level_->GetPrimitiveBuilder()->red_material());
+	player_.Render(renderer_3d_, level_->GetPrimitiveBuilder());
+
+	renderer_3d_->set_override_material(&level_->GetPrimitiveBuilder()->blue_material());
+
+	/*
 	renderer_3d_->DrawMesh(ground_);
 	renderer_3d_->DrawMesh(ceiling_);
 	renderer_3d_->DrawMesh(wall_left_);
 	renderer_3d_->DrawMesh(wall_right_);
+	*/
+
+	for(GameObject* object : *level_->GetGameObjects())
+	{
+		renderer_3d_->DrawMesh(*object);
+	}
 
 	renderer_3d_->set_override_material(NULL);
 	renderer_3d_->DrawMesh(crate_);

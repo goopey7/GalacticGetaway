@@ -39,48 +39,48 @@
          "name":"StaticLevelColllisions",
          "objects":[
                 {
-                 "height":32,
+                 "height":0.5,
                  "id":1,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":768,
-                 "x":96,
-                 "y":96
+                 "width":10,
+                 "x":0,
+                 "y":-5
                 }, 
                 {
-                 "height":448,
+                 "height":5.5,
                  "id":2,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":32,
-                 "x":832,
-                 "y":128
+                 "width":0.5,
+                 "x":-10.5,
+                 "y":0
                 }, 
                 {
-                 "height":32,
+                 "height":0.5,
                  "id":3,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":768,
-                 "x":96,
-                 "y":576
+                 "width":10,
+                 "x":0,
+                 "y":5
                 }, 
                 {
-                 "height":448,
+                 "height":5.5,
                  "id":4,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":32,
-                 "x":96,
-                 "y":128
+                 "width":0.5,
+                 "x":10.5,
+                 "y":0
                 }],
          "opacity":1,
          "type":"objectgroup",

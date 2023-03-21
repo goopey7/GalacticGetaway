@@ -29,6 +29,8 @@ void Level::LoadFromFile(const char* filename)
 	// parse json into cpp object
 	json levelJson = json::parse(i);
 
+	Init();
+
 	// initialize all layers
 	for(const auto& layer : levelJson["layers"])
 	{
@@ -41,8 +43,21 @@ void Level::LoadFromFile(const char* filename)
 			}
 		}
 	}
+}
 
-	Init();
+const std::vector<GameObject*>* Level::GetGameObjects()
+{
+	return &game_objects_;
+}
+
+b2World* Level::GetB2World()
+{
+	return b2_world_;
+}
+
+PrimitiveBuilder* Level::GetPrimitiveBuilder()
+{
+	return primitive_builder_;
 }
 
 void Level::Init()
