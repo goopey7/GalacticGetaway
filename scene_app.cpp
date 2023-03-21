@@ -41,9 +41,9 @@ void SceneApp::Init()
 	//level_->GetB2World()->SetAllowSleeping(false);
 
 	// setup the player and crate
-	player_.Init(0.8f, 0.8f, 0.8f, 13, 4, level_->GetB2World(), level_->GetPrimitiveBuilder(), &platform_);
-	crate_.Init(0.6f, 0.6f, 0.6f, 10, 4, level_->GetB2World(), level_->GetPrimitiveBuilder(), true);
 
+	/*
+	crate_.Init(0.6f, 0.6f, 0.6f, 10, 4, level_->GetB2World(), level_->GetPrimitiveBuilder(), true);
 	OBJMeshLoader obj_loader;
 	MeshMap mesh_map;
 	if (obj_loader.Load("Models/crate/crate.obj", platform_, mesh_map)) {
@@ -56,6 +56,7 @@ void SceneApp::Init()
 		gef::DebugOut(obj_loader.GetLastError().c_str());
 		gef::DebugOut("\n");
 	}
+	*/
 
 	InitFont();
 	SetupLights();
@@ -84,12 +85,9 @@ bool SceneApp::Update(float frame_time)
 
 	fps_ = 1.0f / frame_time;
 
-	level_->GetB2World()->Step(1.f / 165.f, 6, 2);
+	level_->Update(iam_, frame_time);
+	//crate_.Update();
 
-	player_.Update(iam_, frame_time);
-	crate_.Update();
-
-	level_->GetB2World()->SetAllowSleeping(true);
 	return true;
 }
 
@@ -105,7 +103,7 @@ void SceneApp::Render()
 	renderer_3d_->set_projection_matrix(projection_matrix);
 
 	// view
-	gef::Vector2 player_pos(player_.transform().GetTranslation().x(), player_.transform().GetTranslation().y());
+	gef::Vector2 player_pos = level_->getPlayerPosition();
 	gef::Vector4 camera_eye(player_pos.x, player_pos.y, 30.0f);
 	gef::Vector4 camera_lookat(player_pos.x, player_pos.y, 0.0f);
 	gef::Vector4 camera_up(0.0f, 1.0f, 0.0f);
@@ -117,15 +115,7 @@ void SceneApp::Render()
 	// draw 3d geometry
 	renderer_3d_->Begin();
 
-	renderer_3d_->set_override_material(&level_->GetPrimitiveBuilder()->red_material());
-	player_.Render(renderer_3d_, level_->GetPrimitiveBuilder());
-
-	renderer_3d_->set_override_material(&level_->GetPrimitiveBuilder()->blue_material());
-
-	for(GameObject* object : *level_->GetGameObjects())
-	{
-		renderer_3d_->DrawMesh(*object);
-	}
+	level_->Render(renderer_3d_);
 
 	renderer_3d_->set_override_material(NULL);
 	renderer_3d_->DrawMesh(crate_);
@@ -157,13 +147,16 @@ void SceneApp::DrawHUD()
 		font_->RenderText(sprite_renderer_, gef::Vector4(0.f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 
 		// display if player gravity lock is on 
-		player_.GetGravityLock() ? gravity_lock_ = "On" : gravity_lock_ = "Off";
+		level_->getPlayer()->GetGravityLock() ? gravity_lock_ = "On" : gravity_lock_ = "Off";
 		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2, 510.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE, "F - Gravity lock: %s", gravity_lock_.c_str());
 		
-		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2 + 400.f, 510.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, "Ammo: %i/%i", player_.GetGun()->getAmmoLoaded(), player_.GetGun()->getAmmoReserve());
+		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2 + 400.f, 510.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, "Ammo: %i/%i", level_->getGun()->getAmmoLoaded(), level_->getGun()->getAmmoReserve());
 
-		std::string reloading = player_.GetGun()->getReloading() ? "Reloading" : "";
+		std::string reloading = level_->getGun()->getReloading() ? "Reloading" : "";
 		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2 + 400.f, 480.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, reloading.c_str());
+
+		std::string position = "X: " + std::to_string(level_->getPlayerPosition().x) + " Y: " + std::to_string(level_->getPlayerPosition().y);
+		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2 + 400.f, 200.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, position.c_str());
 
 	}
 }

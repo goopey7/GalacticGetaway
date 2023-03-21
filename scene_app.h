@@ -36,11 +36,6 @@ private:
 	void SetupLights();
 
 	//Feasibility Demo player and level
-	Player player_;
-	GameObject ground_;
-	GameObject ceiling_;
-	GameObject wall_left_;
-	GameObject wall_right_;
 	GameObject crate_;
 	
 	gef::Font* font_;
