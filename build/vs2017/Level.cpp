@@ -36,10 +36,13 @@ void Level::LoadFromFile(const char* filename)
 	{
 		if (layer["type"] == "objectgroup")
 		{
-			for(const auto& obj : layer["objects"])
+			if(layer["name"] == "StaticLevelCollisions")
 			{
-				game_objects_.emplace_back(new GameObject());
-				game_objects_.back()->Init(obj["width"],obj["height"], 0.5f,obj["x"], obj["y"],b2_world_, primitive_builder_);
+				for(const auto& obj : layer["objects"])
+				{
+					game_objects_.emplace_back(new GameObject());
+					game_objects_.back()->Init(obj["width"],obj["height"], 1.f,(float)obj["x"]+((float)obj["width"]/2.f), (-(float)obj["y"])-((float)obj["height"]/2.f),b2_world_, primitive_builder_);
+				}
 			}
 		}
 	}

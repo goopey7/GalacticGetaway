@@ -40,19 +40,9 @@ void SceneApp::Init()
 
 	//level_->GetB2World()->SetAllowSleeping(false);
 
-	// setup the player
-	player_.Init(0.8f, 0.8f, 0.8f, 0, 4, level_->GetB2World(), level_->GetPrimitiveBuilder(), &platform_);
-
-	// setup feasibility demo level
-	
-	/*
-	ground_.Init(10.f, 0.5f, 0.5f, 0, -5.f, level_->GetB2World(), level_->GetPrimitiveBuilder());
-	ceiling_.Init(10.f, 0.5f, 0.5f, 0, 5.f, level_->GetB2World(), level_->GetPrimitiveBuilder());
-	wall_left_.Init(0.5f, 5.5f, 0.5f, -10.5f, 0, level_->GetB2World(), level_->GetPrimitiveBuilder());
-	wall_right_.Init(0.5f, 5.5f, 0.5f, 10.5f, 0, level_->GetB2World(), level_->GetPrimitiveBuilder());
-	*/
-	
-	crate_.Init(0.6f, 0.6f, 0.6f, 5, 4, level_->GetB2World(), level_->GetPrimitiveBuilder(), true);
+	// setup the player and crate
+	player_.Init(0.8f, 0.8f, 0.8f, 13, 4, level_->GetB2World(), level_->GetPrimitiveBuilder(), &platform_);
+	crate_.Init(0.6f, 0.6f, 0.6f, 10, 4, level_->GetB2World(), level_->GetPrimitiveBuilder(), true);
 
 	OBJMeshLoader obj_loader;
 	MeshMap mesh_map;
@@ -116,7 +106,7 @@ void SceneApp::Render()
 
 	// view
 	gef::Vector2 player_pos(player_.transform().GetTranslation().x(), player_.transform().GetTranslation().y());
-	gef::Vector4 camera_eye(player_pos.x, player_pos.y, 20.0f);
+	gef::Vector4 camera_eye(player_pos.x, player_pos.y, 40.0f);
 	gef::Vector4 camera_lookat(player_pos.x, player_pos.y, 0.0f);
 	gef::Vector4 camera_up(0.0f, 1.0f, 0.0f);
 	gef::Matrix44 view_matrix;
@@ -131,13 +121,6 @@ void SceneApp::Render()
 	player_.Render(renderer_3d_, level_->GetPrimitiveBuilder());
 
 	renderer_3d_->set_override_material(&level_->GetPrimitiveBuilder()->blue_material());
-
-	/*
-	renderer_3d_->DrawMesh(ground_);
-	renderer_3d_->DrawMesh(ceiling_);
-	renderer_3d_->DrawMesh(wall_left_);
-	renderer_3d_->DrawMesh(wall_right_);
-	*/
 
 	for(GameObject* object : *level_->GetGameObjects())
 	{
