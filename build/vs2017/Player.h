@@ -22,7 +22,13 @@ protected:
 	Gun gun_;
 
 	b2World* physics_world_;
+	b2Vec2 world_gravity_ = b2Vec2(0, -1);
+	float world_grav_mult = 10;
+	bool grav_strength_changed_ = false;
+	float grav_strength_change_time = 2;
+
 	bool gravity_lock_ = false;
+	bool jumping_ = false;
 	enum GravityDirection { GRAVITY_VERTICAL, GRAVITY_LEFT, GRAVITY_RIGHT };
 	GravityDirection world_gravity_direction_ = GRAVITY_VERTICAL;
 	GravityDirection player_gravity_direction_ = GRAVITY_VERTICAL;

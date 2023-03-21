@@ -36,8 +36,18 @@
             },
             {
               "action": "GravityRight",
-              "keys": ["RIGHT"],
-              "buttons": ["RIGHT"]
+              "keys": [ "RIGHT" ],
+              "buttons": [ "RIGHT" ]
+            },
+            {
+              "action": "GravityStrenghtUp",
+              "keys": [ "E" ],
+              "buttons": [ "RB" ]
+            },
+            {
+              "action": "GravityStrengthDown",
+              "keys": [ "Q" ],
+              "buttons": [ "LB" ]
             },
             {
               "action": "Fire",

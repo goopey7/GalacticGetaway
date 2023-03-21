@@ -25,6 +25,8 @@ DEFINE_ACTIONS(
 	GravityDown,
 	GravityLeft,
 	GravityRight,
+	GravityStrenghtUp,
+	GravityStrengthDown,
 	Fire,
 	Reload,
 	Quit,

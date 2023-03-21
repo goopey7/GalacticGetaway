@@ -103,47 +103,87 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 		if (gravity_lock_) physics_body_->SetGravityScale(0);
 		else {
 			physics_body_->SetGravityScale(1);
-			b2Vec2 grav = physics_world_->GetGravity();
+			b2Vec2 grav = world_gravity_;
 			grav *= 0.01;
 			physics_body_->ApplyLinearImpulseToCenter(grav, true);
 			player_gravity_direction_ = world_gravity_direction_;
 		}
 	}
 
-	if (iam->isPressed(Jump) && !gravity_lock_) {
-		b2Vec2 grav = physics_world_->GetGravity();
-		grav *= 2;
+	if (iam->isPressed(Jump) && !gravity_lock_ && !jumping_) {
+		//jumping_ = true;
+		b2Vec2 grav = world_gravity_;
+		grav *= 20;
 		physics_body_->ApplyLinearImpulseToCenter(-grav, true);
 	}
 
 	if (iam->isPressed(GravityUp)) {
-		physics_world_->SetGravity(b2Vec2(0, 9.8f));
+		world_gravity_ = b2Vec2(0, 1);
+		/*b2Vec2 grav = world_gravity_;
+		grav *= world_grav_mult;
+		physics_world_->SetGravity(grav);*/
 		physics_world_->SetAllowSleeping(false);
 		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(180));
 		world_gravity_direction_ = GRAVITY_VERTICAL;
 		if (!gravity_lock_) player_gravity_direction_ = GRAVITY_VERTICAL;
 	}
 	else if (iam->isPressed(GravityDown)) {
-		physics_world_->SetGravity(b2Vec2(0, -9.8f));
+		world_gravity_ = b2Vec2(0, -1);
+		/*b2Vec2 grav = world_gravity_;
+		grav *= world_grav_mult;
+		physics_world_->SetGravity(grav);*/
 		physics_world_->SetAllowSleeping(false);
 		physics_body_->SetTransform(physics_body_->GetPosition(), 0);
 		world_gravity_direction_ = GRAVITY_VERTICAL;
 		if (!gravity_lock_) player_gravity_direction_ = GRAVITY_VERTICAL;
 	}
 	else if (iam->isPressed(GravityLeft)) {
-		physics_world_->SetGravity(b2Vec2(-9.8f, 0));
+		world_gravity_ = b2Vec2(-1, 0);
+		/*b2Vec2 grav = world_gravity_;
+		grav *= world_grav_mult;
+		physics_world_->SetGravity(grav);*/
 		physics_world_->SetAllowSleeping(false);
 		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(90));
 		world_gravity_direction_ = GRAVITY_LEFT;
 		if (!gravity_lock_) player_gravity_direction_ = GRAVITY_LEFT;
 	}
 	else if (iam->isPressed(GravityRight)) {
-		physics_world_->SetGravity(b2Vec2(9.8f, 0));
+		world_gravity_ = b2Vec2(1, 0);
+		/*b2Vec2 grav = world_gravity_;
+		grav *= world_grav_mult;
+		physics_world_->SetGravity(grav);*/
 		physics_world_->SetAllowSleeping(false);
 		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(-90));
 		world_gravity_direction_ = GRAVITY_RIGHT;
 		if (!gravity_lock_) player_gravity_direction_ = GRAVITY_RIGHT;
 	}
+
+	if (iam->isPressed(GravityStrenghtUp)) {
+		grav_strength_changed_ = true;
+		world_grav_mult = 50.f;
+	}
+	else if (iam->isPressed(GravityStrengthDown)) {
+		grav_strength_changed_ = true;
+		world_grav_mult = 0;
+		b2Body* body_list = physics_world_->GetBodyList();
+		while (body_list->GetNext()) {
+			body_list->ApplyLinearImpulseToCenter(-world_gravity_, true);
+			body_list = body_list->GetNext();
+		}
+	}
+
+	if (grav_strength_changed_) {
+		grav_strength_change_time += frame_time;
+		if (grav_strength_change_time >= 5) {
+			grav_strength_changed_ = false;
+			grav_strength_change_time = 0;
+			world_grav_mult = 10.f;
+		}
+	}
+	
+	b2Vec2 grav = world_gravity_;
+	grav *= world_grav_mult;
+	physics_world_->SetGravity(grav);
 
 	UpdateBox2d();
 
