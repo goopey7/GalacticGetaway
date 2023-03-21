@@ -115,8 +115,9 @@ void SceneApp::Render()
 	renderer_3d_->set_projection_matrix(projection_matrix);
 
 	// view
-	gef::Vector4 camera_eye(0, 0, 20.0f);
-	gef::Vector4 camera_lookat(0.0f, 0.0f, 0.0f);
+	gef::Vector2 player_pos(player_.transform().GetTranslation().x(), player_.transform().GetTranslation().y());
+	gef::Vector4 camera_eye(player_pos.x, player_pos.y, 20.0f);
+	gef::Vector4 camera_lookat(player_pos.x, player_pos.y, 0.0f);
 	gef::Vector4 camera_up(0.0f, 1.0f, 0.0f);
 	gef::Matrix44 view_matrix;
 	view_matrix.LookAt(camera_eye, camera_lookat, camera_up);
