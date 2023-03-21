@@ -12,8 +12,8 @@ public:
 	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform);
 	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform);
 	void Update(InputActionManager* iam, float frame_time);
-	bool GetGravityLock() { return gravity_lock_; }
-	Gun* GetGun() { return &gun_; }
+	bool GetGravityLock() const { return gravity_lock_; }
+	const Gun* GetGun() const { return &gun_; }
 
 	void Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder);
 
