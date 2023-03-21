@@ -129,7 +129,7 @@ void InputActionManager::Update()
 	getRightStickY();
 	gef::Vector2 old_mouse_pos = mouse_pos_;
 	mouse_pos_ = inputManager->touch_manager()->mouse_position();
-	if (old_mouse_pos != mouse_pos_) using_keyboard_ = true;
+	if (old_mouse_pos.x != mouse_pos_.x || old_mouse_pos.y != mouse_pos_.y) using_keyboard_ = true;
 }
 
 float InputActionManager::getLeftStickX()
