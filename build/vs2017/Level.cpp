@@ -68,7 +68,7 @@ void Level::LoadFromFile(const char* filename)
 					{
 						OBJMeshLoader obj_loader;
 						MeshMap mesh_map;
-						if (obj_loader.Load("Models/crate/crate.obj", *platform_, mesh_map)) {
+						if (obj_loader.Load("Models/crate/crate.obj", *platform_, mesh_map)) { //Poole (2019) Sci-fi Crate V2. Available at: https://skfb.ly/6TNVo (Accessed: 21 March 2023)
 							gef::Mesh* crate_mesh = mesh_map["scificrate_low_lambert2_0"];
 							if (crate_mesh) {
 								dynObject->set_mesh(crate_mesh);
