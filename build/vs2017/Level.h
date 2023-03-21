@@ -22,10 +22,9 @@ class Level
 public:
 	Level(gef::Platform& platform);
 	void LoadFromFile(const char* filename);
-	const std::vector<GameObject*>* GetGameObjects();
 	void Update(InputActionManager* iam_,float frame_time);
 	void Render(gef::Renderer3D* renderer_3d);
-	const gef::Vector2 getPlayerPosition() const;
+	gef::Vector2 getPlayerPosition() const;
 	const Player* getPlayer() const;
 	const Gun* getGun() const;
 private:
@@ -35,6 +34,7 @@ private:
 	
 	gef::Platform* platform_;
 
-	std::vector<GameObject*> game_objects_;
+	std::vector<GameObject*> static_game_objects_;
+	std::vector<GameObject*> dynamic_game_objects_;
 	Player player_;
 };

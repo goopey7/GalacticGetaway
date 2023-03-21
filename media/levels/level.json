@@ -398,23 +398,155 @@
         {
          "draworder":"topdown",
          "id":4,
-         "name":"CrateSpawns",
+         "name":"DynamicSpawns",
          "objects":[
                 {
                  "height":0,
                  "id":51,
                  "name":"",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"crate"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":0,
                  "x":63,
                  "y":17
+                }, 
+                {
+                 "height":0,
+                 "id":53,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"crate"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":49,
+                 "y":13
+                }, 
+                {
+                 "height":0,
+                 "id":54,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"crate"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":23,
+                 "y":9
+                }, 
+                {
+                 "height":0,
+                 "id":55,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"crate"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":8,
+                 "y":9
+                }, 
+                {
+                 "height":0,
+                 "id":56,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"crate"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":25,
+                 "y":21
+                }, 
+                {
+                 "height":0,
+                 "id":57,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"crate"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":70,
+                 "y":12
+                }, 
+                {
+                 "height":0,
+                 "id":58,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"crate"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":73,
+                 "y":12
+                }, 
+                {
+                 "height":0,
+                 "id":59,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"crate"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":82,
+                 "y":12
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -442,7 +574,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":53,
+ "nextobjectid":60,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.0",

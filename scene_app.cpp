@@ -44,18 +44,6 @@ void SceneApp::Init()
 
 	/*
 	crate_.Init(0.6f, 0.6f, 0.6f, 10, 4, level_->GetB2World(), level_->GetPrimitiveBuilder(), true);
-	OBJMeshLoader obj_loader;
-	MeshMap mesh_map;
-	if (obj_loader.Load("Models/crate/crate.obj", platform_, mesh_map)) {
-		gef::Mesh* crate_mesh = mesh_map["scificrate_low_lambert2_0"];
-		if (crate_mesh) {
-			crate_.set_mesh(crate_mesh);
-		}
-	}
-	else {
-		gef::DebugOut(obj_loader.GetLastError().c_str());
-		gef::DebugOut("\n");
-	}
 	*/
 
 	InitFont();
@@ -111,15 +99,9 @@ void SceneApp::Render()
 	view_matrix.LookAt(camera_eye, camera_lookat, camera_up);
 	renderer_3d_->set_view_matrix(view_matrix);
 
-
 	// draw 3d geometry
 	renderer_3d_->Begin();
-
 	level_->Render(renderer_3d_);
-
-	renderer_3d_->set_override_material(NULL);
-	renderer_3d_->DrawMesh(crate_);
-
 	renderer_3d_->End();
 
 	// start drawing sprites, but don't clear the frame buffer
