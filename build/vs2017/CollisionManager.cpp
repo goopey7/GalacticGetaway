@@ -54,7 +54,8 @@ void CollisionManager::PreSolve(b2Contact* contact, const b2Manifold* oldManifol
 }
 
 void CollisionManager::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
-{	auto* a = reinterpret_cast<GameObject*>(contact->GetFixtureA()->GetUserData().pointer);
+{
+	auto* a = reinterpret_cast<GameObject*>(contact->GetFixtureA()->GetUserData().pointer);
   	auto* b = reinterpret_cast<GameObject*>(contact->GetFixtureB()->GetUserData().pointer);
   
   	if(a != nullptr)
