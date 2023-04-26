@@ -24,8 +24,8 @@ void CollisionManager::BeginContact(b2Contact* contact)
 
 void CollisionManager::EndContact(b2Contact* contact)
 {
-	GameObject* a = (GameObject*) contact->GetFixtureA()->GetUserData().pointer;
-	GameObject* b = (GameObject*) contact->GetFixtureB()->GetUserData().pointer;
+	auto* a = reinterpret_cast<GameObject*>(contact->GetFixtureA()->GetUserData().pointer);
+	auto* b = reinterpret_cast<GameObject*>(contact->GetFixtureB()->GetUserData().pointer);
 
 	if(a != nullptr)
 	{
