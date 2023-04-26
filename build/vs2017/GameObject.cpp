@@ -73,6 +73,11 @@ GameObject::Tag GameObject::GetTag()
 	return tag;
 }
 
+void GameObject::SetTag(Tag tag)
+{
+	this->tag = tag;
+}
+
 void GameObject::UpdateBox2d() {
 	gef::Matrix44 transform;
 	transform.SetIdentity();

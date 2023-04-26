@@ -66,6 +66,7 @@ void Level::LoadFromFile(const char* filename)
 					dynObject->Init(0.6f, 0.6f, 0.6f, object["x"], 0-object["y"], b2_world_, primitive_builder_, true);
 					if(object["properties"][0]["value"] == "crate")
 					{
+						dynObject->SetTag(GameObject::Tag::Crate);
 						OBJMeshLoader obj_loader;
 						MeshMap mesh_map;
 						if (obj_loader.Load("Models/crate/crate.obj", *platform_, mesh_map)) { //Poole (2019) Sci-fi Crate V2. Available at: https://skfb.ly/6TNVo (Accessed: 21 March 2023)

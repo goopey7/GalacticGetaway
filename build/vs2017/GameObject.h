@@ -15,6 +15,7 @@ public:
 		Enemy,
 		Bullet,
 		Hook,
+		Crate,
 	};
 	
 	virtual void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, bool dynamic = false);
@@ -27,6 +28,7 @@ public:
 	virtual void PostResolve(GameObject* other);
 	b2Body* GetBody() { return physics_body_; }
 	Tag GetTag();
+	void SetTag(Tag tag);
 
 protected:
 	b2Body* physics_body_ = nullptr;
