@@ -60,11 +60,11 @@ void GameObject::EndCollision(GameObject* other)
 {
 }
 
-void GameObject::PreSolve(GameObject* other)
+void GameObject::PreResolve(GameObject* other)
 {
 }
 
-void GameObject::PostSolve(GameObject* other)
+void GameObject::PostResolve(GameObject* other)
 {
 }
 

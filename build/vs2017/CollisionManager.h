@@ -11,10 +11,10 @@ public:
 	// When exiting the collision
 	void EndContact(b2Contact* contact) override;
 
-	// Before the collision is solved by box2d
+	// Before the collision is resolved by box2d
 	void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
 	
-	// After the collision is solved by box2d
+	// After the collision is resolved by box2d
 	void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
 	
 };

@@ -44,12 +44,12 @@ void CollisionManager::PreSolve(b2Contact* contact, const b2Manifold* oldManifol
  
  	if(a != nullptr)
  	{
- 		a->PreSolve(b);
+ 		a->PreResolve(b);
  	}
  
  	if(b != nullptr)
  	{
- 		b->PreSolve(a);
+ 		b->PreResolve(a);
  	}
 }
 
@@ -60,11 +60,11 @@ void CollisionManager::PostSolve(b2Contact* contact, const b2ContactImpulse* imp
   
   	if(a != nullptr)
   	{
-  		a->PostSolve(b);
+  		a->PostResolve(b);
   	}
   
   	if(b != nullptr)
   	{
-  		b->PostSolve(a);
+  		b->PostResolve(a);
   	}
 }

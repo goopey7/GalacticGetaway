@@ -23,8 +23,8 @@ public:
 	virtual void Update();
 	virtual void BeginCollision(GameObject* other);
 	virtual void EndCollision(GameObject* other);
-	virtual void PreSolve(GameObject* other);
-	virtual void PostSolve(GameObject* other);
+	virtual void PreResolve(GameObject* other);
+	virtual void PostResolve(GameObject* other);
 	b2Body* GetBody() { return physics_body_; }
 	Tag GetTag();
 
