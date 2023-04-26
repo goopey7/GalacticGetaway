@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <vector>
 
+#include "CollisionManager.h"
 #include "Player.h"
 
 class GameObject;
@@ -37,4 +38,6 @@ private:
 	std::vector<GameObject*> static_game_objects_;
 	std::vector<GameObject*> dynamic_game_objects_;
 	Player player_;
+	
+	CollisionManager collision_manager_;
 };

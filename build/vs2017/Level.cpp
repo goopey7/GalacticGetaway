@@ -89,6 +89,9 @@ void Level::Init()
 {
 	// initialize box2d world
 	b2_world_ = new b2World(b2Vec2(0.0f, -10.f));
+
+	// Set collision manager as contact listener for the world
+	b2_world_->SetContactListener(&collision_manager_);
 	
 	// initialise primitive builder to make create some 3D geometry easier
 	primitive_builder_ = new PrimitiveBuilder(*platform_);
