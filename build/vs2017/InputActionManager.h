@@ -28,6 +28,7 @@ DEFINE_ACTIONS(
 	GravityStrenghtUp,
 	GravityStrengthDown,
 	Fire,
+	Grapple,
 	Reload,
 	Quit,
 	)

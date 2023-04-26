@@ -55,6 +55,11 @@
               "buttons": [ "RT" ]
             },
             {
+              "action": "Grapple",
+              "keys": [],
+              "buttons": [ "LT" ]
+            },
+            {
               "action": "Reload",
               "keys": ["R"],
               "buttons": [ "X" ]

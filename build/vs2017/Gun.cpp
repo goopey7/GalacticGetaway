@@ -7,6 +7,13 @@
 #include <thread>
 #include <system/debug_log.h>
 
+void Gun::Init(gef::Vector4 size, b2World* world, PrimitiveBuilder* builder)
+{
+	set_mesh(builder->CreateBoxMesh(gef::Vector4(size.x(), size.y() * 0.33, size.z() * 1.5)));
+	getBulletManager()->Init(world, builder);
+	hook_ = new Hook(world, builder);
+}
+
 void Gun::Update(gef::Vector4 translation, InputActionManager* input, gef::Platform* platform, float dt) {
 
 	//gef::Vector4 screenPos = WorldToScreen(translation, platform);
@@ -43,6 +50,12 @@ void Gun::Update(gef::Vector4 translation, InputActionManager* input, gef::Platf
 	if (input->getInputManager()->touch_manager()->is_button_down(0) || input->isHeld(Action::Fire)) {
 		Fire(dt);
 	}
+
+	if(input->getInputManager()->touch_manager()->is_button_down(1) || input->isPressed(Action::Grapple))
+	{
+		Grapple();
+	}
+	
 	if (input->isPressed(Action::Reload)) {
 		//reloading_ = true;
 		Reload(&reloading_);
@@ -50,6 +63,10 @@ void Gun::Update(gef::Vector4 translation, InputActionManager* input, gef::Platf
 	}
 
 	bullet_manager_.Update();
+	if(hook_ != nullptr)
+	{
+		hook_->Update();
+	}
 }
 
 void Gun::Fire(float dt) {
@@ -62,6 +79,16 @@ void Gun::Fire(float dt) {
 			ammo_loaded_--;
 			if (ammo_loaded_ == 0) Reload(&reloading_);
 		}
+	}
+}
+
+void Gun::Grapple()
+{
+	if(!hookFired)
+	{
+		gef::Vector2 pos(transform().GetTranslation().x(), transform().GetTranslation().y());
+		hook_->Fire(target_vector_, pos);
+		hookFired = true;
 	}
 }
 
@@ -92,6 +119,24 @@ void Gun::reloadThreadFunc() {
 		ammo_reserve_ = 0;
 	}
 	else return;
+}
+
+void Gun::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder)
+{
+	renderer_3d->set_override_material(&builder->blue_material());
+	renderer_3d->DrawMesh(*this);
+	getBulletManager()->Render(renderer_3d);
+	
+	if(hook_ != nullptr)
+	{
+		renderer_3d->set_override_material(hook_->GetColor());
+		renderer_3d->DrawMesh(*hook_);
+	}
+}
+
+Gun::~Gun()
+{
+	delete hook_;
 }
 
 gef::Vector4 Gun::WorldToScreen(const gef::Vector4 pos, gef::Platform* platform) {
