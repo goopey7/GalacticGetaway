@@ -60,6 +60,14 @@ void GameObject::EndCollision(GameObject* other)
 {
 }
 
+void GameObject::PreSolve(GameObject* other)
+{
+}
+
+void GameObject::PostSolve(GameObject* other)
+{
+}
+
 GameObject::Tag GameObject::GetTag()
 {
 	return tag;

@@ -27,7 +27,7 @@ void Hook::Fire(gef::Vector2 target_vector, gef::Vector2 start_pos)
 
 void Hook::BeginCollision(GameObject* other)
 {
-	gef::DebugOut("Hook::BeginCollision");
+	gef::DebugOut("Hook::BeginCollision\n");
 	if(other != nullptr)
 	{
 		if(other->GetTag() == Player)
@@ -43,7 +43,7 @@ void Hook::BeginCollision(GameObject* other)
 
 void Hook::EndCollision(GameObject* other)
 {
-	gef::DebugOut("Hook::EndCollision");
+	gef::DebugOut("Hook::EndCollision\n");
 	color_ = &builder_->green_material();
 }
 
