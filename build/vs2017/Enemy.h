@@ -5,12 +5,14 @@
 
 class Player;
 
-class Enemy : public GameObject
+class Enemy : public GameObject, public b2RayCastCallback
 {
 public:
-	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform);
-	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform);
+	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform, const ::Player* player);
+	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform, const ::Player* player);
 	void Update(float frame_time);
+
+	float ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float fraction) override;
 
 	void BeginCollision(GameObject* other) override;
 
@@ -34,4 +36,7 @@ protected:
 	gef::Platform* platform_;
 
 	const ::Player* player_ = nullptr;
+	bool bPlayerInRange_ = false;
+
+	float player_detection_range_ = 5.f;
 };

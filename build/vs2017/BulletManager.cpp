@@ -48,7 +48,7 @@ void BulletManager::Update() {
 	//}
 }
 
-void BulletManager::Fire(gef::Vector2 target_vector, gef::Vector2 start_pos, int damage) {
+void BulletManager::Fire(gef::Vector2 target_vector, gef::Vector2 start_pos, int damage, GameObject::Tag target) {
 	if (dead_bullets_.empty()) {
 		dead_bullets_.push_back(new Bullet);
 		dead_bullets_.back()->Init(0.2, 0.2, 0.2, 0, 0, world_, builder_, true);
@@ -56,7 +56,7 @@ void BulletManager::Fire(gef::Vector2 target_vector, gef::Vector2 start_pos, int
 	}
 	live_bullets_.push_back(dead_bullets_.back());
 	dead_bullets_.pop_back();
-	live_bullets_.back()->Fire(target_vector, start_pos, damage);
+	live_bullets_.back()->Fire(target_vector, start_pos, damage, target);
 }
 
 void BulletManager::Render(gef::Renderer3D* renderer_3d) const {

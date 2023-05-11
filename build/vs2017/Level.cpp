@@ -65,7 +65,7 @@ void Level::LoadFromFile(const char* filename)
 					if(object["properties"][0]["value"] == "enemy")
 					{
 						Enemy* enemy = new Enemy();
-						enemy->Init(0.6f, 0.6f, 0.6f, object["x"], 0-object["y"], b2_world_, primitive_builder_, platform_);
+						enemy->Init(0.6f, 0.6f, 0.6f, object["x"], 0-object["y"], b2_world_, primitive_builder_, platform_, &player_);
 						enemies_.push_back(enemy);
 					}
 					else

@@ -674,42 +674,6 @@
                 }, 
                 {
                  "height":0,
-                 "id":71,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"enemy"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":71,
-                 "y":3
-                }, 
-                {
-                 "height":0,
-                 "id":73,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"enemy"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":75,
-                 "y":6
-                }, 
-                {
-                 "height":0,
                  "id":74,
                  "name":"",
                  "point":true,
@@ -723,44 +687,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":81,
-                 "y":3
-                }, 
-                {
-                 "height":0,
-                 "id":75,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"enemy"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":52,
-                 "y":13
-                }, 
-                {
-                 "height":0,
-                 "id":76,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"enemy"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":42,
-                 "y":8
+                 "x":69,
+                 "y":23
                 }],
          "opacity":1,
          "type":"objectgroup",

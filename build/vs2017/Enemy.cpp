@@ -1,11 +1,13 @@
 ﻿#include "Enemy.h"
 
 #include "Bullet.h"
+#include "Player.h"
 #include "system/debug_log.h"
 
 void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world,
-				PrimitiveBuilder* builder, gef::Platform* platform)
+				PrimitiveBuilder* builder, gef::Platform* platform, const ::Player* player)
 {
+	player_ = player;
 	tag = Tag::Enemy;
 	platform_ = platform;
 	set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y, size_z)));
@@ -35,8 +37,9 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 }
 
 void Enemy::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder,
-	gef::Platform* platform)
+	gef::Platform* platform, const ::Player* player)
 {
+	player_ = player;
 	platform_ = platform;
 	set_mesh(builder->CreateBoxMesh(size));
 	
@@ -79,29 +82,54 @@ void Enemy::Update(float frame_time)
 		world_gravity_direction_ = GRAVITY_RIGHT;
 	}
 	
-	// TODO Raycast to check if player is in sight
+	b2Vec2 cast_start = GetBody()->GetPosition() - b2Vec2(player_detection_range_, 0.f);
+	b2Vec2 cast_end = cast_start + b2Vec2(player_detection_range_, 0.f);
+
+	physics_world_->RayCast(this, cast_start, cast_end);
+
+	if(bPlayerInRange_)
+	{
 		// TODO Shoot at player if in sight
-	// TODO else
+	}
+	else
+	{
 		// TODO Movement depending on gravity. Maybe move like red Koopas?
 
 		gef::DebugOut("Enemy velocity: %f\n", physics_body_->GetLinearVelocity().Length());
 		switch (world_gravity_direction_)
 		{
-			case GRAVITY_VERTICAL:
-				//...
-				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2((moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time, 0), 0);
-				break;
+		case GRAVITY_VERTICAL:
+			//...
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2((moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time, 0), 0);
+			break;
 		case GRAVITY_LEFT:
-				//...
-				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? 1.f : -1.f) * move_speed_ * frame_time), 0);
-				break;
-			case GRAVITY_RIGHT:
-				//...
-				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time), 0);
-				break;
+			//...
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? 1.f : -1.f) * move_speed_ * frame_time), 0);
+			break;
+		case GRAVITY_RIGHT:
+			//...
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time), 0);
+			break;
 		}
+	}
 
 	UpdateBox2d();
+}
+
+float Enemy::ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float fraction)
+{
+	auto* player = reinterpret_cast<::Player*>(fixture->GetBody()->GetUserData().pointer);
+	
+	if(player != nullptr)
+	{
+		gef::DebugOut("fraction: %f\n", fraction);
+		if(fraction < 0.2f)
+		{
+			bPlayerInRange_ = true;
+		}
+	}
+
+	return fraction;
 }
 
 void Enemy::BeginCollision(GameObject* other)
@@ -113,7 +141,7 @@ void Enemy::BeginCollision(GameObject* other)
 	else
 	{
 		::Bullet* bullet = dynamic_cast<::Bullet*>(other);
-		if(bullet->getDamage() > 0)
+		if(bullet->getTarget() == Tag::Enemy && bullet->getDamage() > 0)
 		{
 			health_ -= bullet->getDamage();
 			bullet->setDamage(0);

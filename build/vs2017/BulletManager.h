@@ -7,7 +7,7 @@ class BulletManager {
 public:
 	void Init(b2World* world, PrimitiveBuilder* builder);
 	void Update();
-	void Fire(gef::Vector2 target_vector, gef::Vector2 start_pos, int damage);
+	void Fire(gef::Vector2 target_vector, gef::Vector2 start_pos, int damage, GameObject::Tag target);
 	void Render(gef::Renderer3D* renderer_3d) const;
 
 protected:
