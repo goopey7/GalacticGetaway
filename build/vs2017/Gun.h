@@ -2,7 +2,6 @@
 #include "graphics/mesh_instance.h"
 #include <system/platform.h>
 #include "BulletManager.h"
-#include "Hook.h"
 
 class InputActionManager;
 
@@ -11,7 +10,6 @@ public:
 	void Init(gef::Vector4 size, b2World* world, PrimitiveBuilder* builder);
 	void Update(gef::Vector4 translation, InputActionManager* input, gef::Platform* platform, float dt);
 	void Fire(float dt);
-	void Grapple();
 	void Reload(bool* reloading);
 	int getAmmoLoaded() const { return ammo_loaded_; }
 	int getAmmoReserve() const { return ammo_reserve_; }
@@ -31,9 +29,5 @@ protected:
 	bool reloading_ = false;
 
 	BulletManager bullet_manager_;
-	
-	Hook* hook_ = nullptr;
-	bool hookFired = false;
-	
 };
 

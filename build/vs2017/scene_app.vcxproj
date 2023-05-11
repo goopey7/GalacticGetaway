@@ -227,7 +227,6 @@
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Gun.cpp" />
-    <ClCompile Include="Hook.cpp" />
     <ClCompile Include="InputActionManager.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -241,7 +240,6 @@
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gun.h" />
-    <ClInclude Include="Hook.h" />
     <ClInclude Include="InputActionManager.h" />
     <ClInclude Include="json.h" />
     <ClInclude Include="Level.h" />
