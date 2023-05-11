@@ -5,7 +5,7 @@
 void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world,
 				PrimitiveBuilder* builder, gef::Platform* platform)
 {
-	tag = Tag::Player;
+	tag = Tag::Enemy;
 	platform_ = platform;
 	set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y, size_z)));
 
@@ -83,13 +83,6 @@ void Enemy::Update(float frame_time)
 	// TODO else
 		// TODO Movement depending on gravity. Maybe move like red Koopas?
 
-	/*
-		if(physics_body_->GetLinearVelocity().Length() < 0.1f)
-		{
-			moving_left_ = !moving_left_;
-		}
-		*/
-	
 		gef::DebugOut("Enemy velocity: %f\n", physics_body_->GetLinearVelocity().Length());
 		switch (world_gravity_direction_)
 		{
@@ -112,7 +105,7 @@ void Enemy::Update(float frame_time)
 
 void Enemy::BeginCollision(GameObject* other)
 {
-	if(other->GetTag() != Tag::Player && other->GetTag() != Tag::Bullet)
+	if(other->GetTag() != Tag::Bullet)
 	{
 		moving_left_ = !moving_left_;
 	}
