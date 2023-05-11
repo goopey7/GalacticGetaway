@@ -128,6 +128,11 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 	{
 		object->Update();
 	}
+
+	for(Enemy* enemy : enemies_)
+	{
+		enemy->Update(frame_time);
+	}
 	
 	b2_world_->SetAllowSleeping(true);
 }

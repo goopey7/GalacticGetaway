@@ -1,7 +1,9 @@
 ﻿#include "Enemy.h"
 
+#include "system/debug_log.h"
+
 void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world,
-	PrimitiveBuilder* builder, gef::Platform* platform)
+				PrimitiveBuilder* builder, gef::Platform* platform)
 {
 	tag = Tag::Player;
 	platform_ = platform;
@@ -62,6 +64,7 @@ void Enemy::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveB
 
 void Enemy::Update(float frame_time)
 {
+	world_gravity_ = physics_world_->GetGravity();
 	if(std::abs(world_gravity_.y) > 0)
 	{
 		world_gravity_direction_ = GRAVITY_VERTICAL;
@@ -79,17 +82,29 @@ void Enemy::Update(float frame_time)
 		// TODO Shoot at player if in sight
 	// TODO else
 		// TODO Movement depending on gravity. Maybe move like red Koopas?
+
+	/*
+		if(physics_body_->GetLinearVelocity().Length() < 0.1f)
+		{
+			moving_left_ = !moving_left_;
+		}
+		*/
+	
+		gef::DebugOut("Enemy velocity: %f\n", physics_body_->GetLinearVelocity().Length());
 		switch (world_gravity_direction_)
 		{
-		case GRAVITY_VERTICAL:
-			//...
-			break;
+			case GRAVITY_VERTICAL:
+				//...
+				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2((moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time, 0), 0);
+				break;
 		case GRAVITY_LEFT:
-			//...
-			break;
-		case GRAVITY_RIGHT:
-			//...
-			break;
+				//...
+				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? 1.f : -1.f) * move_speed_ * frame_time), 0);
+				break;
+			case GRAVITY_RIGHT:
+				//...
+				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time), 0);
+				break;
 		}
 
 	UpdateBox2d();
@@ -97,6 +112,10 @@ void Enemy::Update(float frame_time)
 
 void Enemy::BeginCollision(GameObject* other)
 {
+	if(other->GetTag() != Tag::Player && other->GetTag() != Tag::Bullet)
+	{
+		moving_left_ = !moving_left_;
+	}
 }
 
 void Enemy::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) const

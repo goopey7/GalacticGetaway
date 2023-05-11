@@ -17,6 +17,8 @@ public:
 	
 protected:
 	int health_ = 10;
+	float move_speed_ = 4.f;
+	bool moving_left_ = true;
 
 	b2World* physics_world_;
 	b2Vec2 world_gravity_ = b2Vec2(0, -1);
