@@ -78,6 +78,16 @@ void GameObject::SetTag(Tag tag)
 	this->tag = tag;
 }
 
+void GameObject::Kill()
+{
+	dead = true;
+}
+
+bool GameObject::TimeToDie()
+{
+	return dead;
+}
+
 void GameObject::UpdateBox2d() {
 	gef::Matrix44 transform;
 	transform.SetIdentity();

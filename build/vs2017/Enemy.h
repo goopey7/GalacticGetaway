@@ -3,9 +3,10 @@
 #include "GameObject.h"
 #include <graphics/renderer_3d.h>
 
+class Player;
+
 class Enemy : public GameObject
 {
-	class Player;
 public:
 	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform);
 	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform);
@@ -32,5 +33,5 @@ protected:
 	GravityDirection world_gravity_direction_ = GRAVITY_VERTICAL;
 	gef::Platform* platform_;
 
-	const Player* player_ = nullptr;
+	const ::Player* player_ = nullptr;
 };

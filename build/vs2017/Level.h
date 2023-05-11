@@ -29,6 +29,8 @@ public:
 	gef::Vector2 getPlayerPosition() const;
 	const Player* getPlayer() const;
 	const Gun* getGun() const;
+	std::vector<GameObject*>& getBodiesToDestroy() {return objects_to_destroy_;}
+	
 private:
 	void Init();
 	b2World* b2_world_;
@@ -40,6 +42,8 @@ private:
 	std::vector<GameObject*> dynamic_game_objects_;
 	Player player_;
 	std::vector<Enemy*> enemies_;
+
+	std::vector<GameObject*> objects_to_destroy_;
 	
 	CollisionManager collision_manager_;
 };

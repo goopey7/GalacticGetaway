@@ -27,6 +27,7 @@ protected:
 	int ammo_reserve_ = 100;
 	int ammo_loaded_ = 30;
 	float fire_time_ = 0;
+	int damage_ = 5;
 	bool reloading_ = false;
 
 	BulletManager bullet_manager_;

@@ -30,8 +30,12 @@ public:
 	Tag GetTag();
 	void SetTag(Tag tag);
 
+	void Kill();
+	bool TimeToDie();
+
 protected:
 	b2Body* physics_body_ = nullptr;
 	Tag tag = None;
+	bool dead = false;
 };
 

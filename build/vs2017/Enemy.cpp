@@ -1,5 +1,6 @@
 ﻿#include "Enemy.h"
 
+#include "Bullet.h"
 #include "system/debug_log.h"
 
 void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world,
@@ -108,6 +109,21 @@ void Enemy::BeginCollision(GameObject* other)
 	if(other->GetTag() != Tag::Bullet)
 	{
 		moving_left_ = !moving_left_;
+	}
+	else
+	{
+		::Bullet* bullet = dynamic_cast<::Bullet*>(other);
+		if(bullet->getDamage() > 0)
+		{
+			health_ -= bullet->getDamage();
+			bullet->setDamage(0);
+			bullet->Kill();
+			
+			if(health_ <= 0)
+			{
+				Kill();
+			}
+		}
 	}
 }
 

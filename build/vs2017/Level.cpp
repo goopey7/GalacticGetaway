@@ -64,8 +64,7 @@ void Level::LoadFromFile(const char* filename)
 				{
 					if(object["properties"][0]["value"] == "enemy")
 					{
-						dynamic_game_objects_.emplace_back(new Enemy());
-						Enemy* enemy = dynamic_cast<Enemy*>(dynamic_game_objects_.back());
+						Enemy* enemy = new Enemy();
 						enemy->Init(0.6f, 0.6f, 0.6f, object["x"], 0-object["y"], b2_world_, primitive_builder_, platform_);
 						enemies_.push_back(enemy);
 					}
@@ -124,17 +123,38 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 
 	player_.Update(iam_, frame_time);
 
-	for(GameObject* object : dynamic_game_objects_)
+	for(int i = 0; i < dynamic_game_objects_.size(); i++)
 	{
+		auto* object = dynamic_game_objects_[i];
 		object->Update();
+		if(object->TimeToDie())
+		{
+			objects_to_destroy_.push_back(object);
+			dynamic_game_objects_.erase(dynamic_game_objects_.begin() + i);
+		}
 	}
 
-	for(Enemy* enemy : enemies_)
+	for(int i=0; i < enemies_.size(); i++)
 	{
+		auto* enemy = enemies_[i];
 		enemy->Update(frame_time);
+		if(enemy->TimeToDie())
+		{
+			objects_to_destroy_.push_back(enemy);
+			enemies_.erase(enemies_.begin() + i);
+		}
 	}
 	
 	b2_world_->SetAllowSleeping(true);
+
+	for(auto* object : objects_to_destroy_)
+	{
+		if(object->GetBody() != nullptr)
+		{
+			b2_world_->DestroyBody(object->GetBody());
+		}
+	}
+	objects_to_destroy_.clear();
 }
 
 void Level::Render(gef::Renderer3D* renderer_3d)
