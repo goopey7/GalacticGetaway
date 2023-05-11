@@ -3,6 +3,7 @@
 #include <d3d10.h>
 #include <fstream>
 
+#include "Enemy.h"
 #include "GameObject.h"
 #include "json.h"
 #include "obj_mesh_loader.h"
@@ -61,23 +62,33 @@ void Level::LoadFromFile(const char* filename)
 			{
 				for(const auto& object : layer["objects"])
 				{
-					dynamic_game_objects_.emplace_back(new GameObject());
-					GameObject* dynObject = dynamic_game_objects_.back();
-					dynObject->Init(0.6f, 0.6f, 0.6f, object["x"], 0-object["y"], b2_world_, primitive_builder_, true);
-					if(object["properties"][0]["value"] == "crate")
+					if(object["properties"][0]["value"] == "enemy")
 					{
-						dynObject->SetTag(GameObject::Tag::Crate);
-						OBJMeshLoader obj_loader;
-						MeshMap mesh_map;
-						if (obj_loader.Load("Models/crate/crate.obj", *platform_, mesh_map)) { //Poole (2019) Sci-fi Crate V2. Available at: https://skfb.ly/6TNVo (Accessed: 21 March 2023)
-							gef::Mesh* crate_mesh = mesh_map["scificrate_low_lambert2_0"];
-							if (crate_mesh) {
-								dynObject->set_mesh(crate_mesh);
+						dynamic_game_objects_.emplace_back(new Enemy());
+						Enemy* enemy = dynamic_cast<Enemy*>(dynamic_game_objects_.back());
+						enemy->Init(0.6f, 0.6f, 0.6f, object["x"], 0-object["y"], b2_world_, primitive_builder_, platform_);
+						enemies_.push_back(enemy);
+					}
+					else
+					{
+						dynamic_game_objects_.emplace_back(new GameObject());
+						GameObject* dynObject = dynamic_game_objects_.back();
+						dynObject->Init(0.6f, 0.6f, 0.6f, object["x"], 0-object["y"], b2_world_, primitive_builder_, true);
+						if(object["properties"][0]["value"] == "crate")
+						{
+							dynObject->SetTag(GameObject::Tag::Crate);
+							OBJMeshLoader obj_loader;
+							MeshMap mesh_map;
+							if (obj_loader.Load("Models/crate/crate.obj", *platform_, mesh_map)) { //Poole (2019) Sci-fi Crate V2. Available at: https://skfb.ly/6TNVo (Accessed: 21 March 2023)
+								gef::Mesh* crate_mesh = mesh_map["scificrate_low_lambert2_0"];
+								if (crate_mesh) {
+									dynObject->set_mesh(crate_mesh);
+								}
 							}
-						}
-						else {
-							gef::DebugOut(obj_loader.GetLastError().c_str());
-							gef::DebugOut("\n");
+							else {
+								gef::DebugOut(obj_loader.GetLastError().c_str());
+								gef::DebugOut("\n");
+							}
 						}
 					}
 				}
@@ -137,6 +148,11 @@ void Level::Render(gef::Renderer3D* renderer_3d)
 	for(const GameObject* object : dynamic_game_objects_)
 	{
 		renderer_3d->DrawMesh(*object);
+	}
+
+	for(const Enemy* enemy : enemies_)
+	{
+		enemy->Render(renderer_3d, primitive_builder_);
 	}
 }
 

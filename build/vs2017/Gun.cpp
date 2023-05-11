@@ -101,7 +101,7 @@ void Gun::reloadThreadFunc() {
 	else return;
 }
 
-void Gun::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder)
+void Gun::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) const
 {
 	renderer_3d->set_override_material(&builder->blue_material());
 	renderer_3d->DrawMesh(*this);

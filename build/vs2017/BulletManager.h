@@ -8,7 +8,7 @@ public:
 	void Init(b2World* world, PrimitiveBuilder* builder);
 	void Update();
 	void Fire(gef::Vector2 target_vector, gef::Vector2 start_pos);
-	void Render(gef::Renderer3D* renderer_3d);
+	void Render(gef::Renderer3D* renderer_3d) const;
 
 protected:
 	std::list<Bullet*> live_bullets_;

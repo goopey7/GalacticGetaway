@@ -52,7 +52,7 @@ void BulletManager::Fire(gef::Vector2 target_vector, gef::Vector2 start_pos) {
 	live_bullets_.back()->Fire(target_vector, start_pos);
 }
 
-void BulletManager::Render(gef::Renderer3D* renderer_3d) {
+void BulletManager::Render(gef::Renderer3D* renderer_3d) const {
 	for (Bullet* bullet : live_bullets_) {
 		renderer_3d->DrawMesh(*bullet);
 	}

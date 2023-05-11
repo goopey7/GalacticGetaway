@@ -4,6 +4,7 @@
 #include "CollisionManager.h"
 #include "Player.h"
 
+class Enemy;
 class GameObject;
 
 namespace gef
@@ -38,6 +39,7 @@ private:
 	std::vector<GameObject*> static_game_objects_;
 	std::vector<GameObject*> dynamic_game_objects_;
 	Player player_;
+	std::vector<Enemy*> enemies_;
 	
 	CollisionManager collision_manager_;
 };

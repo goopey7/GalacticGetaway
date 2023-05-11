@@ -15,8 +15,9 @@ public:
 	int getAmmoReserve() const { return ammo_reserve_; }
 	bool getReloading() const { return reloading_; }
 	void setReloading(bool r) { reloading_ = r; }
+	const BulletManager* getBulletManager() const { return &bullet_manager_; }
 	BulletManager* getBulletManager() { return &bullet_manager_; }
-	void Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder);
+	void Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) const;
 	~Gun();
 
 protected:

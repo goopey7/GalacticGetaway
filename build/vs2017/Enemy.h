@@ -1,23 +1,22 @@
-#pragma once
+﻿#pragma once
+
 #include "GameObject.h"
 #include <graphics/renderer_3d.h>
-#include "Gun.h"
 
-class InputActionManager;
-
-class Player : public GameObject {
+class Enemy : public GameObject
+{
+	class Player;
 public:
 	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform);
 	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform);
-	void Update(InputActionManager* iam, float frame_time);
-	bool GetGravityLock() const { return gravity_lock_; }
-	const Gun* GetGun() const { return &gun_; }
+	void Update(float frame_time);
 
-	void Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder);
+	void BeginCollision(GameObject* other) override;
 
+	void Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) const;
+	
 protected:
 	int health_ = 10;
-	Gun gun_;
 
 	b2World* physics_world_;
 	b2Vec2 world_gravity_ = b2Vec2(0, -1);
@@ -29,7 +28,7 @@ protected:
 	bool jumping_ = false;
 	enum GravityDirection { GRAVITY_VERTICAL, GRAVITY_LEFT, GRAVITY_RIGHT };
 	GravityDirection world_gravity_direction_ = GRAVITY_VERTICAL;
-	GravityDirection player_gravity_direction_ = GRAVITY_VERTICAL;
 	gef::Platform* platform_;
-};
 
+	const Player* player_ = nullptr;
+};
