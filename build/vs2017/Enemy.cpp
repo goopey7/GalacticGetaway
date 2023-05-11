@@ -1,5 +1,7 @@
 ﻿#include "Enemy.h"
 
+#include <d3d10.h>
+
 #include "Bullet.h"
 #include "Player.h"
 #include "system/debug_log.h"
@@ -7,12 +9,15 @@
 void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world,
 				PrimitiveBuilder* builder, gef::Platform* platform, const ::Player* player)
 {
+	size_y_ = size_y;
 	player_ = player;
 	tag = Tag::Enemy;
 	platform_ = platform;
 	set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y, size_z)));
 
 	physics_world_ = world;
+
+	bullet_manager_.Init(world,builder);
 
 	b2BodyDef body_def;
 	body_def.type = b2_dynamicBody;
@@ -39,11 +44,14 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 void Enemy::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder,
 	gef::Platform* platform, const ::Player* player)
 {
+	size_y_ = size.y();
 	player_ = player;
 	platform_ = platform;
 	set_mesh(builder->CreateBoxMesh(size));
 	
 	physics_world_ = world;
+	
+	bullet_manager_.Init(world,builder);
 
 	b2BodyDef body_def;
 	body_def.type = b2_dynamicBody;
@@ -81,21 +89,21 @@ void Enemy::Update(float frame_time)
 	{
 		world_gravity_direction_ = GRAVITY_RIGHT;
 	}
-	
-	b2Vec2 cast_start = GetBody()->GetPosition() - b2Vec2(player_detection_range_, 0.f);
-	b2Vec2 cast_end = cast_start + b2Vec2(player_detection_range_, 0.f);
 
+	fire_timer_ += frame_time;
+	bullet_manager_.Update();
+
+	// Raycast to check if player is in range
+	b2Vec2 cast_start = GetBody()->GetPosition();
+	b2Vec2 cast_end = cast_start + (moving_left_ ? -1 : 1)*b2Vec2(player_detection_range_, 0.f);
+	bPlayerInRange_ = false;
 	physics_world_->RayCast(this, cast_start, cast_end);
-
-	if(bPlayerInRange_)
-	{
-		// TODO Shoot at player if in sight
-	}
-	else
+	
+	if(!bPlayerInRange_)
 	{
 		// TODO Movement depending on gravity. Maybe move like red Koopas?
 
-		gef::DebugOut("Enemy velocity: %f\n", physics_body_->GetLinearVelocity().Length());
+		//gef::DebugOut("Enemy velocity: %f\n", physics_body_->GetLinearVelocity().Length());
 		switch (world_gravity_direction_)
 		{
 		case GRAVITY_VERTICAL:
@@ -116,16 +124,28 @@ void Enemy::Update(float frame_time)
 	UpdateBox2d();
 }
 
+// On Raycast Hit
 float Enemy::ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float fraction)
 {
-	auto* player = reinterpret_cast<::Player*>(fixture->GetBody()->GetUserData().pointer);
-	
-	if(player != nullptr)
+	auto* object = reinterpret_cast<::GameObject*>(fixture->GetBody()->GetUserData().pointer);
+	if(object != nullptr && object->GetTag() == Tag::Player)
 	{
-		gef::DebugOut("fraction: %f\n", fraction);
-		if(fraction < 0.2f)
+		auto* player = reinterpret_cast<::Player*>(object);
+		if(player != nullptr)
 		{
-			bPlayerInRange_ = true;
+			gef::DebugOut("fraction: %f\n", fraction);
+			if(fraction <= 1.f)
+			{
+				bPlayerInRange_ = true;
+				b2Vec2 pos = GetBody()->GetPosition() + b2Vec2(0.f, size_y_ / 8.f);
+				b2Vec2 dir = player_->GetBody()->GetPosition() - pos;
+				dir.Normalize();
+				if(fire_timer_ >= fire_rate_)
+				{
+					bullet_manager_.Fire({dir.x,dir.y}, {pos.x, pos.y}, damage_, GameObject::Tag::Player, 10.f);
+					fire_timer_ = 0.f;
+				}
+			}
 		}
 	}
 
@@ -159,4 +179,5 @@ void Enemy::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) cons
 {
 	renderer_3d->set_override_material(&builder->red_material());
 	renderer_3d->DrawMesh(*this);
+	bullet_manager_.Render(renderer_3d);
 }

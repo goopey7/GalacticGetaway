@@ -3,6 +3,8 @@
 #include "GameObject.h"
 #include <graphics/renderer_3d.h>
 
+#include "BulletManager.h"
+
 class Player;
 
 class Enemy : public GameObject, public b2RayCastCallback
@@ -20,6 +22,8 @@ public:
 	
 protected:
 	int health_ = 10;
+	int damage_ = 1;
+	float fire_rate_ = 1.f; // shots per second
 	float move_speed_ = 4.f;
 	bool moving_left_ = true;
 
@@ -37,6 +41,10 @@ protected:
 
 	const ::Player* player_ = nullptr;
 	bool bPlayerInRange_ = false;
+	float player_detection_range_ = 100.f;
 
-	float player_detection_range_ = 5.f;
+	BulletManager bullet_manager_;
+	float fire_timer_ = 0.f;
+
+	float size_y_ = 0.f;
 };

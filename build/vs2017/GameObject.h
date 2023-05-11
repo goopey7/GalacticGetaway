@@ -3,6 +3,7 @@
 #include "maths/vector4.h"
 #include <box2d/box2d.h>
 #include "primitive_builder.h"
+#include "maths/vector2.h"
 
 
 class GameObject : public gef::MeshInstance {
@@ -30,6 +31,7 @@ public:
 	const b2Body* GetBody() const { return physics_body_; }
 	Tag GetTag();
 	void SetTag(Tag tag);
+	const gef::Vector4 GetSize() const { return size_; }
 
 	void Kill();
 	bool TimeToDie();
@@ -38,5 +40,7 @@ protected:
 	b2Body* physics_body_ = nullptr;
 	Tag tag = None;
 	bool dead = false;
+private:
+	gef::Vector4 size_;
 };
 

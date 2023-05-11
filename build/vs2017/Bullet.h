@@ -5,7 +5,7 @@
 class Bullet : public GameObject {
 public:
 	Bullet();
-	void Fire(gef::Vector2 target_vector, gef::Vector2 start_pos, int damage, GameObject::Tag target);
+	void Fire(gef::Vector2 target_vector, gef::Vector2 start_pos, int damage, GameObject::Tag target, float speed = 10.f);
 	void setAlive(bool b) { is_alive_ = b; }
 	bool isAlive() { return is_alive_; }
 	int getDamage() const { return damage_; }
@@ -15,6 +15,7 @@ public:
 protected:
 	bool is_alive_ = false;
 	int damage_ = 0;
+	float speed_ = 10.f;
 	Tag target_ = Tag::None;
 };
 
