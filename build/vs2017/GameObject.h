@@ -27,6 +27,7 @@ public:
 	virtual void EndCollision(GameObject* other);
 	virtual void PreResolve(GameObject* other);
 	virtual void PostResolve(GameObject* other);
+	void EnableCollisionResolution(bool enable);
 	b2Body* GetBody() { return physics_body_; }
 	const b2Body* GetBody() const { return physics_body_; }
 	Tag GetTag();

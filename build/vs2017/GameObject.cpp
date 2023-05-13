@@ -70,6 +70,16 @@ void GameObject::PostResolve(GameObject* other)
 {
 }
 
+void GameObject::EnableCollisionResolution(bool enable)
+{
+	b2Fixture* fixture = physics_body_->GetFixtureList();
+	while(fixture != nullptr)
+	{
+		fixture->SetSensor(!enable);
+		fixture = fixture->GetNext();
+	}
+}
+
 GameObject::Tag GameObject::GetTag()
 {
 	return tag;
