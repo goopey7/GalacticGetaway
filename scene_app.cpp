@@ -13,6 +13,7 @@
 #include <string>
 
 #include "Level.h"
+#include "platform/d3d11/system/platform_d3d11.h"
 
 SceneApp::SceneApp(gef::Platform& platform) :
 	Application(platform),
@@ -20,6 +21,7 @@ SceneApp::SceneApp(gef::Platform& platform) :
 	renderer_3d_(NULL),
 	font_(NULL)
 {
+	platform_d3d_ = reinterpret_cast<gef::PlatformD3D11*>(&platform);
 }
 
 void SceneApp::Init()
@@ -68,6 +70,19 @@ void SceneApp::CleanUp()
 
 bool SceneApp::Update(float frame_time)
 {
+	if(platform_d3d_)
+	{
+		RECT rect;
+		GetClientRect(platform_d3d_->hwnd(), &rect);
+		float width = rect.right - rect.left;
+		float height = rect.bottom - rect.top;
+		if(currentWidth != width || currentHeight != height)
+		{
+			platform_d3d_->Resize(width, height);
+			sprite_renderer_->set_projection_matrix(platform_.OrthographicFrustum(0.0f, (float)platform_.width(), 0.0f, (float)platform_.height(), -1.0f, 1.0f));
+		}
+	}
+
 	iam_->Update();
 	if (iam_->isPressed(Quit)) return false;
 
@@ -126,19 +141,19 @@ void SceneApp::DrawHUD()
 	if (font_)
 	{
 		// display frame rate
-		font_->RenderText(sprite_renderer_, gef::Vector4(0.f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
+		font_->RenderText(sprite_renderer_, gef::Vector4(5.f, platform_.height()/2, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 
 		// display if player gravity lock is on 
 		level_->getPlayer()->GetGravityLock() ? gravity_lock_ = "On" : gravity_lock_ = "Off";
-		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2, 510.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE, "F - Gravity lock: %s", gravity_lock_.c_str());
+		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2, platform_.height() - 30.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE, "F - Gravity lock: %s", gravity_lock_.c_str());
 		
-		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2 + 400.f, 510.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, "Ammo: %i/%i", level_->getGun()->getAmmoLoaded(), level_->getGun()->getAmmoReserve());
+		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2 + 400.f, platform_.height() - 30.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, "Ammo: %i/%i", level_->getGun()->getAmmoLoaded(), level_->getGun()->getAmmoReserve());
 
 		std::string reloading = level_->getGun()->getReloading() ? "Reloading" : "";
-		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2 + 400.f, 480.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, reloading.c_str());
+		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2 + 400.f, platform_.height() - 60.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, reloading.c_str());
 
 		std::string position = "X: " + std::to_string(level_->getPlayerPosition().x) + " Y: " + std::to_string(level_->getPlayerPosition().y);
-		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2 + 400.f, 200.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, position.c_str());
+		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() - 20.f, platform_.height() / 2, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, position.c_str());
 
 	}
 }

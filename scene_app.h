@@ -10,6 +10,11 @@
 #include "Player.h"
 #include <string>
 
+namespace gef
+{
+	class PlatformD3D11;
+}
+
 class Level;
 class InputActionManager;
 
@@ -41,6 +46,10 @@ private:
 	gef::Font* font_;
 	gef::Renderer3D* renderer_3d_;
 	gef::SpriteRenderer* sprite_renderer_;
+
+	gef::PlatformD3D11* platform_d3d_;
+	int currentWidth = 0;
+	int currentHeight = 0;
 
 	//Input Action Manager
 	InputActionManager* iam_;
