@@ -21,6 +21,6 @@ protected:
 	int damage_ = 0;
 	float speed_ = 10.f;
 	Tag target_ = Tag::None;
-	bool bCollisionEnabled = true;
+	bool bCollisionEnabled = false;
 };
 

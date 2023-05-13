@@ -123,10 +123,11 @@ void Enemy::Update(float frame_time)
 	{
 		b2Vec2 pos = GetBody()->GetPosition() + b2Vec2(0.f, size_y_ / 8.f);
 		b2Vec2 dir = player_->GetBody()->GetPosition() - pos;
+		gef::DebugOut("dir x: %f, y: %f\n", dir.x, dir.y);
 		dir.Normalize();
 		if(fire_timer_ >= fire_rate_)
 		{
-			bullet_manager_.Fire({dir.x,dir.y}, {pos.x, pos.y}, damage_, GameObject::Tag::Player, 1000000000.f);
+			bullet_manager_.Fire({dir.x,-dir.y}, {pos.x, pos.y}, damage_, GameObject::Tag::Player, 20.f);
 			fire_timer_ = 0.f;
 		}
 	}

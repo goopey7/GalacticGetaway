@@ -10,8 +10,7 @@ public:
 	void Render(gef::Renderer3D* renderer_3d) const;
 
 protected:
-	std::vector<Bullet*> live_bullets_;
-	std::vector<Bullet*> dead_bullets_;
+	std::vector<Bullet*> bullets_;
 
 	b2World* world_;
 	PrimitiveBuilder* builder_;

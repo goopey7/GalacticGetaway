@@ -7,15 +7,18 @@ Bullet::Bullet()
 	tag = Tag::Bullet;
 }
 
-void Bullet::Fire(gef::Vector2 target_vector, gef::Vector2 start_pos, int damage, GameObject::Tag target, float speed) {
+void Bullet::Fire(gef::Vector2 target_vector, gef::Vector2 start_pos, int damage, GameObject::Tag target, float speed)
+{
 	target_ = target;
 	damage_ = damage;
-	b2Vec2 b2_target_vector(target_vector.x * speed_, -target_vector.y * speed_);
+	speed_ = speed;
+	b2Vec2 b2_target_vector(target_vector.x * speed, -target_vector.y * speed);
 	b2Vec2 b2_start_pos(start_pos.x, start_pos.y);
 	setAlive(true);
 	physics_body_->SetEnabled(true);
 	physics_body_->SetTransform(b2_start_pos, 0);
-	physics_body_->ApplyLinearImpulseToCenter(b2_target_vector, true);
+	//physics_body_->ApplyLinearImpulseToCenter(b2_target_vector, true);
+	physics_body_->SetLinearVelocity({b2_target_vector.x, b2_target_vector.y});
 	EnableCollisionResolution(bCollisionEnabled);
 }
 
@@ -43,13 +46,22 @@ void Bullet::PostResolve(GameObject* other)
 
 void Bullet::BeginCollision(GameObject* other)
 {
-	if(other != nullptr && other->GetTag() == Tag::Bullet)
+	if(other->GetTag() == Tag::Bullet)
 	{
-		bCollisionEnabled = false;
+		return;
 	}
-	else
+	
+	if(target_ == Tag::Player && other->GetTag() == Tag::Player)
 	{
-		bCollisionEnabled = true;
+		Kill();
+	}
+	else if(target_ == Tag::Enemy && other->GetTag() == Tag::Enemy)
+	{
+		Kill();
+	}
+	else if(other->GetTag() != Tag::Player && other->GetTag() != Tag::Enemy)
+	{
+		Kill();
 	}
 }
 
