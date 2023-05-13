@@ -41,6 +41,7 @@ protected:
 
 	const ::Player* player_ = nullptr;
 	bool bPlayerInRange_ = false;
+	bool bSawPlayer = false;
 	float player_detection_range_ = 100.f;
 
 	BulletManager bullet_manager_;

@@ -99,7 +99,7 @@ void Enemy::Update(float frame_time)
 	bPlayerInRange_ = false;
 	physics_world_->RayCast(this, cast_start, cast_end);
 	
-	if(!bPlayerInRange_)
+	if(!bSawPlayer)
 	{
 		// TODO Movement depending on gravity. Maybe move like red Koopas?
 
@@ -119,6 +119,17 @@ void Enemy::Update(float frame_time)
 			break;
 		}
 	}
+	else
+	{
+		b2Vec2 pos = GetBody()->GetPosition() + b2Vec2(0.f, size_y_ / 8.f);
+		b2Vec2 dir = player_->GetBody()->GetPosition() - pos;
+		dir.Normalize();
+		if(fire_timer_ >= fire_rate_)
+		{
+			bullet_manager_.Fire({dir.x,dir.y}, {pos.x, pos.y}, damage_, GameObject::Tag::Player, 1000000000.f);
+			fire_timer_ = 0.f;
+		}
+	}
 
 	UpdateBox2d();
 }
@@ -135,14 +146,7 @@ float Enemy::ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2
 			if(fraction <= 1.f)
 			{
 				bPlayerInRange_ = true;
-				b2Vec2 pos = GetBody()->GetPosition() + b2Vec2(0.f, size_y_ / 8.f);
-				b2Vec2 dir = player_->GetBody()->GetPosition() - pos;
-				dir.Normalize();
-				if(fire_timer_ >= fire_rate_)
-				{
-					bullet_manager_.Fire({dir.x,dir.y}, {pos.x, pos.y}, damage_, GameObject::Tag::Player, 10.f);
-					fire_timer_ = 0.f;
-				}
+				bSawPlayer = true;
 			}
 		}
 	}
