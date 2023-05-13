@@ -14,7 +14,7 @@ void BulletManager::Init(b2World* world, PrimitiveBuilder* builder) {
 void BulletManager::Update() {
 	//std::list<Bullet*>::iterator bullet = live_bullets_.begin();
 
-	for (int i=0; i < live_bullets_.size(); i++) {
+	for (size_t i=0; i < live_bullets_.size(); i++) {
 		Bullet* bullet = live_bullets_[i];
 		if (!bullet->GetBody()->IsAwake()) {
 			bullet->GetBody()->SetEnabled(false);
