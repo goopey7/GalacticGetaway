@@ -1,5 +1,7 @@
 #include "Bullet.h"
 
+#include "system/debug_log.h"
+
 Bullet::Bullet()
 {
 	tag = Tag::Bullet;
@@ -14,6 +16,17 @@ void Bullet::Fire(gef::Vector2 target_vector, gef::Vector2 start_pos, int damage
 	physics_body_->SetEnabled(true);
 	physics_body_->SetTransform(b2_start_pos, 0);
 	physics_body_->ApplyLinearImpulseToCenter(b2_target_vector, true);
+	EnableCollisionResolution(bCollisionEnabled);
+}
+
+void Bullet::Update()
+{
+	EnableCollisionResolution(bCollisionEnabled);
+	GameObject::Update();
+}
+
+void Bullet::PreResolve(GameObject* other)
+{
 }
 
 void Bullet::EndCollision(GameObject* other)
@@ -21,6 +34,22 @@ void Bullet::EndCollision(GameObject* other)
 	if(other->GetTag() != Tag::Player)
 	{
 		damage_ = 0;
+	}
+}
+
+void Bullet::PostResolve(GameObject* other)
+{
+}
+
+void Bullet::BeginCollision(GameObject* other)
+{
+	if(other != nullptr && other->GetTag() == Tag::Bullet)
+	{
+		bCollisionEnabled = false;
+	}
+	else
+	{
+		bCollisionEnabled = true;
 	}
 }
 

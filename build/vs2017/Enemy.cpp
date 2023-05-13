@@ -103,7 +103,6 @@ void Enemy::Update(float frame_time)
 	{
 		// TODO Movement depending on gravity. Maybe move like red Koopas?
 
-		//gef::DebugOut("Enemy velocity: %f\n", physics_body_->GetLinearVelocity().Length());
 		switch (world_gravity_direction_)
 		{
 		case GRAVITY_VERTICAL:
@@ -133,7 +132,6 @@ float Enemy::ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2
 		auto* player = reinterpret_cast<::Player*>(object);
 		if(player != nullptr)
 		{
-			gef::DebugOut("fraction: %f\n", fraction);
 			if(fraction <= 1.f)
 			{
 				bPlayerInRange_ = true;
