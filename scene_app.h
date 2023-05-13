@@ -41,7 +41,6 @@ private:
 	void SetupLights();
 
 	//Feasibility Demo player and level
-	GameObject crate_;
 	
 	gef::Font* font_;
 	gef::Renderer3D* renderer_3d_;
