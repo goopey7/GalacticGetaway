@@ -12,32 +12,31 @@ void BulletManager::Init(b2World* world, PrimitiveBuilder* builder) {
 }
  
 void BulletManager::Update() {
-	std::list<Bullet*>::iterator bullet = live_bullets_.begin();
+	//std::list<Bullet*>::iterator bullet = live_bullets_.begin();
 
-	while (bullet != live_bullets_.end()) {
-		if((*bullet)->TimeToDie())
-		{
-			Bullet* temp = (*bullet);
-			live_bullets_.erase(bullet++);
-			//delete temp;
-			continue;
-		}
-		if (!(*bullet)->GetBody()->IsAwake()) {
-			(*bullet)->GetBody()->SetEnabled(false);
-			(*bullet)->setAlive(false);
+	for (int i=0; i < live_bullets_.size(); i++) {
+		Bullet* bullet = live_bullets_[i];
+		if (!bullet->GetBody()->IsAwake()) {
+			bullet->GetBody()->SetEnabled(false);
+			bullet->setAlive(false);
 			if (dead_bullets_.size() < 30) {
-				dead_bullets_.push_back((*bullet));
-				live_bullets_.erase(bullet++);
+				dead_bullets_.push_back(bullet);
+				live_bullets_.erase(live_bullets_.begin() + i);
 			}
 			else {
-				Bullet* temp = (*bullet);
-				live_bullets_.erase(bullet++);
-				delete temp;
+				live_bullets_.erase(live_bullets_.begin() + i);
+				delete bullet;
+				bullet = nullptr;
 			}
 		}
 		else {
-			(*bullet)->Update();
-			bullet++;
+			bullet->Update();
+		}
+		if(bullet != nullptr && bullet->TimeToDie())
+		{
+			live_bullets_.erase(live_bullets_.begin() + i);
+			delete bullet;
+			bullet = nullptr;
 		}
 	}
 
