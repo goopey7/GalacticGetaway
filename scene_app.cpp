@@ -70,6 +70,8 @@ void SceneApp::CleanUp()
 
 bool SceneApp::Update(float frame_time)
 {
+	// CAUSES MEMORY LEAK
+	/*
 	if(platform_d3d_)
 	{
 		RECT rect;
@@ -82,6 +84,7 @@ bool SceneApp::Update(float frame_time)
 			sprite_renderer_->set_projection_matrix(platform_.OrthographicFrustum(0.0f, (float)platform_.width(), 0.0f, (float)platform_.height(), -1.0f, 1.0f));
 		}
 	}
+	*/
 
 	iam_->Update();
 	if (iam_->isPressed(Quit)) return false;
