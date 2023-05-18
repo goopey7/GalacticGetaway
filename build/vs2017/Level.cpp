@@ -159,7 +159,7 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 
 void Level::Render(gef::Renderer3D* renderer_3d)
 {
-	renderer_3d->set_override_material(&primitive_builder_->red_material());
+	//renderer_3d->set_override_material(&primitive_builder_->red_material());
 	player_.Render(renderer_3d, primitive_builder_);
 	
 	renderer_3d->set_override_material(&primitive_builder_->blue_material());

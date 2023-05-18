@@ -8,7 +8,12 @@
 void Player::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform) {
 	tag = Tag::Player;
 	platform_ = platform;
-	set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y, size_z)));
+
+	sprite_animator3D_ = new SpriteAnimator3D(platform, builder, gef::Vector4(size_x, size_y, size_z));
+	sprite_animator3D_->AddAnimation("Test", "Player");
+	set_mesh(sprite_animator3D_->Update(0, mesh_, "Test"));
+
+	//set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y, size_z)));
 
 	gun_.Init(gef::Vector4(size_x * 0.33f, size_y, size_z * 1.5f), world, builder);
 	gun_.set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x * 0.33, size_y, size_z * 1.5)));
@@ -69,6 +74,7 @@ void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, Primitive
 
 
 void Player::Update(InputActionManager* iam, float frame_time) {
+	set_mesh(sprite_animator3D_->Update(frame_time, mesh_, "Test"));
 
 	// Movement
 	switch (player_gravity_direction_)
@@ -194,7 +200,7 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 }
 
 void Player::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) {
-	renderer_3d->set_override_material(&builder->red_material());
+	renderer_3d->set_override_material(NULL);
 	renderer_3d->DrawMesh(*this);
 	gun_.Render(renderer_3d, builder);
 }

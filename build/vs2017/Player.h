@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include <graphics/renderer_3d.h>
 #include "Gun.h"
+#include "SpriteAnimator3D.h"
 
 class InputActionManager;
 
@@ -31,5 +32,7 @@ protected:
 	GravityDirection world_gravity_direction_ = GRAVITY_VERTICAL;
 	GravityDirection player_gravity_direction_ = GRAVITY_VERTICAL;
 	gef::Platform* platform_;
+
+	SpriteAnimator3D* sprite_animator3D_;
 };
 

@@ -34,6 +34,8 @@ public:
 	/// @param[in] materials	an array of Material pointers. One for each face. 6 in total.
 	gef::Mesh* CreateBoxMesh(const gef::Vector4& half_size, gef::Vector4 centre = gef::Vector4(0.0f, 0.0f, 0.0f), gef::Material** materials = NULL);
 
+	gef::Mesh* CreatePlaneMesh(const gef::Vector4& half_size, gef::Vector4 centre = gef::Vector4(0.0f, 0.0f, 0.0f), gef::Material** materials = NULL);
+
 
 	/// @brief Creates a sphere shaped mesh
 	/// @return The mesh created
@@ -48,6 +50,10 @@ public:
 	/// @note The default cube has dimensions 1 x 1 x 1 with the centre at 0, 0, 0.
 	inline const gef::Mesh* GetDefaultCubeMesh() const {
 		return default_cube_mesh_;
+	};
+
+	inline const gef::Mesh* GetDefaultPlaneMesh() const {
+		return default_plane_mesh_;
 	};
 
 	/// @brief Get the default sphere mesh.
@@ -80,6 +86,7 @@ protected:
 	gef::Platform& platform_;
 
 	gef::Mesh* default_cube_mesh_;
+	gef::Mesh* default_plane_mesh_;
 	gef::Mesh* default_sphere_mesh_;
 
 	gef::Material red_material_;
