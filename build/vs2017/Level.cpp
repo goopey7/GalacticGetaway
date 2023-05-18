@@ -10,6 +10,9 @@
 #include "primitive_builder.h"
 #include "box2d/b2_math.h"
 #include "box2d/b2_world.h"
+#include "graphics/font.h"
+#include "graphics/sprite_renderer.h"
+#include "maths/math_utils.h"
 #include "system/debug_log.h"
 
 using nlohmann::json;
@@ -159,28 +162,75 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 
 void Level::Render(gef::Renderer3D* renderer_3d)
 {
-	//renderer_3d->set_override_material(&primitive_builder_->red_material());
-	player_.Render(renderer_3d, primitive_builder_);
-	
-	renderer_3d->set_override_material(&primitive_builder_->blue_material());
-	
-	for(const GameObject* object : static_game_objects_)
-	{
-		renderer_3d->DrawMesh(*object);
-	}
-	
-	renderer_3d->set_override_material(NULL);
-	for(const GameObject* object : dynamic_game_objects_)
-	{
-		renderer_3d->DrawMesh(*object);
-	}
-
-	for(const Enemy* enemy : enemies_)
-	{
-		enemy->Render(renderer_3d, primitive_builder_);
-	}
 }
 
+void Level::Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font)
+{
+}
+
+void Level::Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_renderer, gef::Font* font)
+{
+	// projection
+	float fov = gef::DegToRad(45.0f);
+	float aspect_ratio = (float)platform_->width() / (float)platform_->height();
+	gef::Matrix44 projection_matrix;
+	projection_matrix = platform_->PerspectiveProjectionFov(fov, aspect_ratio, 0.1f, 100.0f);
+	renderer_3d->set_projection_matrix(projection_matrix);
+	
+	// view
+	gef::Vector2 player_pos = getPlayerPosition();
+	gef::Vector4 camera_eye(player_pos.x, player_pos.y, 30.0f);
+	gef::Vector4 camera_lookat(player_pos.x, player_pos.y, 0.0f);
+	gef::Vector4 camera_up(0.0f, 1.0f, 0.0f);
+	gef::Matrix44 view_matrix;
+	view_matrix.LookAt(camera_eye, camera_lookat, camera_up);
+	renderer_3d->set_view_matrix(view_matrix);
+	
+	renderer_3d->Begin();
+		player_.Render(renderer_3d, primitive_builder_);
+		renderer_3d->set_override_material(&primitive_builder_->blue_material());
+		for(const GameObject* object : static_game_objects_)
+		{
+			renderer_3d->DrawMesh(*object);
+		}
+		renderer_3d->set_override_material(NULL);
+		for(const GameObject* object : dynamic_game_objects_)
+		{
+			renderer_3d->DrawMesh(*object);
+		}
+		for(const Enemy* enemy : enemies_)
+		{
+			enemy->Render(renderer_3d, primitive_builder_);
+		}
+	renderer_3d->End();
+	
+	// start drawing sprites, but don't clear the frame buffer
+	sprite_renderer->Begin(false);
+		DrawHUD(sprite_renderer, font);
+	sprite_renderer->End();
+}
+
+void Level::DrawHUD(gef::SpriteRenderer* sprite_renderer, gef::Font* font)
+{
+	if (font)
+	{
+		// display frame rate
+		//font->RenderText(sprite_renderer, gef::Vector4(5.f, platform_.height()/2, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
+
+		// display if player gravity lock is on 
+		//font->getPlayer()->GetGravityLock() ? gravity_lock_ = "On" : gravity_lock_ = "Off";
+		//font->RenderText(sprite_renderer, gef::Vector4(platform_->width() / 2, platform_->height() - 30.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE, "F - Gravity lock: %s", gravity_lock_.c_str());
+		
+		font->RenderText(sprite_renderer, gef::Vector4(platform_->width() / 2 + 400.f, platform_->height() - 30.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, "Ammo: %i/%i", getGun()->getAmmoLoaded(), getGun()->getAmmoReserve());
+
+		std::string reloading = getGun()->getReloading() ? "Reloading" : "";
+		font->RenderText(sprite_renderer, gef::Vector4(platform_->width() / 2 + 400.f, platform_->height() - 60.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, reloading.c_str());
+
+		std::string position = "X: " + std::to_string(getPlayerPosition().x) + " Y: " + std::to_string(getPlayerPosition().y);
+		font->RenderText(sprite_renderer, gef::Vector4(platform_->width() - 20.f, platform_->height() / 2, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, position.c_str());
+
+	}
+}
 gef::Vector2 Level::getPlayerPosition() const
 {
 	return gef::Vector2(player_.transform().GetTranslation().x(),player_.transform().GetTranslation().y());

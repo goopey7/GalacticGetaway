@@ -3,6 +3,7 @@
 
 #include "CollisionManager.h"
 #include "Player.h"
+#include "Scene.h"
 
 class Enemy;
 class GameObject;
@@ -19,13 +20,15 @@ class b2World;
 class PrimitiveBuilder;
 class Gun;
 
-class Level
+class Level : public Scene
 {
 public:
 	Level(gef::Platform& platform);
 	void LoadFromFile(const char* filename);
-	void Update(InputActionManager* iam_,float frame_time);
-	void Render(gef::Renderer3D* renderer_3d);
+	void Update(InputActionManager* iam_,float frame_time) override;
+	void Render(gef::Renderer3D* renderer_3d) override;
+	void Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) override;
+	void Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_renderer, gef::Font* font) override;
 	gef::Vector2 getPlayerPosition() const;
 	const Player* getPlayer() const;
 	const Gun* getGun() const;
@@ -33,6 +36,7 @@ public:
 	
 private:
 	void Init();
+	void DrawHUD(gef::SpriteRenderer* sprite_renderer, gef::Font* font);
 	b2World* b2_world_;
 	PrimitiveBuilder* primitive_builder_;
 	

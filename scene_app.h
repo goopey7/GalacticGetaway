@@ -2,13 +2,10 @@
 #define _SCENE_APP_H
 
 #include <system/application.h>
-#include <maths/vector2.h>
-#include "primitive_builder.h"
-#include <graphics/mesh_instance.h>
-#include <box2d/box2d.h>
-#include "GameObject.h"
 #include "Player.h"
 #include <string>
+
+class StateManager;
 
 namespace gef
 {
@@ -53,7 +50,7 @@ private:
 	//Input Action Manager
 	InputActionManager* iam_;
 
-	Level* level_;
+	StateManager* state_manager_;
 
 	float fps_;
 	std::string gravity_lock_;

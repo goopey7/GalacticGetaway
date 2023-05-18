@@ -525,7 +525,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":63,
+                 "x":64,
                  "y":17
                 }, 
                 {
@@ -669,7 +669,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":38,
+                 "x":37,
                  "y":8
                 }, 
                 {
@@ -687,8 +687,116 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":69,
-                 "y":23
+                 "x":51,
+                 "y":13
+                }, 
+                {
+                 "height":0,
+                 "id":77,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"enemy"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":69.4347826086957,
+                 "y":22.4347826086957
+                }, 
+                {
+                 "height":0,
+                 "id":78,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"crate"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":53,
+                 "y":13
+                }, 
+                {
+                 "height":0,
+                 "id":79,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"crate"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":42,
+                 "y":8
+                }, 
+                {
+                 "height":0,
+                 "id":80,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"crate"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":61,
+                 "y":17
+                }, 
+                {
+                 "height":0,
+                 "id":81,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"enemy"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":63,
+                 "y":17
+                }, 
+                {
+                 "height":0,
+                 "id":82,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"enemy"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":40,
+                 "y":8
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -720,7 +828,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":77,
+ "nextobjectid":83,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.0",

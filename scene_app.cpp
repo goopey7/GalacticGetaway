@@ -1,19 +1,18 @@
 #include "scene_app.h"
+
 #include <system/platform.h>
 #include <graphics/sprite_renderer.h>
 #include <graphics/font.h>
-#include <system/debug_log.h>
 #include <graphics/renderer_3d.h>
 #include <maths/math_utils.h>
 #include <input/input_manager.h>
-#include <input/keyboard.h>
 #include <input/touch_input_manager.h>
-#include "InputActionManager.h"
-#include "obj_mesh_loader.h"
+#include <platform/d3d11/system/platform_d3d11.h>
 #include <string>
 
+#include "InputActionManager.h"
+#include "StateManager.h"
 #include "Level.h"
-#include "platform/d3d11/system/platform_d3d11.h"
 
 SceneApp::SceneApp(gef::Platform& platform) :
 	Application(platform),
@@ -37,8 +36,9 @@ void SceneApp::Init()
 		iam_->getInputManager()->touch_manager()->EnablePanel(0);
 	}
 
-	level_ = new Level(platform_);
-	level_->LoadFromFile("level.json");
+	state_manager_ = new StateManager();
+	Level* level_ = new Level(platform_);
+	state_manager_->PushLevel(level_, "level.json");
 
 	//level_->GetB2World()->SetAllowSleeping(false);
 
@@ -91,7 +91,7 @@ bool SceneApp::Update(float frame_time)
 
 	fps_ = 1.0f / frame_time;
 
-	level_->Update(iam_, frame_time);
+	state_manager_->Update(iam_, frame_time);
 	//crate_.Update();
 
 	return true;
@@ -99,33 +99,9 @@ bool SceneApp::Update(float frame_time)
 
 void SceneApp::Render()
 {
-	// setup camera
+	// draw current scene
+	state_manager_->Render(renderer_3d_, sprite_renderer_, font_);
 
-	// projection
-	float fov = gef::DegToRad(45.0f);
-	float aspect_ratio = (float)platform_.width() / (float)platform_.height();
-	gef::Matrix44 projection_matrix;
-	projection_matrix = platform_.PerspectiveProjectionFov(fov, aspect_ratio, 0.1f, 100.0f);
-	renderer_3d_->set_projection_matrix(projection_matrix);
-
-	// view
-	gef::Vector2 player_pos = level_->getPlayerPosition();
-	gef::Vector4 camera_eye(player_pos.x, player_pos.y, 30.0f);
-	gef::Vector4 camera_lookat(player_pos.x, player_pos.y, 0.0f);
-	gef::Vector4 camera_up(0.0f, 1.0f, 0.0f);
-	gef::Matrix44 view_matrix;
-	view_matrix.LookAt(camera_eye, camera_lookat, camera_up);
-	renderer_3d_->set_view_matrix(view_matrix);
-
-	// draw 3d geometry
-	renderer_3d_->Begin();
-	level_->Render(renderer_3d_);
-	renderer_3d_->End();
-
-	// start drawing sprites, but don't clear the frame buffer
-	sprite_renderer_->Begin(false);
-	DrawHUD();
-	sprite_renderer_->End();
 }
 void SceneApp::InitFont()
 {
@@ -139,27 +115,6 @@ void SceneApp::CleanUpFont()
 	font_ = NULL;
 }
 
-void SceneApp::DrawHUD()
-{
-	if (font_)
-	{
-		// display frame rate
-		font_->RenderText(sprite_renderer_, gef::Vector4(5.f, platform_.height()/2, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
-
-		// display if player gravity lock is on 
-		level_->getPlayer()->GetGravityLock() ? gravity_lock_ = "On" : gravity_lock_ = "Off";
-		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2, platform_.height() - 30.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE, "F - Gravity lock: %s", gravity_lock_.c_str());
-		
-		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2 + 400.f, platform_.height() - 30.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, "Ammo: %i/%i", level_->getGun()->getAmmoLoaded(), level_->getGun()->getAmmoReserve());
-
-		std::string reloading = level_->getGun()->getReloading() ? "Reloading" : "";
-		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() / 2 + 400.f, platform_.height() - 60.f, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, reloading.c_str());
-
-		std::string position = "X: " + std::to_string(level_->getPlayerPosition().x) + " Y: " + std::to_string(level_->getPlayerPosition().y);
-		font_->RenderText(sprite_renderer_, gef::Vector4(platform_.width() - 20.f, platform_.height() / 2, -0.9f), 1.0f, 0xffffffff, gef::TJ_RIGHT, position.c_str());
-
-	}
-}
 
 void SceneApp::SetupLights()
 {

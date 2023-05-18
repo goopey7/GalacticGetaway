@@ -230,7 +230,9 @@
     <ClCompile Include="InputActionManager.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SpriteAnimator3D.cpp" />
+    <ClCompile Include="StateManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\obj_mesh_loader.h" />
@@ -246,7 +248,9 @@
     <ClInclude Include="json.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="SpriteAnimator3D.h" />
+    <ClInclude Include="StateManager.h" />
     <ClInclude Include="StringToGefInputEnum.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
