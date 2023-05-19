@@ -229,10 +229,12 @@
     <ClCompile Include="Gun.cpp" />
     <ClCompile Include="InputActionManager.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SpriteAnimator3D.cpp" />
     <ClCompile Include="StateManager.cpp" />
+    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="UIElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\obj_mesh_loader.h" />
@@ -247,11 +249,14 @@
     <ClInclude Include="InputActionManager.h" />
     <ClInclude Include="json.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SpriteAnimator3D.h" />
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="StringToGefInputEnum.h" />
+    <ClInclude Include="Text.h" />
+    <ClInclude Include="UIElement.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

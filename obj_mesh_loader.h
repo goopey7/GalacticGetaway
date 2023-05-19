@@ -25,7 +25,7 @@ public:
 private:
 	const std::string GetFolderName(const char* filename);
 	gef::Mesh* CreateMesh(gef::Platform& platform, std::vector<Int32>& face_indices, std::vector<gef::Vector4>& positions, std::vector<gef::Vector4>& normals, std::vector<gef::Vector2>& uvs, std::vector<gef::Material*>& material_list, std::vector<Int32>& primitive_indices, std::vector<Int32>& texture_indices);
-	bool LoadMaterials(gef::Platform& platform, const char* filename, const std::string& folder_name, std::map<std::string, Int32>& materials, std::vector<gef::Material*>& material_list);
+	bool LoadMaterials(const gef::Platform& platform, const char* filename, const std::string& folder_name, std::map<std::string, Int32>& materials, std::vector<gef::Material*>& material_list);
 private:
 	std::string last_error_;
 };

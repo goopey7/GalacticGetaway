@@ -17,11 +17,6 @@
 
 using nlohmann::json;
 
-Level::Level(gef::Platform& platform)
-	: platform_(&platform)
-{
-}
-
 float fixY(float y)
 {
 	return y - 9.f;

@@ -7,7 +7,7 @@
 #include "system/debug_log.h"
 
 void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world,
-				PrimitiveBuilder* builder, gef::Platform* platform, const ::Player* player)
+				PrimitiveBuilder* builder, const gef::Platform* platform, const ::Player* player)
 {
 	size_y_ = size_y;
 	player_ = player;
@@ -42,7 +42,7 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 }
 
 void Enemy::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder,
-	gef::Platform* platform, const ::Player* player)
+	const gef::Platform* platform, const ::Player* player)
 {
 	size_y_ = size.y();
 	player_ = player;

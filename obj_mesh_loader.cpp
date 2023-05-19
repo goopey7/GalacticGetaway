@@ -350,7 +350,7 @@ bool StringEndsWith(std::string const& full_string, std::string const& ending)
 	return false;
 }
 
-bool OBJMeshLoader::LoadMaterials(gef::Platform& platform, const char* filename, const std::string& folder_name, std::map<std::string, Int32>& materials, std::vector<gef::Material*>& material_list)
+bool OBJMeshLoader::LoadMaterials(const gef::Platform& platform, const char* filename, const std::string& folder_name, std::map<std::string, Int32>& materials, std::vector<gef::Material*>& material_list)
 {
 	gef::PNGLoader png_loader;
 	std::vector<std::pair<gef::Texture*, gef::Colour>> textures;

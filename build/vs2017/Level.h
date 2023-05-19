@@ -23,7 +23,7 @@ class Gun;
 class Level : public Scene
 {
 public:
-	Level(gef::Platform& platform);
+	Level(gef::Platform& platform) : Scene(platform) {}
 	void LoadFromFile(const char* filename);
 	void Update(InputActionManager* iam_,float frame_time) override;
 	void Render(gef::Renderer3D* renderer_3d) override;
@@ -40,7 +40,6 @@ private:
 	b2World* b2_world_;
 	PrimitiveBuilder* primitive_builder_;
 	
-	gef::Platform* platform_;
 
 	std::vector<GameObject*> static_game_objects_;
 	std::vector<GameObject*> dynamic_game_objects_;
