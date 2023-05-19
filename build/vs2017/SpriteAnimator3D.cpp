@@ -18,16 +18,17 @@ SpriteAnimator3D::SpriteAnimator3D(gef::Platform* platform, PrimitiveBuilder* bu
 {
 }
 
-void SpriteAnimator3D::AddAnimation(const char* anim_name, const char* folder_name) {
+void SpriteAnimator3D::AddAnimation(const char* anim_name, const char* folder_name, float speed) {
 	gef::PNGLoader png_loader;	
 
+	animations_[anim_name].second = speed;
 	for (auto& entry : fs::directory_iterator(folder_name)) {
 		std::filesystem::path outfilename = entry.path();
 		std::string outfilename_str = outfilename.string();
 		const char* path = outfilename_str.c_str();
 		gef::DebugOut("\n");
 		gef::DebugOut(path);
-
+		
 		gef::ImageData image_data;
 		png_loader.Load(path, *platform_, image_data);
 		if (image_data.image() != NULL) {
@@ -36,26 +37,31 @@ void SpriteAnimator3D::AddAnimation(const char* anim_name, const char* folder_na
 			material->set_texture(texture);
 			
 			gef::Mesh* mesh = builder_->CreatePlaneMesh(half_size_, centre_, &material);
-			animations_[anim_name].push_back(*mesh);
+			animations_[anim_name].first.push_back(*mesh);
 		}
 	}
 }
 
 const gef::Mesh* SpriteAnimator3D::Update(float dt, const gef::Mesh* current_mesh, const char* anim_name) {
 	time_passed_ += dt;
-	if (time_passed_ >= 0.3) {
+	if (time_passed_ >= animations_[anim_name].second) {
 		time_passed_ = 0;
-		if (current_mesh >= &animations_[anim_name].back() || current_mesh < &animations_[anim_name].front()) {
-			current_mesh = &animations_[anim_name].front();
+
+		it = animations_[anim_name].first.begin();
+		while (&*it != &animations_[anim_name].first.back() && &*it != current_mesh) {
+			it++;
+		}
+		if (&*it == &animations_[anim_name].first.back() || &*it != current_mesh) {
+			current_mesh = &animations_[anim_name].first.front();
 		}
 		else {
-			it = animations_[anim_name].begin();
-			while (&*it != current_mesh) {
-				it++;
-			}
 			it++;
 			current_mesh = &*it;
 		}
 	}
 	return current_mesh;
+}
+
+const gef::Mesh* SpriteAnimator3D::GetFirstFrame(const char* anim_name) {
+	return &animations_[anim_name].first.front();
 }

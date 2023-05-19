@@ -34,5 +34,7 @@ protected:
 	gef::Platform* platform_;
 
 	SpriteAnimator3D* sprite_animator3D_;
+	enum AnimationState { IDLE, RUNNING };
+	AnimationState animation_state_ = IDLE;
 };
 

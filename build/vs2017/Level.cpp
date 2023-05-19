@@ -54,7 +54,7 @@ void Level::LoadFromFile(const char* filename)
 			if(layer["name"] == "PlayerSpawn")
 			{
 				auto playerJson = layer["objects"][0];
-				player_.Init(0.8f, 0.8f, 0.8f, playerJson["x"], 0-playerJson["y"], b2_world_, primitive_builder_, platform_);
+				player_.Init(1, 1, 1, playerJson["x"], 0-playerJson["y"], b2_world_, primitive_builder_, platform_);
 			}
 			if(layer["name"] == "DynamicSpawns")
 			{
@@ -182,7 +182,6 @@ void Level::Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_ren
 	renderer_3d->set_view_matrix(view_matrix);
 	
 	renderer_3d->Begin();
-		player_.Render(renderer_3d, primitive_builder_);
 		renderer_3d->set_override_material(&primitive_builder_->blue_material());
 		for(const GameObject* object : static_game_objects_)
 		{
@@ -197,6 +196,7 @@ void Level::Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_ren
 		{
 			enemy->Render(renderer_3d, primitive_builder_);
 		}
+		player_.Render(renderer_3d, primitive_builder_);
 	renderer_3d->End();
 	
 	// start drawing sprites, but don't clear the frame buffer

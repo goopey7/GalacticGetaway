@@ -10,10 +10,9 @@ void Player::Init(float size_x, float size_y, float size_z, float pos_x, float p
 	platform_ = platform;
 
 	sprite_animator3D_ = new SpriteAnimator3D(platform, builder, gef::Vector4(size_x, size_y, size_z));
-	sprite_animator3D_->AddAnimation("Test", "Player");
-	set_mesh(sprite_animator3D_->Update(0, mesh_, "Test"));
-
-	//set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y, size_z)));
+	sprite_animator3D_->AddAnimation("Idle", "Player/Idle", 0.1);
+	sprite_animator3D_->AddAnimation("Running", "Player/Run", 0.1);
+	set_mesh(sprite_animator3D_->GetFirstFrame("Idle"));
 
 	gun_.Init(gef::Vector4(size_x * 0.33f, size_y, size_z * 1.5f), world, builder);
 	gun_.set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x * 0.33, size_y, size_z * 1.5)));
@@ -74,37 +73,42 @@ void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, Primitive
 
 
 void Player::Update(InputActionManager* iam, float frame_time) {
-	set_mesh(sprite_animator3D_->Update(frame_time, mesh_, "Test"));
-
 	// Movement
-	switch (player_gravity_direction_)
-	{
-	case GRAVITY_VERTICAL:
-		if (iam->isHeld(MoveLeft)) {
+	if (iam->isPressed(MoveLeft) || iam->isPressed(MoveRight)) animation_state_ = RUNNING;
+	else if (iam->isReleased(MoveLeft) || iam->isReleased(MoveRight)) animation_state_ = IDLE;
+
+	if (iam->isHeld(MoveLeft)) {
+		switch (player_gravity_direction_)
+		{
+		case GRAVITY_VERTICAL:
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(-8 * frame_time, 0), 0);
+			break;
+		case GRAVITY_LEFT:
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), 0);
+			break;
+		case GRAVITY_RIGHT:
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), 0);
+			break;
+		default:
+			break;
 		}
-		if (iam->isHeld(MoveRight)) {
+		physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(-8 * frame_time, 0), 0);
+	}
+	if (iam->isHeld(MoveRight)) {
+		switch (player_gravity_direction_)
+		{
+		case GRAVITY_VERTICAL:
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(8 * frame_time, 0), 0);
-		}
-		break;
-	case GRAVITY_LEFT:
-		if (iam->isHeld(MoveLeft)) {
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), 0);
-		}
-		if (iam->isHeld(MoveRight)) {
+			break;
+		case GRAVITY_LEFT:
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), 0);
-		}
-		break;
-	case GRAVITY_RIGHT:
-		if (iam->isHeld(MoveLeft)) {
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), 0);
-		}
-		if (iam->isHeld(MoveRight)) {
+			break;
+		case GRAVITY_RIGHT:
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), 0);
+			break;
+		default:
+			break;
 		}
-		break;
-	default:
-		break;
 	}
 
 	if (iam->isPressed(GravityLock)) {
@@ -197,10 +201,22 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 	UpdateBox2d();
 
 	gun_.Update(transform().GetTranslation(), iam, platform_, frame_time);
+
+	switch (animation_state_)
+	{
+	case Player::IDLE:
+		set_mesh(sprite_animator3D_->Update(frame_time, mesh_, "Idle"));
+		break;
+	case Player::RUNNING:
+		set_mesh(sprite_animator3D_->Update(frame_time, mesh_, "Running"));
+		break;
+	default:
+		break;
+	}
 }
 
 void Player::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) {
 	renderer_3d->set_override_material(NULL);
 	renderer_3d->DrawMesh(*this);
-	gun_.Render(renderer_3d, builder);
+	//gun_.Render(renderer_3d, builder);
 }
