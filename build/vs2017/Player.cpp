@@ -15,7 +15,7 @@ void Player::Init(float size_x, float size_y, float size_z, float pos_x, float p
 	set_mesh(sprite_animator3D_->GetFirstFrame("Idle"));
 
 	gun_.Init(gef::Vector4(size_x * 0.33f, size_y, size_z * 1.5f), world, builder);
-	gun_.set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x * 0.33, size_y, size_z * 1.5)));
+	gun_.set_mesh(sprite_animator3D_->CreateMesh("Player/Gun/gun.png", gef::Vector4(size_x * 0.33, size_y, size_z)));
 	gun_.getBulletManager()->Init(world, builder);
 
 	physics_world_ = world;
@@ -218,5 +218,5 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 void Player::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) {
 	renderer_3d->set_override_material(NULL);
 	renderer_3d->DrawMesh(*this);
-	//gun_.Render(renderer_3d, builder);
+	gun_.Render(renderer_3d, builder);
 }

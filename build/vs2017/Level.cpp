@@ -174,7 +174,7 @@ void Level::Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_ren
 	
 	// view
 	gef::Vector2 player_pos = getPlayerPosition();
-	gef::Vector4 camera_eye(player_pos.x, player_pos.y, 30.0f);
+	gef::Vector4 camera_eye(player_pos.x, player_pos.y + 3, 30.0f);
 	gef::Vector4 camera_lookat(player_pos.x, player_pos.y, 0.0f);
 	gef::Vector4 camera_up(0.0f, 1.0f, 0.0f);
 	gef::Matrix44 view_matrix;

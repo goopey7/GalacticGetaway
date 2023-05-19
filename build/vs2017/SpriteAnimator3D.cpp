@@ -62,6 +62,21 @@ const gef::Mesh* SpriteAnimator3D::Update(float dt, const gef::Mesh* current_mes
 	return current_mesh;
 }
 
+gef::Mesh* SpriteAnimator3D::CreateMesh(const char* filepath, const gef::Vector4& half_size, gef::Vector4 centre) {
+	gef::PNGLoader png_loader;
+	gef::ImageData image_data;
+	png_loader.Load(filepath, *platform_, image_data);
+	if (image_data.image() != NULL) {
+		gef::Texture* texture = gef::Texture::Create(*platform_, image_data);
+		gef::Material* material = new gef::Material();
+		material->set_texture(texture);
+
+		gef::Mesh* mesh = builder_->CreatePlaneMesh(half_size, centre, &material);
+		return mesh;
+	}
+	return nullptr;
+}
+
 const gef::Mesh* SpriteAnimator3D::GetFirstFrame(const char* anim_name) {
 	return &animations_[anim_name].first.front();
 }

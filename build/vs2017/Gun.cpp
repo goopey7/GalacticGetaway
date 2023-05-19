@@ -37,7 +37,7 @@ void Gun::Update(gef::Vector4 translation, InputActionManager* input, gef::Platf
 
 	gef::Matrix44 translate1;
 	translate1.SetIdentity();
-	translate1.SetTranslation(gef::Vector4(0, -0.5f, 0));
+	translate1.SetTranslation(gef::Vector4(0, -1.f, 0.1f));
 
 	gef::Matrix44 translate2;
 	translate2.SetIdentity();
@@ -103,7 +103,6 @@ void Gun::reloadThreadFunc() {
 
 void Gun::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) const
 {
-	renderer_3d->set_override_material(&builder->blue_material());
 	renderer_3d->DrawMesh(*this);
 	getBulletManager()->Render(renderer_3d);
 }

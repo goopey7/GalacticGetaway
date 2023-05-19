@@ -11,6 +11,7 @@ public:
 	void AddAnimation(const char* anim_name, const char* folder_name, float speed);
 	const gef::Mesh* Update(float dt, const gef::Mesh* current_mesh, const char* anim_name);
 	const gef::Mesh* GetFirstFrame(const char* anim_name);
+	gef::Mesh* CreateMesh(const char* filepath, const gef::Vector4& half_size, gef::Vector4 centre = gef::Vector4(0, 0, 0));
 protected:
 	std::unordered_map<const char*, std::pair<std::list<gef::Mesh>, float>> animations_;
 	std::list<gef::Mesh>::iterator it;
