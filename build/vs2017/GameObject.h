@@ -45,7 +45,7 @@ protected:
 	bool dead = false;
 private:
 	gef::Vector4 size_;
-	gef::Vector4 translate_;
-	gef::Vector4 rotate_;
+	gef::Vector4 translate_ = gef::Vector4(0, 0, 0);
+	gef::Vector4 rotate_ = gef::Vector4(0, 0, 0);
 };
 

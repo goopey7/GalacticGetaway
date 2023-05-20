@@ -108,13 +108,11 @@ void GameObject::UpdateBox2d() {
 	rotation.RotationX(rotate_.x());
 	rotation.RotationZ(rotate_.z() + physics_body_->GetAngle());
 	rotation.RotationY(rotate_.y());
-	rotate_ = gef::Vector4(0, 0, 0);
 
 	gef::Matrix44 translation1;
 	translation1.SetIdentity();
 	if (!(translate_.x() == 0 && translate_.y() == 0 && translate_.z() == 0)) {
 		translation1.SetTranslation(translate_);
-		translate_ = gef::Vector4(0, 0, 0);
 	}
 
 	gef::Matrix44 translation2;
