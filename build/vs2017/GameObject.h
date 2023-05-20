@@ -9,7 +9,7 @@
 class GameObject : public gef::MeshInstance {
 	
 public:
-	enum Tag
+	enum class Tag
 	{
 		None,
 		Player,
@@ -39,7 +39,7 @@ public:
 
 protected:
 	b2Body* physics_body_ = nullptr;
-	Tag tag = None;
+	Tag tag = Tag::None;
 	bool dead = false;
 private:
 	gef::Vector4 size_;

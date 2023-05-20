@@ -12,7 +12,7 @@ void Player::Init(float size_x, float size_y, float size_z, float pos_x, float p
 	sprite_animator3D_ = new SpriteAnimator3D(platform, builder, gef::Vector4(size_x, size_y, size_z));
 	sprite_animator3D_->AddAnimation("Idle", "Player/Idle", 0.1);
 	sprite_animator3D_->AddAnimation("Running", "Player/Run", 0.1);
-	sprite_animator3D_->AddAnimation("Jumping", "Player/Jump", 0.1, false);
+	sprite_animator3D_->AddAnimation("Jumping", "Player/Jump", 0.3, false);
 	set_mesh(sprite_animator3D_->GetFirstFrame("Idle"));
 
 	gun_.Init(gef::Vector4(size_x * 0.33f, size_y, size_z * 1.5f), world, builder);
@@ -123,6 +123,8 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 
 	if (iam->isPressed(Jump) && !gravity_lock_ && !jumping_) {
 		jumping_ = true;
+		animation_state_ = JUMPING;
+		set_mesh(sprite_animator3D_->GetFirstFrame("Jumping"));
 		b2Vec2 grav = world_gravity_;
 		grav *= 20;
 		physics_body_->ApplyLinearImpulseToCenter(-grav, true);
@@ -200,9 +202,10 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 
 	gun_.Update(transform().GetTranslation(), iam, platform_, frame_time);
 
-	if (jumping_) animation_state_ = JUMPING;
-	else if (iam->isPressed(MoveLeft) || iam->isPressed(MoveRight)) animation_state_ = RUNNING;
-	else if (iam->isReleased(MoveLeft) || iam->isReleased(MoveRight)) animation_state_ = IDLE;
+	if (animation_state_ != JUMPING) {
+		if (iam->isPressed(MoveLeft) || iam->isPressed(MoveRight)) animation_state_ = RUNNING;
+		else if (iam->isReleased(MoveLeft) || iam->isReleased(MoveRight)) animation_state_ = IDLE;
+	}
 
 	switch (animation_state_)
 	{
@@ -214,6 +217,21 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 		break;
 	case Player::JUMPING:
 		if(!sprite_animator3D_->ReachedEnd("Jumping")) set_mesh(sprite_animator3D_->Update(frame_time, mesh_, "Jumping"));
+	default:
+		break;
+	}
+}
+
+void Player::BeginCollision(GameObject* other) {
+	switch (other->GetTag())
+	{
+	case Tag::None:
+		if (jumping_) {
+			jumping_ = false;
+			animation_state_ = IDLE;
+			sprite_animator3D_->Reset("Jumping");
+		}
+		break;
 	default:
 		break;
 	}

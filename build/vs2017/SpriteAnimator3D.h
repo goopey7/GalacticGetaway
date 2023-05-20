@@ -19,6 +19,7 @@ public:
 	const gef::Mesh* Update(float dt, const gef::Mesh* current_mesh, const char* anim_name);
 	const gef::Mesh* GetFirstFrame(const char* anim_name);
 	bool ReachedEnd(const char* anim_name) { return animations_[anim_name].reached_end_; }
+	void Reset(const char* anim_name) { animations_[anim_name].reached_end_ = false; }
 	gef::Mesh* CreateMesh(const char* filepath, const gef::Vector4& half_size, gef::Vector4 centre = gef::Vector4(0, 0, 0));
 protected:
 	std::unordered_map<const char*, AnimationInfo> animations_;

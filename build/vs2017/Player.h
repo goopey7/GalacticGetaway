@@ -13,7 +13,7 @@ public:
 	void Update(InputActionManager* iam, float frame_time);
 	bool GetGravityLock() const { return gravity_lock_; }
 	const Gun* GetGun() const { return &gun_; }
-
+	void BeginCollision(GameObject* other) override;
 	void Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder);
 
 protected:
