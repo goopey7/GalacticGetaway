@@ -104,28 +104,38 @@ void GameObject::UpdateBox2d() {
 	gef::Matrix44 transform;
 	transform.SetIdentity();
 
-	gef::Matrix44 rotation_z;
-	rotation_z.RotationZ(physics_body_->GetAngle());
+	gef::Matrix44 rotation;
+	rotation.RotationX(rotate_.x());
+	rotation.RotationZ(rotate_.z() + physics_body_->GetAngle());
+	rotation.RotationY(rotate_.y());
+	rotate_ = gef::Vector4(0, 0, 0);
 
-	gef::Matrix44 translation;
-	translation.SetIdentity();
-	translation.SetTranslation(gef::Vector4(physics_body_->GetPosition().x, physics_body_->GetPosition().y, 0.f));
+	gef::Matrix44 translation1;
+	translation1.SetIdentity();
+	if (!(translate_.x() == 0 && translate_.y() == 0 && translate_.z() == 0)) {
+		translation1.SetTranslation(translate_);
+		translate_ = gef::Vector4(0, 0, 0);
+	}
 
-	transform = rotation_z * translation;
+	gef::Matrix44 translation2;
+	translation2.SetIdentity();
+	translation2.SetTranslation(gef::Vector4(physics_body_->GetPosition().x, physics_body_->GetPosition().y, 0.f));
+
+	transform = rotation * translation1 * translation2;
 	set_transform(transform);
 }
 
-void GameObject::Translate(gef::Vector4 translation) {
-	gef::Matrix44 translate;
-	translate.SetIdentity();
-	translate.SetTranslation(translation);
-	set_transform(transform() * translate);
-}
-
-void GameObject::Rotate(gef::Vector4 rot) {
-	gef::Matrix44 rotation;
-	rotation.RotationX(rot.x());
-	rotation.RotationY(rot.y());
-	rotation.RotationZ(rot.z());
-	set_transform(transform() * rotation);
-}
+//void GameObject::Translate(gef::Vector4 translation) {
+//	gef::Matrix44 translate;
+//	translate.SetIdentity();
+//	translate.SetTranslation(translation);
+//	set_transform(transform() * translate);
+//}
+//
+//void GameObject::Rotate(gef::Vector4 rot) {
+//	gef::Matrix44 rotation;
+//	rotation.RotationX(rot.x());
+//	rotation.RotationY(rot.y());
+//	rotation.RotationZ(rot.z());
+//	set_transform(transform() * rotation);
+//}
