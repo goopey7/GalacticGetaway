@@ -114,3 +114,18 @@ void GameObject::UpdateBox2d() {
 	transform = rotation_z * translation;
 	set_transform(transform);
 }
+
+void GameObject::Translate(gef::Vector4 translation) {
+	gef::Matrix44 translate;
+	translate.SetIdentity();
+	translate.SetTranslation(translation);
+	set_transform(transform() * translate);
+}
+
+void GameObject::Rotate(gef::Vector4 rot) {
+	gef::Matrix44 rotation;
+	rotation.RotationX(rot.x());
+	rotation.RotationY(rot.y());
+	rotation.RotationZ(rot.z());
+	set_transform(transform() * rotation);
+}

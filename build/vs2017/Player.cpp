@@ -72,10 +72,10 @@ void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, Primitive
 	UpdateBox2d();
 }
 
-
 void Player::Update(InputActionManager* iam, float frame_time) {
 	// Movement
 	if (iam->isHeld(MoveLeft)) {
+		Rotate(gef::Vector4(0, 180, 0));
 		switch (player_gravity_direction_)
 		{
 		case GRAVITY_VERTICAL:
