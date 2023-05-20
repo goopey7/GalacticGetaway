@@ -12,6 +12,16 @@ Text::Text(const gef::Vector2& anchor, std::string text)
 {
 }
 
+Text::Text(const gef::Vector2& anchor, std::string text, const gef::Platform& platform)
+	: UIElement(anchor, platform), text_(std::move(text))
+{
+}
+
+void Text::UpdateText(std::string text)
+{
+	text_ = std::move(text);
+}
+
 void Text::Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font)
 {
 	font->RenderText(sprite_renderer, gef::Vector4(platform_->width() * anchor_.x, platform_->height() * anchor_.y, -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE,text_.c_str()); 

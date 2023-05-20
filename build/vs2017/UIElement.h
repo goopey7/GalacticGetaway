@@ -18,6 +18,7 @@ class UIElement
 {
 public:
 	UIElement(const gef::Vector2& anchor) : anchor_(anchor) {}
+	UIElement(const gef::Vector2& anchor, const gef::Platform& platform) : anchor_(anchor) {SetPlatform(platform);}
 	virtual void Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) = 0;
 	virtual void Update(InputActionManager* iam, float frame_time) {}
 	virtual void Interact() {}

@@ -1,10 +1,11 @@
 ﻿#pragma once
-#include <vector>
+#include <map>
 
 #include "CollisionManager.h"
 #include "Player.h"
 #include "Scene.h"
 
+class Text;
 class Enemy;
 class GameObject;
 
@@ -35,12 +36,14 @@ public:
 	std::vector<GameObject*>& getBodiesToDestroy() {return objects_to_destroy_;}
 	
 private:
+	enum HudElement
+	{
+		Ammo,
+	};
 	void Init();
-	void DrawHUD(gef::SpriteRenderer* sprite_renderer, gef::Font* font);
 	b2World* b2_world_;
 	PrimitiveBuilder* primitive_builder_;
 	
-
 	std::vector<GameObject*> static_game_objects_;
 	std::vector<GameObject*> dynamic_game_objects_;
 	Player player_;
@@ -49,4 +52,7 @@ private:
 	std::vector<GameObject*> objects_to_destroy_;
 	
 	CollisionManager collision_manager_;
+
+	//HUD
+	std::map<HudElement, Text*> hud_text_;
 };
