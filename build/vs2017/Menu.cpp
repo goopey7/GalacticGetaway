@@ -2,6 +2,7 @@
 
 #include "InputActionManager.h"
 #include "UIElement.h"
+#include "graphics/sprite.h"
 #include "graphics/sprite_renderer.h"
 
 void Menu::AddUIElement(UIElement* element)
@@ -12,11 +13,6 @@ void Menu::AddUIElement(UIElement* element)
 
 void Menu::Update(InputActionManager* iam, float frame_time)
 {
-	if(iam->isPressed(Action::Jump))
-	{
-		NextScene();
-	}
-	
 	// Check for mouse intersections with UI
 	for (auto& element : ui_elements_)
 	{
