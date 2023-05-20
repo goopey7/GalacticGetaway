@@ -12,6 +12,11 @@ void Menu::AddUIElement(UIElement* element)
 
 void Menu::Update(InputActionManager* iam, float frame_time)
 {
+	if(iam->isPressed(Action::Jump))
+	{
+		NextScene();
+	}
+	
 	// Check for mouse intersections with UI
 	for (auto& element : ui_elements_)
 	{

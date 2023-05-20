@@ -9,7 +9,7 @@ class UIElement;
 class Menu : public Scene
 {
 public:
-	Menu(gef::Platform& platform) : Scene(platform) {}
+	Menu(gef::Platform& platform, StateManager& state_manager) : Scene(platform, state_manager) {}
 	void AddUIElement(UIElement* element);
 	void Update(InputActionManager* iam, float frame_time) override;
 	void Render(gef::Renderer3D* renderer_3d) override {}

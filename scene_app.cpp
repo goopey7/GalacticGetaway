@@ -39,11 +39,11 @@ void SceneApp::Init()
 	}
 
 	state_manager_ = new StateManager();
-	//Menu* menu = new Menu(platform_);
-	//menu->AddUIElement(new Text({0.5,0.5}, "Main Menu"));
-	//menu->AddUIElement(new Text({0.5,0.6}, "Press space to start"));
-	//state_manager_->PushScene(menu);
-	Level* level_ = new Level(platform_);
+	Menu* menu = new Menu(platform_, *state_manager_);
+	menu->AddUIElement(new Text({0.5,0.5}, "Main Menu"));
+	menu->AddUIElement(new Text({0.5,0.6}, "Press space to start"));
+	state_manager_->PushScene(menu);
+	Level* level_ = new Level(platform_, *state_manager_);
 	state_manager_->PushLevel(level_, "level.json");
 
 	//level_->GetB2World()->SetAllowSleeping(false);

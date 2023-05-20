@@ -23,7 +23,7 @@ class Gun;
 class Level : public Scene
 {
 public:
-	Level(gef::Platform& platform) : Scene(platform) {}
+	Level(gef::Platform& platform, StateManager& state_manager) : Scene(platform, state_manager) {}
 	void LoadFromFile(const char* filename);
 	void Update(InputActionManager* iam_,float frame_time) override;
 	void Render(gef::Renderer3D* renderer_3d) override;
