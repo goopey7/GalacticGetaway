@@ -18,16 +18,15 @@ SpriteAnimator3D::SpriteAnimator3D(gef::Platform* platform, PrimitiveBuilder* bu
 {
 }
 
-void SpriteAnimator3D::AddAnimation(const char* anim_name, const char* folder_name, float speed) {
+void SpriteAnimator3D::AddAnimation(const char* anim_name, const char* folder_name, float speed, bool looping) {
 	gef::PNGLoader png_loader;	
 
-	animations_[anim_name].second = speed;
+	animations_[anim_name].frame_speed_ = speed;
+	animations_[anim_name].looping_ = looping;
 	for (auto& entry : fs::directory_iterator(folder_name)) {
 		std::filesystem::path outfilename = entry.path();
 		std::string outfilename_str = outfilename.string();
 		const char* path = outfilename_str.c_str();
-		gef::DebugOut("\n");
-		gef::DebugOut(path);
 		
 		gef::ImageData image_data;
 		png_loader.Load(path, *platform_, image_data);
@@ -37,26 +36,31 @@ void SpriteAnimator3D::AddAnimation(const char* anim_name, const char* folder_na
 			material->set_texture(texture);
 			
 			gef::Mesh* mesh = builder_->CreatePlaneMesh(half_size_, centre_, &material);
-			animations_[anim_name].first.push_back(*mesh);
+			animations_[anim_name].frames_.push_back(*mesh);
 		}
 	}
 }
 
 const gef::Mesh* SpriteAnimator3D::Update(float dt, const gef::Mesh* current_mesh, const char* anim_name) {
-	time_passed_ += dt;
-	if (time_passed_ >= animations_[anim_name].second) {
-		time_passed_ = 0;
+	if (animations_[anim_name].looping_ || !animations_[anim_name].reached_end_) {
+		time_passed_ += dt;
+		if (time_passed_ >= animations_[anim_name].frame_speed_) {
+			time_passed_ = 0;
 
-		it = animations_[anim_name].first.begin();
-		while (&*it != &animations_[anim_name].first.back() && &*it != current_mesh) {
-			it++;
-		}
-		if (&*it == &animations_[anim_name].first.back() || &*it != current_mesh) {
-			current_mesh = &animations_[anim_name].first.front();
-		}
-		else {
-			it++;
-			current_mesh = &*it;
+			it = animations_[anim_name].frames_.begin();
+			while (&*it != &animations_[anim_name].frames_.back() && &*it != current_mesh) {
+				it++;
+			}
+			if (&*it == &animations_[anim_name].frames_.back() || &*it != current_mesh) {
+				current_mesh = &animations_[anim_name].frames_.front();
+			}
+			else {
+				it++;
+				current_mesh = &*it;
+				if (!animations_[anim_name].looping_ && current_mesh == &animations_[anim_name].frames_.back()) {
+					animations_[anim_name].reached_end_ = true;
+				}
+			}
 		}
 	}
 	return current_mesh;
@@ -78,5 +82,5 @@ gef::Mesh* SpriteAnimator3D::CreateMesh(const char* filepath, const gef::Vector4
 }
 
 const gef::Mesh* SpriteAnimator3D::GetFirstFrame(const char* anim_name) {
-	return &animations_[anim_name].first.front();
+	return &animations_[anim_name].frames_.front();
 }
