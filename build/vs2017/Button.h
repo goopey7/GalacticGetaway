@@ -9,14 +9,19 @@
 class Button : public UIElement
 {
 public:
-	Button(const gef::Vector2& anchor, std::string text, gef::Colour color = gef::Colour(1, 1, 1, 1));
-	Button(const gef::Vector2& anchor, const gef::Platform& platform, std::string text, gef::Colour color = gef::Colour(1,1,1,1));
+	Button(const gef::Vector2& anchor, std::string text, float width = 150.f, float height = 50.f, gef::Colour color = gef::Colour(1, 1, 1, 1), gef::Colour hover_color = gef::Colour(0, 1, 0, 1), gef::Colour text_color = gef::Colour(0,0,0,1));
+	Button(const gef::Vector2& anchor, const gef::Platform& platform, std::string text, float width = 150.f, float height = 50.f, gef::Colour color = gef::Colour(1,1,1,1), gef::Colour hover_color = gef::Colour(0, 1, 0, 1), gef::Colour text_color = gef::Colour(0,0,0,1));
+	void Selected(InputActionManager* iam);
 	void SetOnClick(std::function<void()> onClick) { OnClick_ = onClick; }
 	void Update(InputActionManager* iam, float frame_time) override;
 	void Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) override;
+	gef::Sprite* GetSprite() {return &button;}
+	void SetText(std::string text) {text_ = std::move(text);}
 private:
 	std::string text_;
 	gef::Colour color_;
+	gef::Colour hover_color_;
+	gef::Colour text_color_;
 	gef::Sprite button;
 	std::function<void()> OnClick_;
 };

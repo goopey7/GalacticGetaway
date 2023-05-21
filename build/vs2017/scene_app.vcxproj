@@ -261,6 +261,9 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="UIElement.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\media\config\bindings.json" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -23,7 +23,14 @@ public:
 	virtual void Update(InputActionManager* iam, float frame_time) {}
 	virtual void Interact() {}
 	void SetPlatform(const gef::Platform& platform) {platform_ = &platform;}
+	bool IsSelected();
+	void Select();
+	void Deselect();
+	bool IsSelectable();
+
 protected:
 	const gef::Platform* platform_ = nullptr;
 	gef::Vector2 anchor_;
+	bool is_selected = false;
+	bool is_selectable = false;
 };

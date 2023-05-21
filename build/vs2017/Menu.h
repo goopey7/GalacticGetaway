@@ -17,4 +17,7 @@ public:
 	void Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_renderer, gef::Font* font) override {Render(sprite_renderer, font);}
 private:
 	std::vector<UIElement*> ui_elements_;
+	UIElement* selected_element_ = nullptr;
+	int selected_element_index_ = 0;
+	std::vector<int> selectable_indices_;
 };

@@ -31,6 +31,9 @@ DEFINE_ACTIONS(
 	Grapple,
 	Reload,
 	Quit,
+	MenuSelect,
+	MenuSelectRight,
+	MenuSelectLeft,
 	)
 
 	class InputActionManager

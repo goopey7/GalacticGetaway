@@ -68,7 +68,21 @@
               "action": "Quit",
               "keys": [ "ESCAPE", "CAPSLOCK" ],
               "buttons": [ "START" ]
+            },
+            {
+              "action": "MenuSelect",
+              "keys": [ "RETURN" ],
+              "buttons": [ "A" ]
+            },
+            {
+              "action": "MenuSelectRight",
+              "keys": [ "RIGHT" ],
+              "buttons": [ "RIGHT" ]
+            },
+            {
+              "action": "MenuSelectLeft",
+              "keys": [ "LEFT" ],
+              "buttons": [ "LEFT" ]
             }
-
           ]
 }
