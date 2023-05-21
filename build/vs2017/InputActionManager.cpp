@@ -30,12 +30,12 @@ InputActionManager::InputActionManager(gef::Platform& platform)
 		const Action action = stringToAction[actionBinding["action"]];
 		for (const auto& key : actionBinding["keys"])
 		{
-			actionKeyBindings[stringToKeyCode[key]] = action;
+			actionKeyBindings[stringToKeyCode[key]].push_back(action);
 		}
 
 		for (const auto& controllerButton : actionBinding["buttons"])
 		{
-			actionControllerBindings[stringToControllerButton[controllerButton]] = action;
+			actionControllerBindings[stringToControllerButton[controllerButton]].push_back(action);
 		}
 	}
 
@@ -73,26 +73,29 @@ void InputActionManager::Update()
 
 		for (const auto binding : actionKeyBindings)
 		{
-			if (action == binding.second)
+			for(int i=0; i < binding.second.size(); i++)
 			{
-				bool oldMapPressed = actionMapPressed[action];
-				bool oldMapHeld = actionMapHeld[action];
-				bool oldMapReleased = actionMapReleased[action];
-
-				actionMapPressed[action] = kb->IsKeyPressed(binding.first);
-				actionMapHeld[action] = kb->IsKeyDown(binding.first);
-				actionMapReleased[action] = kb->IsKeyReleased(binding.first);
-
-				if (kb->IsKeyPressed(binding.first)) {
-					using_keyboard_ = true;
-				}
-				if (oldMapPressed != actionMapPressed[action] || oldMapHeld != actionMapHeld[action] || oldMapReleased != actionMapReleased[action])
+				if (action == binding.second[i])
 				{
+					bool oldMapPressed = actionMapPressed[action];
+					bool oldMapHeld = actionMapHeld[action];
+					bool oldMapReleased = actionMapReleased[action];
 
-					breakOut = true;
-					break;
+					actionMapPressed[action] = kb->IsKeyPressed(binding.first);
+					actionMapHeld[action] = kb->IsKeyDown(binding.first);
+					actionMapReleased[action] = kb->IsKeyReleased(binding.first);
+
+					if (kb->IsKeyPressed(binding.first)) {
+						using_keyboard_ = true;
+					}
+					if (oldMapPressed != actionMapPressed[action] || oldMapHeld != actionMapHeld[action] || oldMapReleased != actionMapReleased[action])
+					{
+						breakOut = true;
+					}
 				}
 			}
+			if(breakOut)
+				break;
 		}
 
 		if (breakOut)
@@ -102,25 +105,30 @@ void InputActionManager::Update()
 
 		for (const auto binding : actionControllerBindings)
 		{
-			if (action == binding.second)
+			bool breakAgain = false;
+			for(int i=0; i < binding.second.size(); i++)
 			{
-				bool oldMapPressed = actionMapPressed[action];
-				bool oldMapHeld = actionMapHeld[action];
-				bool oldMapReleased = actionMapReleased[action];
-
-				actionMapPressed[action] = controller->buttons_pressed() & binding.first;
-				actionMapHeld[action] = controller->buttons_down() & binding.first;
-				actionMapReleased[action] = controller->buttons_released() & binding.first;
-
-				if (controller->buttons_pressed() & binding.first) {
-					using_keyboard_ = false;
-				}
-				if (oldMapPressed != actionMapPressed[action] || oldMapHeld != actionMapHeld[action] || oldMapReleased != actionMapReleased[action])
+				if (action == binding.second[i])
 				{
+					bool oldMapPressed = actionMapPressed[action];
+					bool oldMapHeld = actionMapHeld[action];
+					bool oldMapReleased = actionMapReleased[action];
 
-					break;
+					actionMapPressed[action] = controller->buttons_pressed() & binding.first;
+					actionMapHeld[action] = controller->buttons_down() & binding.first;
+					actionMapReleased[action] = controller->buttons_released() & binding.first;
+
+					if (controller->buttons_pressed() & binding.first) {
+						using_keyboard_ = false;
+					}
+					if (oldMapPressed != actionMapPressed[action] || oldMapHeld != actionMapHeld[action] || oldMapReleased != actionMapReleased[action])
+					{
+						breakAgain = true;
+					}
 				}
 			}
+			if(breakAgain)
+				break;
 		}
 	}
 	getLeftStickX();
