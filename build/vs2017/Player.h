@@ -8,8 +8,8 @@ class InputActionManager;
 
 class Player : public GameObject {
 public:
-	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform);
-	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform);
+	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, SpriteAnimator3D* sprite_animator);
+	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator);
 	void Update(InputActionManager* iam, float frame_time);
 	bool GetGravityLock() const { return gravity_lock_; }
 	const Gun* GetGun() const { return &gun_; }
@@ -33,7 +33,6 @@ protected:
 	GravityDirection player_gravity_direction_ = GRAVITY_VERTICAL;
 	gef::Platform* platform_;
 
-	SpriteAnimator3D* sprite_animator3D_;
 	enum AnimationState { IDLE, RUNNING, JUMPING };
 	AnimationState animation_state_ = IDLE;
 };

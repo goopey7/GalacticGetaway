@@ -4,6 +4,7 @@
 #include "CollisionManager.h"
 #include "Player.h"
 #include "Scene.h"
+#include "SpriteAnimator3D.h"
 
 class Text;
 class Enemy;
@@ -48,6 +49,7 @@ private:
 	std::vector<GameObject*> dynamic_game_objects_;
 	Player player_;
 	std::vector<Enemy*> enemies_;
+	SpriteAnimator3D* sprite_animator3D_;
 
 	std::vector<GameObject*> objects_to_destroy_;
 	

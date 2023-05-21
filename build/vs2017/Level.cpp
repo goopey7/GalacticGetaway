@@ -55,7 +55,7 @@ void Level::LoadFromFile(const char* filename)
 			if(layer["name"] == "PlayerSpawn")
 			{
 				auto playerJson = layer["objects"][0];
-				player_.Init(1, 1, 1, playerJson["x"], 0-playerJson["y"], b2_world_, primitive_builder_, platform_);
+				player_.Init(1, 1, 1, playerJson["x"], 0-playerJson["y"], b2_world_, sprite_animator3D_);
 			}
 			if(layer["name"] == "DynamicSpawns")
 			{
@@ -64,7 +64,7 @@ void Level::LoadFromFile(const char* filename)
 					if(object["properties"][0]["value"] == "enemy")
 					{
 						Enemy* enemy = new Enemy();
-						enemy->Init(0.6f, 0.6f, 0.6f, object["x"], 0-object["y"], b2_world_, primitive_builder_, platform_, &player_);
+						enemy->Init(1, 1, 1, object["x"], 0-object["y"], b2_world_, sprite_animator3D_, &player_);
 						enemies_.push_back(enemy);
 					}
 					else
@@ -105,6 +105,8 @@ void Level::Init()
 	
 	// initialise primitive builder to make create some 3D geometry easier
 	primitive_builder_ = new PrimitiveBuilder(*platform_);
+	sprite_animator3D_ = new SpriteAnimator3D(platform_, primitive_builder_, gef::Vector4(1, 1, 1));
+	sprite_animator3D_->Init();
 
 	hud_text_[Ammo] = new Text({0.88f, 0.93f}, "", *platform_);
 }
