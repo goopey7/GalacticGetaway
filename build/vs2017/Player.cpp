@@ -225,6 +225,8 @@ void Player::BeginCollision(GameObject* other) {
 	switch (other->GetTag())
 	{
 	case Tag::None:
+	case Tag::Crate:
+	case Tag::Enemy:
 		if (jumping_) {
 			jumping_ = false;
 			animation_state_ = IDLE;
