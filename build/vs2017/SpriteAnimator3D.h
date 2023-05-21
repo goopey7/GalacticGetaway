@@ -15,12 +15,15 @@ struct AnimationInfo {
 class SpriteAnimator3D {
 public:
 	SpriteAnimator3D(gef::Platform* platform, PrimitiveBuilder* builder, const gef::Vector4& half_size, gef::Vector4 centre = gef::Vector4(0, 0, 0));
+	void Init();
 	void AddAnimation(const char* anim_name, const char* folder_name, float speed, bool looping = true);
-	const gef::Mesh* Update(float dt, const gef::Mesh* current_mesh, const char* anim_name);
+	const gef::Mesh* UpdateAnimation(float& time, const gef::Mesh* current_mesh, const char* anim_name);
 	const gef::Mesh* GetFirstFrame(const char* anim_name);
 	bool ReachedEnd(const char* anim_name) { return animations_[anim_name].reached_end_; }
 	void Reset(const char* anim_name) { animations_[anim_name].reached_end_ = false; }
 	gef::Mesh* CreateMesh(const char* filepath, const gef::Vector4& half_size, gef::Vector4 centre = gef::Vector4(0, 0, 0));
+	PrimitiveBuilder* GetPrimitiveBuilder() { return builder_; }
+	gef::Platform* GetPlatform() { return platform_; }
 protected:
 	std::unordered_map<const char*, AnimationInfo> animations_;
 	std::list<gef::Mesh>::iterator it;
@@ -29,6 +32,6 @@ protected:
 	PrimitiveBuilder* builder_;
 	gef::Vector4 half_size_;
 	gef::Vector4 centre_;
-	float time_passed_ = 0;
+	//float time_passed_ = 0;
 };
 

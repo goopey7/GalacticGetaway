@@ -7,7 +7,7 @@ class InputActionManager;
 
 class Gun : public gef::MeshInstance {
 public:
-	void Init(gef::Vector4 size, b2World* world, PrimitiveBuilder* builder);
+	void Init(gef::Vector4 size, b2World* world, SpriteAnimator3D* sprite_animator);
 	void Update(gef::Vector4 translation, InputActionManager* input, gef::Platform* platform, float dt);
 	void Fire(float dt);
 	void Reload(bool* reloading);

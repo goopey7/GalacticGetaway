@@ -7,17 +7,18 @@
 #include "system/debug_log.h"
 
 void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world,
-				PrimitiveBuilder* builder, const gef::Platform* platform, const ::Player* player)
+	SpriteAnimator3D* sprite_animator, const ::Player* player)
 {
 	size_y_ = size_y;
 	player_ = player;
 	tag = Tag::Enemy;
-	platform_ = platform;
-	set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y, size_z)));
+	platform_ = sprite_animator->GetPlatform();
+	sprite_animator3D_ = sprite_animator;
+	set_mesh(sprite_animator3D_->GetFirstFrame("EnemyIdle"));
 
 	physics_world_ = world;
 
-	bullet_manager_.Init(world,builder);
+	bullet_manager_.Init(world,sprite_animator3D_->GetPrimitiveBuilder());
 
 	b2BodyDef body_def;
 	body_def.type = b2_dynamicBody;
@@ -41,17 +42,17 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 	UpdateBox2d();
 }
 
-void Enemy::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder,
-	const gef::Platform* platform, const ::Player* player)
+void Enemy::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator, const ::Player* player)
 {
 	size_y_ = size.y();
 	player_ = player;
-	platform_ = platform;
-	set_mesh(builder->CreateBoxMesh(size));
+	platform_ = sprite_animator->GetPlatform();
+	sprite_animator3D_ = sprite_animator;
+	set_mesh(sprite_animator3D_->GetFirstFrame("EnemyIdle"));
 	
 	physics_world_ = world;
 	
-	bullet_manager_.Init(world,builder);
+	bullet_manager_.Init(world, sprite_animator3D_->GetPrimitiveBuilder());
 
 	b2BodyDef body_def;
 	body_def.type = b2_dynamicBody;
@@ -99,10 +100,10 @@ void Enemy::Update(float frame_time)
 	bPlayerInRange_ = false;
 	physics_world_->RayCast(this, cast_start, cast_end);
 	
-	if(!bSawPlayer)
+	if(!bSawPlayer || !bPlayerInRange_)
 	{
 		// TODO Movement depending on gravity. Maybe move like red Koopas?
-
+		animation_state_ = RUNNING;
 		switch (world_gravity_direction_)
 		{
 		case GRAVITY_VERTICAL:
@@ -121,6 +122,7 @@ void Enemy::Update(float frame_time)
 	}
 	else
 	{
+		animation_state_ = IDLE;
 		b2Vec2 pos = GetBody()->GetPosition() + b2Vec2(0.f, size_y_ / 8.f);
 		b2Vec2 dir = player_->GetBody()->GetPosition() - pos;
 		dir.Normalize();
@@ -132,6 +134,19 @@ void Enemy::Update(float frame_time)
 	}
 
 	UpdateBox2d();
+
+	anim_time_ += frame_time;
+	switch (animation_state_)
+	{
+	case IDLE:
+		set_mesh(sprite_animator3D_->UpdateAnimation(anim_time_, mesh_, "EnemyIdle"));
+		break;
+	case RUNNING:
+		set_mesh(sprite_animator3D_->UpdateAnimation(anim_time_, mesh_, "EnemyRunning"));
+		break;
+	default:
+		break;
+	}
 }
 
 // On Raycast Hit
@@ -179,7 +194,6 @@ void Enemy::BeginCollision(GameObject* other)
 
 void Enemy::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) const
 {
-	renderer_3d->set_override_material(&builder->red_material());
 	renderer_3d->DrawMesh(*this);
 	bullet_manager_.Render(renderer_3d);
 }

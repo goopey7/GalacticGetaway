@@ -5,19 +5,13 @@
 
 #include "InputActionManager.h"
 
-void Player::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform) {
+void Player::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, SpriteAnimator3D* sprite_animator) {
 	tag = Tag::Player;
-	platform_ = platform;
+	platform_ = sprite_animator->GetPlatform();
+	sprite_animator3D_ = sprite_animator;
+	set_mesh(sprite_animator3D_->GetFirstFrame("PlayerIdle"));
 
-	sprite_animator3D_ = new SpriteAnimator3D(platform, builder, gef::Vector4(size_x, size_y, size_z));
-	sprite_animator3D_->AddAnimation("Idle", "Player/Idle", 0.1);
-	sprite_animator3D_->AddAnimation("Running", "Player/Run", 0.1);
-	sprite_animator3D_->AddAnimation("Jumping", "Player/Jump", 0.3, false);
-	set_mesh(sprite_animator3D_->GetFirstFrame("Idle"));
-
-	gun_.Init(gef::Vector4(size_x * 0.33f, size_y, size_z * 1.5f), world, builder);
-	gun_.set_mesh(sprite_animator3D_->CreateMesh("Player/Gun/gun.png", gef::Vector4(size_x * 0.33, size_y, size_z)));
-	gun_.getBulletManager()->Init(world, builder);
+	gun_.Init(gef::Vector4(size_x * 0.33f, size_y, size_z * 1.5f), world, sprite_animator);
 
 	physics_world_ = world;
 
@@ -43,11 +37,13 @@ void Player::Init(float size_x, float size_y, float size_z, float pos_x, float p
 	UpdateBox2d();
 }
 
-void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::Platform* platform) {
-	platform_ = platform;
-	set_mesh(builder->CreateBoxMesh(size));
+void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator) {
+	tag = Tag::Player;
+	platform_ = sprite_animator->GetPlatform();
+	sprite_animator3D_ = sprite_animator;
+	set_mesh(sprite_animator3D_->GetFirstFrame("PlayerIdle"));
 	
-	gun_.Init(size, world, builder);
+	gun_.Init(gef::Vector4(size.x() * 0.33f, size.y(), size.z() * 1.5f), world, sprite_animator);
 
 	physics_world_ = world;
 
@@ -123,7 +119,7 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 	if (iam->isPressed(Jump) && !gravity_lock_ && !jumping_) {
 		jumping_ = true;
 		animation_state_ = JUMPING;
-		set_mesh(sprite_animator3D_->GetFirstFrame("Jumping"));
+		set_mesh(sprite_animator3D_->GetFirstFrame("PlayerJumping"));
 		b2Vec2 grav = world_gravity_;
 		grav *= 20;
 		physics_body_->ApplyLinearImpulseToCenter(-grav, true);
@@ -201,6 +197,7 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 
 	gun_.Update(transform().GetTranslation(), iam, platform_, frame_time);
 
+	anim_time_ += frame_time;
 	if (iam->isPressed(MoveLeft) || iam->isPressed(MoveRight)) {
 		if (iam->isPressed(MoveLeft)) Rotate(gef::Vector4(0, FRAMEWORK_PI, 0));
 		else Rotate(gef::Vector4(0, 0, 0));
@@ -212,13 +209,13 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 	switch (animation_state_)
 	{
 	case Player::IDLE:
-		set_mesh(sprite_animator3D_->Update(frame_time, mesh_, "Idle"));
+		set_mesh(sprite_animator3D_->UpdateAnimation(anim_time_, mesh_, "PlayerIdle"));
 		break;
 	case Player::RUNNING:
-		set_mesh(sprite_animator3D_->Update(frame_time, mesh_, "Running"));
+		set_mesh(sprite_animator3D_->UpdateAnimation(anim_time_, mesh_, "PlayerRunning"));
 		break;
 	case Player::JUMPING:
-		if(!sprite_animator3D_->ReachedEnd("Jumping")) set_mesh(sprite_animator3D_->Update(frame_time, mesh_, "Jumping"));
+		if(!sprite_animator3D_->ReachedEnd("PlayerJumping")) set_mesh(sprite_animator3D_->UpdateAnimation(anim_time_, mesh_, "PlayerJumping"));
 	default:
 		break;
 	}
@@ -231,7 +228,7 @@ void Player::BeginCollision(GameObject* other) {
 		if (jumping_) {
 			jumping_ = false;
 			animation_state_ = IDLE;
-			sprite_animator3D_->Reset("Jumping");
+			sprite_animator3D_->Reset("PlayerJumping");
 		}
 		break;
 	default:

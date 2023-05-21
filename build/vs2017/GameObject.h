@@ -4,7 +4,7 @@
 #include <box2d/box2d.h>
 #include "primitive_builder.h"
 #include "maths/vector2.h"
-
+#include "SpriteAnimator3D.h"
 
 class GameObject : public gef::MeshInstance {
 	
@@ -43,9 +43,10 @@ protected:
 	b2Body* physics_body_ = nullptr;
 	Tag tag = Tag::None;
 	bool dead = false;
-private:
 	gef::Vector4 size_;
 	gef::Vector4 translate_ = gef::Vector4(0, 0, 0);
 	gef::Vector4 rotate_ = gef::Vector4(0, 0, 0);
+	SpriteAnimator3D* sprite_animator3D_;
+	float anim_time_ = 0;
 };
 

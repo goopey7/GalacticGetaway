@@ -3,13 +3,15 @@
 #include <input/input_manager.h>
 #include <input/touch_input_manager.h>
 #include <maths/math_utils.h>
+#include "SpriteAnimator3D.h"
 #include <cmath>
 #include <thread>
 #include <system/debug_log.h>
 
-void Gun::Init(gef::Vector4 size, b2World* world, PrimitiveBuilder* builder)
+void Gun::Init(gef::Vector4 size, b2World* world, SpriteAnimator3D* sprite_animator)
 {
-	getBulletManager()->Init(world, builder);
+	set_mesh(sprite_animator->CreateMesh("Player/Gun/gun.png", size));
+	getBulletManager()->Init(world, sprite_animator->GetPrimitiveBuilder());
 }
 
 void Gun::Update(gef::Vector4 translation, InputActionManager* input, gef::Platform* platform, float dt) {

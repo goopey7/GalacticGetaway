@@ -18,11 +18,19 @@ SpriteAnimator3D::SpriteAnimator3D(gef::Platform* platform, PrimitiveBuilder* bu
 {
 }
 
-void SpriteAnimator3D::AddAnimation(const char* anim_name, const char* folder_name, float speed, bool looping) {
-	gef::PNGLoader png_loader;	
+void SpriteAnimator3D::Init() {
+	AddAnimation("PlayerIdle", "Player/Idle", 0.1);
+	AddAnimation("PlayerRunning", "Player/Run", 0.1);
+	AddAnimation("PlayerJumping", "Player/Jump", 0.3, false);
 
+	AddAnimation("EnemyIdle", "Enemy/Idle", 0.2);
+	AddAnimation("EnemyRunning", "Enemy/Run/new", 0.1);
+}
+
+void SpriteAnimator3D::AddAnimation(const char* anim_name, const char* folder_name, float speed, bool looping) {
 	animations_[anim_name].frame_speed_ = speed;
 	animations_[anim_name].looping_ = looping;
+	gef::PNGLoader png_loader;	
 	for (auto& entry : fs::directory_iterator(folder_name)) {
 		std::filesystem::path outfilename = entry.path();
 		std::string outfilename_str = outfilename.string();
@@ -41,11 +49,10 @@ void SpriteAnimator3D::AddAnimation(const char* anim_name, const char* folder_na
 	}
 }
 
-const gef::Mesh* SpriteAnimator3D::Update(float dt, const gef::Mesh* current_mesh, const char* anim_name) {
+const gef::Mesh* SpriteAnimator3D::UpdateAnimation(float& time, const gef::Mesh* current_mesh, const char* anim_name) {
 	if (animations_[anim_name].looping_ || !animations_[anim_name].reached_end_) {
-		time_passed_ += dt;
-		if (time_passed_ >= animations_[anim_name].frame_speed_) {
-			time_passed_ = 0;
+		if (time >= animations_[anim_name].frame_speed_) {
+			time = 0;
 
 			it = animations_[anim_name].frames_.begin();
 			while (&*it != &animations_[anim_name].frames_.back() && &*it != current_mesh) {
