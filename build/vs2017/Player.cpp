@@ -11,7 +11,7 @@ void Player::Init(float size_x, float size_y, float size_z, float pos_x, float p
 	sprite_animator3D_ = sprite_animator;
 	set_mesh(sprite_animator3D_->GetFirstFrame("PlayerIdle"));
 
-	gun_.Init(gef::Vector4(size_x * 0.33f, size_y, size_z * 1.5f), world, sprite_animator);
+	gun_.Init(gef::Vector4(size_x * 0.33f, size_y, size_z * 1.5f), world, sprite_animator, "Player/Gun/gun.png");
 
 	physics_world_ = world;
 
@@ -43,7 +43,7 @@ void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAni
 	sprite_animator3D_ = sprite_animator;
 	set_mesh(sprite_animator3D_->GetFirstFrame("PlayerIdle"));
 	
-	gun_.Init(gef::Vector4(size.x() * 0.33f, size.y(), size.z() * 1.5f), world, sprite_animator);
+	gun_.Init(gef::Vector4(size.x() * 0.33f, size.y(), size.z() * 1.5f), world, sprite_animator, "Player/Gun/gun.png");
 
 	physics_world_ = world;
 

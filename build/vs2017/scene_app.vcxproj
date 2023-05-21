@@ -233,6 +233,7 @@
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerGun.cpp" />
     <ClCompile Include="SpriteAnimator3D.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="Text.cpp" />
@@ -254,6 +255,7 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerGun.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SpriteAnimator3D.h" />
     <ClInclude Include="StateManager.h" />

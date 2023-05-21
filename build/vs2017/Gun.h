@@ -7,27 +7,23 @@ class InputActionManager;
 
 class Gun : public gef::MeshInstance {
 public:
-	void Init(gef::Vector4 size, b2World* world, SpriteAnimator3D* sprite_animator);
-	void Update(gef::Vector4 translation, InputActionManager* input, gef::Platform* platform, float dt);
+	void Init(gef::Vector4 size, b2World* world, SpriteAnimator3D* sprite_animator, const char* filename);
+	void Update(gef::Vector4 translation);
 	void Fire(float dt);
-	void Reload(bool* reloading);
-	int getAmmoLoaded() const { return ammo_loaded_; }
-	int getAmmoReserve() const { return ammo_reserve_; }
-	bool getReloading() const { return reloading_; }
-	void setReloading(bool r) { reloading_ = r; }
+	virtual void Reload(bool* reloading) {};
 	const BulletManager* getBulletManager() const { return &bullet_manager_; }
 	BulletManager* getBulletManager() { return &bullet_manager_; }
 	void Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) const;
 	~Gun();
 
 protected:
+	void UpdateTransform(gef::Vector4 translation);
 	gef::Vector4 WorldToScreen(const gef::Vector4 pos, gef::Platform* platform);
-	void reloadThreadFunc();
 	gef::Vector2 target_vector_;
 	int ammo_reserve_ = 100;
 	int ammo_loaded_ = 30;
+	int damage_ = 1;
 	float fire_time_ = 0;
-	int damage_ = 5;
 	bool reloading_ = false;
 
 	BulletManager bullet_manager_;

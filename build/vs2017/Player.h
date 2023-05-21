@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include <graphics/renderer_3d.h>
-#include "Gun.h"
+#include "PlayerGun.h"
 #include "SpriteAnimator3D.h"
 
 class InputActionManager;
@@ -12,13 +12,13 @@ public:
 	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator);
 	void Update(InputActionManager* iam, float frame_time);
 	bool GetGravityLock() const { return gravity_lock_; }
-	const Gun* GetGun() const { return &gun_; }
+	const PlayerGun* GetGun() const { return &gun_; }
 	void BeginCollision(GameObject* other) override;
 	void Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder);
 
 protected:
 	int health_ = 10;
-	Gun gun_;
+	PlayerGun gun_;
 
 	b2World* physics_world_;
 	b2Vec2 world_gravity_ = b2Vec2(0, -1);
