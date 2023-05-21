@@ -9,7 +9,6 @@
 
 void Gun::Init(gef::Vector4 size, b2World* world, PrimitiveBuilder* builder)
 {
-	set_mesh(builder->CreateBoxMesh(gef::Vector4(size.x(), size.y() * 0.33, size.z() * 1.5)));
 	getBulletManager()->Init(world, builder);
 }
 
@@ -29,22 +28,26 @@ void Gun::Update(gef::Vector4 translation, InputActionManager* input, gef::Platf
 	}
 	target_vector_.Normalise();
 
-	float angle = atan2(target_vector_.x, target_vector_.y);
-	if (angle < 0) angle += 2 * FRAMEWORK_PI;
-
 	gef::Matrix44 rotation_z;
+	float angle = atan2(target_vector_.x, target_vector_.y);
 	rotation_z.RotationZ(angle);
 
 	gef::Matrix44 translate1;
 	translate1.SetIdentity();
-	translate1.SetTranslation(gef::Vector4(0, -1.f, 0.1f));
+	translate1.SetTranslation(gef::Vector4(0, -1.f, (angle >=0) ? 0.1 : -0.1));
 
 	gef::Matrix44 translate2;
 	translate2.SetIdentity();
 	translate2.SetTranslation(translation);
 
-	rotation_z = translate1 * rotation_z * translate2;
-	set_transform(rotation_z);
+	if (angle < 0) {
+		gef::Matrix44 rotation_y;
+		rotation_y.RotationY(FRAMEWORK_PI);
+		translate1 = translate1 * rotation_y;
+	}
+	translate1 = translate1 * rotation_z * translate2;
+
+	set_transform(translate1);
 
 	if (input->getInputManager()->touch_manager()->is_button_down(0) || input->isHeld(Action::Fire)) {
 		Fire(dt);

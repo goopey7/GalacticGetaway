@@ -7,6 +7,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 {
 	// initialisation
 	gef::PlatformD3D11 platform(hInstance, 1920, 1080, false, true);
+	platform.set_render_target_clear_colour(gef::Colour(0.0f, 0.0f, 0.0f, 1.0f));
 
 	SceneApp myApp(platform);
 	myApp.Run();

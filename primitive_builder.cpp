@@ -178,7 +178,7 @@ gef::Mesh* PrimitiveBuilder::CreatePlaneMesh(const gef::Vector4& half_size, gef:
 	// vertices
 	//
 	// create vertices, 4 for each face so we have all vertices in a single vertex share the same normal
-	const int kNumVertices = 4;
+	const int kNumVertices = 8;
 	gef::Mesh::Vertex vertices[kNumVertices] =
 	{
 		// front
@@ -186,32 +186,44 @@ gef::Mesh* PrimitiveBuilder::CreatePlaneMesh(const gef::Vector4& half_size, gef:
 		{ centre.x() + half_size.x(),	centre.y() + half_size.y(),	0, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f },
 		{ centre.x() - half_size.x(),	centre.y() - half_size.y(), 0, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f },
 		{ centre.x() + half_size.x(),	centre.y() - half_size.y(), 0, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f },
+
+		// back
+		{ centre.x() + half_size.x(),	centre.y() + half_size.y(),	0, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f },
+		{ centre.x() - half_size.x(),	centre.y() + half_size.y(),	0, 0.0f, 0.0f, -1.0f, -1.0f, 0.0f },
+		{ centre.x() + half_size.x(),	centre.y() - half_size.y(), 0, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f },
+		{ centre.x() - half_size.x(),	centre.y() - half_size.y(), 0, 0.0f, 0.0f, -1.0f, -1.0f, 1.0f },
+
 	};
 
-	const int kNumIndices = 6;
+	const int kNumIndices = 12;
 	Int32 indices[kNumIndices] =
 	{
 		// front
 		0, 1, 2,
 		1, 3, 2,
+		// back
+		4, 5, 6,
+		5, 7, 6,
 	};
 
 	// create the vertex buffer for the box vertices
 	mesh->InitVertexBuffer(platform_, vertices, kNumVertices, sizeof(gef::Mesh::Vertex));
 
 	// create a primitive per face so we can alter the material per face
-	const int num_faces = 1;
+	const int num_faces = 2;
 	mesh->AllocatePrimitives(num_faces);
 
-	gef::Primitive* primitive = mesh->GetPrimitive(0);
-	primitive->InitIndexBuffer(platform_, &indices[0], 6, sizeof(Int32));
-	primitive->set_type(gef::TRIANGLE_LIST);
+	for (int primitive_num = 0; primitive_num < num_faces; ++primitive_num)
+	{
+		gef::Primitive* primitive = mesh->GetPrimitive(primitive_num);
+		primitive->InitIndexBuffer(platform_, &indices[primitive_num * 6], 6, sizeof(Int32));
+		primitive->set_type(gef::TRIANGLE_LIST);
 
-	// if materials pointer is valid then assume we have an array of Material pointers
-	// with a size greater than 6 (one material per face)
-	if(materials)
-		primitive->set_material(materials[0]);
-
+		// if materials pointer is valid then assume we have an array of Material pointers
+		// with a size greater than 6 (one material per face)
+		if (materials)
+			primitive->set_material(materials[0]);
+	}
 
 	// set the bounds
 

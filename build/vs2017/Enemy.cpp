@@ -123,7 +123,6 @@ void Enemy::Update(float frame_time)
 	{
 		b2Vec2 pos = GetBody()->GetPosition() + b2Vec2(0.f, size_y_ / 8.f);
 		b2Vec2 dir = player_->GetBody()->GetPosition() - pos;
-		gef::DebugOut("dir x: %f, y: %f\n", dir.x, dir.y);
 		dir.Normalize();
 		if(fire_timer_ >= fire_rate_)
 		{

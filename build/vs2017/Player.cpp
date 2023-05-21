@@ -75,7 +75,6 @@ void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, Primitive
 void Player::Update(InputActionManager* iam, float frame_time) {
 	// Movement
 	if (iam->isHeld(MoveLeft)) {
-		Rotate(gef::Vector4(0, 180, 0));
 		switch (player_gravity_direction_)
 		{
 		case GRAVITY_VERTICAL:
@@ -202,11 +201,14 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 
 	gun_.Update(transform().GetTranslation(), iam, platform_, frame_time);
 
-	if (animation_state_ != JUMPING) {
-		if (iam->isPressed(MoveLeft) || iam->isPressed(MoveRight)) animation_state_ = RUNNING;
-		else if (iam->isReleased(MoveLeft) || iam->isReleased(MoveRight)) animation_state_ = IDLE;
+	if (iam->isPressed(MoveLeft) || iam->isPressed(MoveRight)) {
+		if (iam->isPressed(MoveLeft)) Rotate(gef::Vector4(0, FRAMEWORK_PI, 0));
+		else Rotate(gef::Vector4(0, 0, 0));
+		if (animation_state_ != JUMPING) animation_state_ = RUNNING;
 	}
-
+	else if (iam->isReleased(MoveLeft) || iam->isReleased(MoveRight)) {
+		if (animation_state_ != JUMPING) animation_state_ = IDLE;
+	}
 	switch (animation_state_)
 	{
 	case Player::IDLE:
