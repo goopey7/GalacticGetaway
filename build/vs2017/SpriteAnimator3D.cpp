@@ -24,7 +24,7 @@ void SpriteAnimator3D::Init() {
 	AddAnimation("PlayerJumping", "Player/Jump", 0.3, false);
 
 	AddAnimation("EnemyIdle", "Enemy/Idle", 0.2);
-	AddAnimation("EnemyRunning", "Enemy/Run/new", 0.1);
+	AddAnimation("EnemyRunning", "Enemy/Run", 0.1);
 }
 
 void SpriteAnimator3D::AddAnimation(const char* anim_name, const char* folder_name, float speed, bool looping) {
