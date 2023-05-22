@@ -1,6 +1,5 @@
 ﻿#include "PressurePlate.h"
 #include "graphics/renderer_3d.h"
-#include "system/debug_log.h"
 
 void PressurePlate::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, float threshold)
 {
@@ -59,14 +58,6 @@ void PressurePlate::Update(float frame_time)
 	{
 		on_deactivate_();
 	}
-}
-
-void PressurePlate::BeginCollision(GameObject* other)
-{
-}
-
-void PressurePlate::EndCollision(GameObject* other)
-{
 }
 
 void PressurePlate::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) const

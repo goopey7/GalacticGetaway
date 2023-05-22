@@ -40,21 +40,32 @@ void SceneApp::Init()
 	}
 
 	state_manager_ = new StateManager();
+	Level* level = new Level(platform_, *state_manager_);
 	Menu* menu = new Menu(platform_, *state_manager_);
 	menu->AddUIElement(new Text({0.5,0.5}, "Main Menu"));
 	//menu->AddUIElement(new Text({0.5,0.6}, "Press space to start"));
 	Button* button = new Button({0.5,0.6}, platform_, "Start", 150.f, 50.f, gef::Colour(1,1,1,1));
-	Button* button2 = new Button({0.1,0.6}, platform_, "Test", 200.f, 50.f, gef::Colour(1,1,0,1));
-	Button* button3 = new Button({0.8,0.6}, platform_, "Test", 200.f, 50.f, gef::Colour(1,1,0,1));
-	button->SetOnClick([this] { state_manager_->NextScene(); });
-	button2->SetOnClick([button2] {button2->SetText("Button Pressed");});
-	button3->SetOnClick([button3] {button3->SetText("Button Pressed");});
+	Button* button2 = new Button({0.1,0.6}, platform_, "Enemy Testing", 200.f, 50.f, gef::Colour(1,1,0,1));
+	Button* button3 = new Button({0.8,0.6}, platform_, "Puzzle Testing", 200.f, 50.f, gef::Colour(1,1,0,1));
+	button->SetOnClick([this, level]
+	{
+		state_manager_->PushLevel(level, "level.json");
+		state_manager_->NextScene();
+	});
+	button2->SetOnClick([this, level]
+	{
+		state_manager_->PushLevel(level, "enemy.json");
+		state_manager_->NextScene();
+	});
+	button3->SetOnClick([this, level]
+	{
+		state_manager_->PushLevel(level, "puzzle.json");
+		state_manager_->NextScene();
+	});
 	menu->AddUIElement(button2);
 	menu->AddUIElement(button);
 	menu->AddUIElement(button3);
 	state_manager_->PushScene(menu);
-	Level* level_ = new Level(platform_, *state_manager_);
-	state_manager_->PushLevel(level_, "level.json");
 
 	//level_->GetB2World()->SetAllowSleeping(false);
 

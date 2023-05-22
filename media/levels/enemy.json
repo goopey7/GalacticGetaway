@@ -292,39 +292,6 @@
                 }, 
                 {
                  "height":1,
-                 "id":41,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":5,
-                 "x":37,
-                 "y":8
-                }, 
-                {
-                 "height":1,
-                 "id":42,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":5,
-                 "x":48,
-                 "y":13
-                }, 
-                {
-                 "height":1,
-                 "id":43,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":3,
-                 "x":61,
-                 "y":17
-                }, 
-                {
-                 "height":1,
                  "id":44,
                  "name":"",
                  "rotation":0,
@@ -498,6 +465,61 @@
                  "width":4,
                  "x":73,
                  "y":6
+                }, 
+                {
+                 "height":1,
+                 "id":91,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":3,
+                 "x":52,
+                 "y":21
+                }, 
+                {
+                 "height":0.2,
+                 "id":92,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":3,
+                 "x":49,
+                 "y":20.8
+                }, 
+                {
+                 "height":0.2,
+                 "id":93,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":3,
+                 "x":44.3260869565217,
+                 "y":20.1173913043478
+                }, 
+                {
+                 "height":0.2,
+                 "id":94,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":3,
+                 "x":39.3260869565217,
+                 "y":21.1173913043478
+                }, 
+                {
+                 "height":0.2,
+                 "id":95,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":3,
+                 "x":52.3260869565217,
+                 "y":17.1173913043478
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -510,24 +532,6 @@
          "id":4,
          "name":"DynamicSpawns",
          "objects":[
-                {
-                 "height":0,
-                 "id":53,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"crate"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":49,
-                 "y":13
-                }, 
                 {
                  "height":0,
                  "id":54,
@@ -633,26 +637,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":39.6521739130435,
-                 "y":8
-                }, 
-                {
-                 "height":0,
-                 "id":78,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"crate"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":52,
-                 "y":13
+                 "x":36,
+                 "y":23
                 }, 
                 {
                  "height":0.2,
@@ -691,8 +677,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":68.7826086956522,
-                 "y":17.2608695652174
+                 "x":69.0638586956522,
+                 "y":16.5108695652174
                 }, 
                 {
                  "height":0,
@@ -711,6 +697,132 @@
                  "width":0,
                  "x":56,
                  "y":23
+                }, 
+                {
+                 "height":0,
+                 "id":97,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"crate"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":45,
+                 "y":20
+                }, 
+                {
+                 "height":0,
+                 "id":98,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"enemy"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":64,
+                 "y":23
+                }, 
+                {
+                 "height":0,
+                 "id":99,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"enemy"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":33,
+                 "y":23
+                }, 
+                {
+                 "height":0,
+                 "id":100,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"enemy"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":44,
+                 "y":23
+                }, 
+                {
+                 "height":0,
+                 "id":101,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"enemy"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":48,
+                 "y":23
+                }, 
+                {
+                 "height":0,
+                 "id":102,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"enemy"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":53,
+                 "y":21
+                }, 
+                {
+                 "height":0,
+                 "id":103,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"enemy"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":40,
+                 "y":21
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -732,17 +844,17 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":65,
-                 "y":23
+                 "x":54,
+                 "y":17
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":91,
+ "nextobjectid":104,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.0",
