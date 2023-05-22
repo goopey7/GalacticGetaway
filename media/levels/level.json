@@ -675,6 +675,96 @@
                  "width":2,
                  "x":68,
                  "y":22.8
+                }, 
+                {
+                 "height":0,
+                 "id":86,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"enemy"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":58,
+                 "y":23
+                }, 
+                {
+                 "height":0,
+                 "id":87,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"enemy"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":60,
+                 "y":23
+                }, 
+                {
+                 "height":0,
+                 "id":88,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"enemy"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":54,
+                 "y":23
+                }, 
+                {
+                 "height":0,
+                 "id":89,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"crate"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":64,
+                 "y":23
+                }, 
+                {
+                 "height":0,
+                 "id":90,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"crate"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":56,
+                 "y":23
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -706,7 +796,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":86,
+ "nextobjectid":91,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.0",
