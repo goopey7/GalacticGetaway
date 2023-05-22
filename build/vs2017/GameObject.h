@@ -41,6 +41,9 @@ public:
 	void Kill();
 	bool TimeToDie();
 
+	float GetWeight() const { return weight_; }
+	void SetWeight(float weight) { weight_ = weight; }
+
 protected:
 	b2Body* physics_body_ = nullptr;
 	Tag tag = Tag::None;
@@ -49,6 +52,7 @@ protected:
 	gef::Vector4 translate_ = gef::Vector4(0, 0, 0);
 	gef::Vector4 rotate_ = gef::Vector4(0, 0, 0);
 	SpriteAnimator3D* sprite_animator3D_;
+	float weight_ = 1;
 	float anim_time_ = 0;
 };
 

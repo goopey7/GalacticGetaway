@@ -1,5 +1,4 @@
 ﻿#include "PressurePlate.h"
-
 #include "graphics/renderer_3d.h"
 #include "system/debug_log.h"
 
@@ -35,12 +34,39 @@ void PressurePlate::Init(float size_x, float size_y, float size_z, float pos_x, 
 
 void PressurePlate::Update(float frame_time)
 {
+	const bool wasActivated = current_load_ >= threshold_;
+	
+	if(GetBody()->GetContactList() == nullptr)
+	{
+		if(wasActivated)
+		{
+			current_load_ = 0.f;
+			on_deactivate_();
+		}
+		return;
+	}
+	
+	std::set<GameObject*> visited_objects;
 
+	current_load_ = 0.f;
+	TraverseContactChain(reinterpret_cast<GameObject*>(GetBody()->GetContactList()->other->GetUserData().pointer), visited_objects, current_load_);
+
+	if(!wasActivated && current_load_ >= threshold_)
+	{
+		on_activate_();
+	}
+	else if(wasActivated && current_load_ < threshold_)
+	{
+		on_deactivate_();
+	}
 }
 
 void PressurePlate::BeginCollision(GameObject* other)
 {
-	GameObject::BeginCollision(other);
+}
+
+void PressurePlate::EndCollision(GameObject* other)
+{
 }
 
 void PressurePlate::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) const
@@ -52,4 +78,29 @@ void PressurePlate::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* build
 void PressurePlate::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, float threshold)
 {
 	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, builder, threshold);
+}
+
+void PressurePlate::TraverseContactChain(GameObject* game_object, std::set<GameObject*>& visited_objects, float& total_weight)
+{
+	// Check if the body has already been visited to avoid infinite recursion
+	if (game_object == nullptr || visited_objects.contains(game_object))
+	{
+		return;
+	}
+
+	if(game_object->GetTag() == Tag::None || game_object->GetTag() == Tag::PressurePlate)
+	{
+		return;
+	}
+	
+	visited_objects.insert(game_object);
+
+	total_weight += game_object->GetWeight();
+
+	// Iterate through all contacts of the body
+	for (const b2ContactEdge* edge = game_object->GetBody()->GetContactList(); edge; edge = edge->next)
+	{
+		// Traverse the contact chain recursively
+		TraverseContactChain(reinterpret_cast<GameObject*>(edge->other->GetUserData().pointer), visited_objects, total_weight);
+	}
 }

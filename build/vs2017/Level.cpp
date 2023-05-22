@@ -79,6 +79,8 @@ void Level::LoadFromFile(const char* filename)
 						{ return element["name"] == "threshold";}).value()["value"];
 						
 						plate->Init(object["width"]/2.f,object["height"]/2.f,1,object["x"] + object["width"]/2.f, (-(float)object["y"]) - ((float)object["height"]/2.f), b2_world_, primitive_builder_, threshold);
+						plate->SetOnActivate([]{ gef::DebugOut("Plate Activated\n");});
+						plate->SetOnDeactivate([]{ gef::DebugOut("Plate Deactivated\n");});
 						static_game_objects_.push_back(plate);
 					}
 					else
