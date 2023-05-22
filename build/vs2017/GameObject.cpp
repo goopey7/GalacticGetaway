@@ -20,6 +20,8 @@ void GameObject::Init(float size_x, float size_y, float size_z, float pos_x, flo
 	fixture.density = 1.f;
 	fixture.friction = 0.7f;
 	fixture.userData.pointer = reinterpret_cast<uintptr_t>(this);
+	fixture.restitution = 0.0f;
+	fixture.restitutionThreshold = 5;
 
 	physics_body_ = world->CreateBody(&body_def);
 	physics_body_->CreateFixture(&fixture);

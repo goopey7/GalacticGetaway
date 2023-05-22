@@ -20,6 +20,8 @@ public:
 	~Gun();
 
 protected:
+	virtual int* loaded() { return &ammo_loaded_; }
+	virtual void decreaseLoaded() { ammo_loaded_--; }
 	virtual float GetFireRate() { return fire_rate_; }
 	void UpdateTransform(gef::Vector4 translation);
 	gef::Vector4 WorldToScreen(const gef::Vector4 pos, gef::Platform* platform);

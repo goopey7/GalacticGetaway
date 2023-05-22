@@ -171,8 +171,8 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 	gun_.Update(transform().GetTranslation(), iam, platform_, frame_time);
 
 	anim_time_ += frame_time;
-	if (iam->isPressed(MoveLeft) || iam->isPressed(MoveRight)) {
-		if (iam->isPressed(MoveLeft)) Rotate(gef::Vector4(0, FRAMEWORK_PI, 0));
+	if (iam->isHeld(MoveLeft) || iam->isHeld(MoveRight)) {
+		if (iam->isHeld(MoveLeft)) Rotate(gef::Vector4(0, FRAMEWORK_PI, 0));
 		else Rotate(gef::Vector4(0, 0, 0));
 		if (animation_state_ != JUMPING) animation_state_ = RUNNING;
 	}

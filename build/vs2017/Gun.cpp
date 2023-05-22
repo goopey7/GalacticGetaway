@@ -51,12 +51,13 @@ void Gun::UpdateTransform(gef::Vector4 translation) {
 void Gun::Fire(float dt, GameObject::Tag target) {
 	if (!reloading_) {
 		fire_time_ += dt;
-		if (fire_time_ >= GetFireRate() && ammo_loaded_ > 0) {
+		int* load = loaded();
+		if (fire_time_ >= GetFireRate() && *load > 0) {
 			gef::Vector2 pos(transform().GetTranslation().x(), transform().GetTranslation().y());
 			bullet_manager_.Fire(target_vector_, pos, damage_, target, 40.f);
 			fire_time_ = 0;
-			ammo_loaded_--;
-			if (ammo_loaded_ == 0) Reload(&reloading_);
+			decreaseLoaded();
+			if (*load == 0) Reload(&reloading_);
 		}
 	}
 }

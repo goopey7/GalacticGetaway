@@ -57,7 +57,7 @@ void CollisionManager::PostSolve(b2Contact* contact, const b2ContactImpulse* imp
 {
 	auto* a = reinterpret_cast<GameObject*>(contact->GetFixtureA()->GetUserData().pointer);
   	auto* b = reinterpret_cast<GameObject*>(contact->GetFixtureB()->GetUserData().pointer);
-  
+
  	if(a != nullptr && !a->TimeToDie())
   	{
   		a->PostResolve(b);
