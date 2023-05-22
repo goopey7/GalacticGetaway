@@ -22,7 +22,7 @@ void SpriteAnimator3D::Init() {
 	AddAnimation("PlayerIdle", "Player/Idle", 0.1);
 	AddAnimation("PlayerRunning", "Player/Run", 0.1);
 	AddAnimation("PlayerJumping", "Player/Jump", 0.3, false);
-
+   
 	AddAnimation("EnemyIdle", "Enemy/Idle", 0.2);
 	AddAnimation("EnemyRunning", "Enemy/Run", 0.1);
 }
