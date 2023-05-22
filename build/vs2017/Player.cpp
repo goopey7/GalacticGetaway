@@ -226,6 +226,7 @@ void Player::BeginCollision(GameObject* other) {
 	{
 	case Tag::None:
 	case Tag::Crate:
+	case Tag::PressurePlate:
 	case Tag::Enemy:
 		if (jumping_) {
 			jumping_ = false;

@@ -44,35 +44,7 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 
 void Enemy::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator, const ::Player* player)
 {
-	size_y_ = size.y();
-	player_ = player;
-	platform_ = sprite_animator->GetPlatform();
-	sprite_animator3D_ = sprite_animator;
-	set_mesh(sprite_animator3D_->GetFirstFrame("EnemyIdle"));
-	
-	physics_world_ = world;
-	
-	gun_.Init(gef::Vector4(size.x() * 0.33f, size.y(), size.z() * 1.5f), world, sprite_animator, "Enemy/Gun/gun.png");
-
-	b2BodyDef body_def;
-	body_def.type = b2_dynamicBody;
-	body_def.position = b2Vec2(pos.x(), pos.y());
-
-	b2PolygonShape shape;
-	shape.SetAsBox(size.x(), size.y());
-
-	b2FixtureDef fixture;
-	fixture.shape = &shape;
-	fixture.density = 1.f;
-	fixture.friction = 0.5f;
-
-	physics_body_ = world->CreateBody(&body_def);
-	physics_body_->CreateFixture(&fixture);
-	physics_body_->GetUserData().pointer = (uintptr_t)this;
-	physics_body_->SetSleepingAllowed(false);
-	physics_body_->SetFixedRotation(true);
-
-	UpdateBox2d();
+	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, sprite_animator, player);
 }
 
 void Enemy::Update(float frame_time)
@@ -123,7 +95,7 @@ void Enemy::Update(float frame_time)
 			break;
 		}
 		gun_.SetTargetVector({ moving_left_ ? -1.f : 1.f, 0 });
-		gun_.Update(transform().GetTranslation());
+		gun_.Update(frame_time, transform().GetTranslation());
 	}
 	else
 	{
@@ -132,7 +104,7 @@ void Enemy::Update(float frame_time)
 		//b2Vec2 dir = player_->GetBody()->GetPosition() - pos;
 		b2Vec2 dir = player_->GetBody()->GetPosition() - GetBody()->GetPosition();
 		gun_.SetTargetVector({ dir.x,-dir.y });
-		gun_.Update(transform().GetTranslation());
+		gun_.Update(frame_time, transform().GetTranslation());
 
 		gun_.Fire(frame_time, GameObject::Tag::Player);
 		//dir.Normalize();

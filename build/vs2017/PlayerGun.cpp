@@ -34,7 +34,7 @@ void PlayerGun::Update(gef::Vector4 translation, InputActionManager* input, gef:
 		//reloading_ = false;
 	}
 
-	bullet_manager_.Update();
+	bullet_manager_.Update(dt);
 }
 
 void PlayerGun::Reload(bool* reloading) {

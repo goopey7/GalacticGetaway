@@ -14,13 +14,13 @@ void Gun::Init(gef::Vector4 size, b2World* world, SpriteAnimator3D* sprite_anima
 	getBulletManager()->Init(world, sprite_animator->GetPrimitiveBuilder());
 }
 
-void Gun::Update(gef::Vector4 translation) {
+void Gun::Update(float frame_time, gef::Vector4 translation) {
 	ammo_reserve_ = INT_MAX;
 	ammo_loaded_ = INT_MAX;
 
 	UpdateTransform(translation);
 
-	bullet_manager_.Update();
+	bullet_manager_.Update(frame_time);
 }
 
 void Gun::UpdateTransform(gef::Vector4 translation) {

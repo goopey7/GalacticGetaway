@@ -5,13 +5,13 @@ void BulletManager::Init(b2World* world, PrimitiveBuilder* builder) {
 	builder_ = builder;
 }
  
-void BulletManager::Update()
+void BulletManager::Update(float frame_time)
 {
 	for (size_t i=0; i < bullets_.size(); i++) {
 		Bullet* bullet = bullets_[i];
 		if(bullet != nullptr)
 		{
-			bullet->Update();
+			bullet->Update(frame_time);
 			if(bullet->TimeToDie())
 			{
 				world_->DestroyBody(bullet->GetBody());

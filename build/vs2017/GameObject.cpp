@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "primitive_builder.h"
+#include "graphics/renderer_3d.h"
 
 void GameObject::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, bool dynamic) {
 
@@ -27,31 +28,16 @@ void GameObject::Init(float size_x, float size_y, float size_z, float pos_x, flo
 }
 
 void GameObject::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, bool dynamic) {
-	set_mesh(builder->CreateBoxMesh(size/2.f));
+	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, builder, dynamic);
+}
 
-	size_ = size;
-	b2BodyDef body_def;
-	dynamic ? body_def.type = b2_dynamicBody : body_def.type = b2_staticBody;
-	body_def.position = b2Vec2(pos.x(), pos.y());
-	body_def.userData.pointer = reinterpret_cast<uintptr_t>(this);
-
-	b2PolygonShape shape;
-	shape.SetAsBox(size.x()/2.f, size.y()/2.f);
-
-	b2FixtureDef fixture;
-	fixture.shape = &shape;
-	fixture.density = 1.f;
-	fixture.friction = 0.5f;
-	fixture.userData.pointer = reinterpret_cast<uintptr_t>(this);
-
-	physics_body_ = world->CreateBody(&body_def);
-	physics_body_->CreateFixture(&fixture);
-
+void GameObject::Update(float frame_time) {
 	UpdateBox2d();
 }
 
-void GameObject::Update() {
-	UpdateBox2d();
+void GameObject::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) const
+{
+	renderer_3d->DrawMesh(*this);
 }
 
 void GameObject::BeginCollision(GameObject* other)

@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "json.h"
 #include "obj_mesh_loader.h"
+#include "PressurePlate.h"
 #include "primitive_builder.h"
 #include "Text.h"
 #include "box2d/b2_math.h"
@@ -61,18 +62,31 @@ void Level::LoadFromFile(const char* filename)
 			{
 				for(const auto& object : layer["objects"])
 				{
-					if(object["properties"][0]["value"] == "enemy")
+					std::string type = std::find_if(object["properties"].begin(), object["properties"].end(), [](const json& element)
+						{ return element["name"] == "type";}).value()["value"];
+					
+					if(type == "enemy")
 					{
 						Enemy* enemy = new Enemy();
 						enemy->Init(1, 1, 1, object["x"], 0-object["y"], b2_world_, sprite_animator3D_, &player_);
 						enemies_.push_back(enemy);
+					}
+					else if(type == "plate")
+					{
+						PressurePlate* plate = new PressurePlate();
+						
+						float threshold = std::find_if(object["properties"].begin(), object["properties"].end(), [](const json& element)
+						{ return element["name"] == "threshold";}).value()["value"];
+						
+						plate->Init(object["width"]/2.f,object["height"]/2.f,1,object["x"] + object["width"]/2.f, (-(float)object["y"]) - ((float)object["height"]/2.f), b2_world_, primitive_builder_, threshold);
+						static_game_objects_.push_back(plate);
 					}
 					else
 					{
 						dynamic_game_objects_.emplace_back(new GameObject());
 						GameObject* dynObject = dynamic_game_objects_.back();
 						dynObject->Init(0.6f, 0.6f, 0.6f, object["x"], 0-object["y"], b2_world_, primitive_builder_, true);
-						if(object["properties"][0]["value"] == "crate")
+						if(type == "crate")
 						{
 							dynObject->SetTag(GameObject::Tag::Crate);
 							OBJMeshLoader obj_loader;
@@ -126,10 +140,15 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 
 	player_.Update(iam_, frame_time);
 
+	for(int i=0; i < static_game_objects_.size(); i++)
+	{
+		static_game_objects_[i]->Update(frame_time);
+	}
+
 	for(int i = 0; i < dynamic_game_objects_.size(); i++)
 	{
 		auto* object = dynamic_game_objects_[i];
-		object->Update();
+		object->Update(frame_time);
 		if(object->TimeToDie())
 		{
 			objects_to_destroy_.push_back(object);
@@ -203,15 +222,14 @@ void Level::Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_ren
 	renderer_3d->set_view_matrix(view_matrix);
 	
 	renderer_3d->Begin();
-		renderer_3d->set_override_material(&primitive_builder_->blue_material());
 		for(const GameObject* object : static_game_objects_)
 		{
-			renderer_3d->DrawMesh(*object);
+			object->Render(renderer_3d, primitive_builder_);
 		}
 		renderer_3d->set_override_material(NULL);
 		for(const GameObject* object : dynamic_game_objects_)
 		{
-			renderer_3d->DrawMesh(*object);
+			object->Render(renderer_3d, primitive_builder_);
 		}
 		player_.Render(renderer_3d, primitive_builder_);
 		for(const Enemy* enemy : enemies_)

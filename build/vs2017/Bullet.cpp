@@ -22,10 +22,10 @@ void Bullet::Fire(gef::Vector2 target_vector, gef::Vector2 start_pos, int damage
 	EnableCollisionResolution(bCollisionEnabled);
 }
 
-void Bullet::Update()
+void Bullet::Update(float frame_time)
 {
 	EnableCollisionResolution(bCollisionEnabled);
-	GameObject::Update();
+	GameObject::Update(frame_time);
 }
 
 void Bullet::PreResolve(GameObject* other)

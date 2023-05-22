@@ -8,7 +8,7 @@ class InputActionManager;
 class Gun : public gef::MeshInstance {
 public:
 	void Init(gef::Vector4 size, b2World* world, SpriteAnimator3D* sprite_animator, const char* filename);
-	void Update(gef::Vector4 translation);
+	void Update(float frame_time, gef::Vector4 translation);
 	void Fire(float dt, GameObject::Tag target);
 	virtual void Reload(bool* reloading) {};
 	void SetTargetVector(gef::Vector2 vec) { target_vector_ = vec; target_vector_.Normalise(); }
