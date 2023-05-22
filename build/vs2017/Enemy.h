@@ -2,8 +2,7 @@
 
 #include "GameObject.h"
 #include <graphics/renderer_3d.h>
-
-#include "BulletManager.h"
+#include "Gun.h"
 
 class Player;
 
@@ -42,10 +41,12 @@ protected:
 	const ::Player* player_ = nullptr;
 	bool bPlayerInRange_ = false;
 	bool bSawPlayer = false;
-	float player_detection_range_ = 50.f;
+	float player_detection_range_ = 10.f;
 
-	BulletManager bullet_manager_;
-	float fire_timer_ = 0.f;
+	
+	//BulletManager bullet_manager_;
+	//float fire_timer_ = 0.f;
+	Gun gun_;
 
 	float size_y_ = 0.f;
 

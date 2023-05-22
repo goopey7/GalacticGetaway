@@ -18,5 +18,10 @@ public:
 
 protected:
 	void reloadThreadFunc();
+	float GetFireRate() override { return fire_rate_; }
+	int ammo_reserve_ = 100;
+	int ammo_loaded_ = 30;
+	int damage_ = 5;
+	float fire_rate_ = 1.f / 15.f;
 };
 

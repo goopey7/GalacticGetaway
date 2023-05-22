@@ -25,7 +25,7 @@ void PlayerGun::Update(gef::Vector4 translation, InputActionManager* input, gef:
 	UpdateTransform(translation);
 
 	if (input->getInputManager()->touch_manager()->is_button_down(0) || input->isHeld(Action::Fire)) {
-		Fire(dt);
+		Fire(dt, GameObject::Tag::Enemy);
 	}
 
 	if (input->isPressed(Action::Reload)) {

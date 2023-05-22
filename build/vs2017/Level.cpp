@@ -213,11 +213,12 @@ void Level::Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_ren
 		{
 			renderer_3d->DrawMesh(*object);
 		}
+		player_.Render(renderer_3d, primitive_builder_);
 		for(const Enemy* enemy : enemies_)
 		{
 			enemy->Render(renderer_3d, primitive_builder_);
 		}
-		player_.Render(renderer_3d, primitive_builder_);
+
 	renderer_3d->End();
 	
 	// start drawing sprites, but don't clear the frame buffer

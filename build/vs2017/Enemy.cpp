@@ -18,7 +18,7 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 
 	physics_world_ = world;
 
-	bullet_manager_.Init(world,sprite_animator3D_->GetPrimitiveBuilder());
+	gun_.Init(gef::Vector4(size_x * 0.4f, size_y, size_z), world, sprite_animator, "Enemy/Gun/gun.png");
 
 	b2BodyDef body_def;
 	body_def.type = b2_dynamicBody;
@@ -52,7 +52,7 @@ void Enemy::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnim
 	
 	physics_world_ = world;
 	
-	bullet_manager_.Init(world, sprite_animator3D_->GetPrimitiveBuilder());
+	gun_.Init(gef::Vector4(size.x() * 0.33f, size.y(), size.z() * 1.5f), world, sprite_animator, "Enemy/Gun/gun.png");
 
 	b2BodyDef body_def;
 	body_def.type = b2_dynamicBody;
@@ -91,12 +91,15 @@ void Enemy::Update(float frame_time)
 		world_gravity_direction_ = GRAVITY_RIGHT;
 	}
 
-	fire_timer_ += frame_time;
-	bullet_manager_.Update();
+	/*fire_timer_ += frame_time;
+	bullet_manager_.Update();*/
 
 	// Raycast to check if player is in range
 	b2Vec2 cast_start = GetBody()->GetPosition();
-	b2Vec2 cast_end = cast_start + (moving_left_ ? -1 : 1)*b2Vec2(player_detection_range_, 0.f);
+	//b2Vec2 cast_end = cast_start + (moving_left_ ? -1 : 1)*b2Vec2(player_detection_range_, 0.f);
+	b2Vec2 direction = player_->GetBody()->GetPosition() - GetBody()->GetPosition();
+	direction.Normalize();
+	b2Vec2 cast_end = cast_start +  b2Vec2(direction.x * player_detection_range_, direction.y * player_detection_range_);
 	bPlayerInRange_ = false;
 	physics_world_->RayCast(this, cast_start, cast_end);
 	
@@ -119,18 +122,25 @@ void Enemy::Update(float frame_time)
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time), 0);
 			break;
 		}
+		gun_.SetTargetVector({ moving_left_ ? -1.f : 1.f, 0 });
+		gun_.Update(transform().GetTranslation());
 	}
 	else
 	{
 		animation_state_ = IDLE;
-		b2Vec2 pos = GetBody()->GetPosition() + b2Vec2(0.f, size_y_ / 8.f);
-		b2Vec2 dir = player_->GetBody()->GetPosition() - pos;
-		dir.Normalize();
-		if(fire_timer_ >= fire_rate_)
+		//b2Vec2 pos = GetBody()->GetPosition() + b2Vec2(0.f, size_y_ / 8.f);
+		//b2Vec2 dir = player_->GetBody()->GetPosition() - pos;
+		b2Vec2 dir = player_->GetBody()->GetPosition() - GetBody()->GetPosition();
+		gun_.SetTargetVector({ dir.x,-dir.y });
+		gun_.Update(transform().GetTranslation());
+
+		gun_.Fire(frame_time, GameObject::Tag::Player);
+		//dir.Normalize();
+		/*if(fire_timer_ >= fire_rate_)
 		{
 			bullet_manager_.Fire({dir.x,-dir.y}, {pos.x, pos.y}, damage_, GameObject::Tag::Player, 20.f);
 			fire_timer_ = 0.f;
-		}
+		}*/
 	}
 
 	UpdateBox2d();
@@ -195,5 +205,6 @@ void Enemy::BeginCollision(GameObject* other)
 void Enemy::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) const
 {
 	renderer_3d->DrawMesh(*this);
-	bullet_manager_.Render(renderer_3d);
+	gun_.Render(renderer_3d);
+	//bullet_manager_.Render(renderer_3d);
 }
