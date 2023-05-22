@@ -4,6 +4,7 @@
 
 #include "Bullet.h"
 #include "Player.h"
+#include <maths/math_utils.h>
 #include "system/debug_log.h"
 
 void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world,
@@ -137,6 +138,8 @@ void Enemy::Update(float frame_time)
 
 	UpdateBox2d();
 
+	if (moving_left_) Rotate(gef::Vector4(0, FRAMEWORK_PI, 0));
+	else Rotate(gef::Vector4(0, 0, 0));
 	anim_time_ += frame_time;
 	switch (animation_state_)
 	{
