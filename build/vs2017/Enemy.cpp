@@ -91,9 +91,6 @@ void Enemy::Update(float frame_time)
 		world_gravity_direction_ = GRAVITY_RIGHT;
 	}
 
-	/*fire_timer_ += frame_time;
-	bullet_manager_.Update();*/
-
 	// Raycast to check if player is in range
 	b2Vec2 cast_start = GetBody()->GetPosition();
 	//b2Vec2 cast_end = cast_start + (moving_left_ ? -1 : 1)*b2Vec2(player_detection_range_, 0.f);
@@ -101,9 +98,13 @@ void Enemy::Update(float frame_time)
 	direction.Normalize();
 	b2Vec2 cast_end = cast_start +  b2Vec2(direction.x * player_detection_range_, direction.y * player_detection_range_);
 	bPlayerInRange_ = false;
+	closest_fraction_ = 1.f;
+	closest_fixture_ = nullptr;
 	physics_world_->RayCast(this, cast_start, cast_end);
+	InspectClosestFixture();
 	
-	if(!bSawPlayer || !bPlayerInRange_)
+	//if(!bSawPlayer || !bPlayerInRange_)
+	if(!bPlayerInRange_)
 	{
 		// TODO Movement depending on gravity. Maybe move like red Koopas?
 		animation_state_ = RUNNING;
@@ -128,19 +129,10 @@ void Enemy::Update(float frame_time)
 	else
 	{
 		animation_state_ = IDLE;
-		//b2Vec2 pos = GetBody()->GetPosition() + b2Vec2(0.f, size_y_ / 8.f);
-		//b2Vec2 dir = player_->GetBody()->GetPosition() - pos;
 		b2Vec2 dir = player_->GetBody()->GetPosition() - GetBody()->GetPosition();
 		gun_.SetTargetVector({ dir.x,-dir.y });
 		gun_.Update(transform().GetTranslation());
-
 		gun_.Fire(frame_time, GameObject::Tag::Player);
-		//dir.Normalize();
-		/*if(fire_timer_ >= fire_rate_)
-		{
-			bullet_manager_.Fire({dir.x,-dir.y}, {pos.x, pos.y}, damage_, GameObject::Tag::Player, 20.f);
-			fire_timer_ = 0.f;
-		}*/
 	}
 
 	UpdateBox2d();
@@ -162,21 +154,29 @@ void Enemy::Update(float frame_time)
 // On Raycast Hit
 float Enemy::ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float fraction)
 {
-	auto* object = reinterpret_cast<::GameObject*>(fixture->GetBody()->GetUserData().pointer);
-	if(object != nullptr && object->GetTag() == Tag::Player)
-	{
-		auto* player = reinterpret_cast<::Player*>(object);
-		if(player != nullptr)
+	if (fraction < closest_fraction_) {
+		closest_fraction_ = fraction;
+		closest_fixture_ = fixture;
+	}
+	return 1;
+}
+
+void Enemy::InspectClosestFixture() {
+	if (closest_fixture_) {
+		auto* object = reinterpret_cast<::GameObject*>(closest_fixture_->GetBody()->GetUserData().pointer);
+		if (object != nullptr && object->GetTag() == Tag::Player)
 		{
-			if(fraction <= 1.f)
+			auto* player = reinterpret_cast<::Player*>(object);
+			if (player != nullptr)
 			{
-				bPlayerInRange_ = true;
-				bSawPlayer = true;
+				if (closest_fraction_ <= 1.f)
+				{
+					bPlayerInRange_ = true;
+					//bSawPlayer = true;
+				}
 			}
 		}
 	}
-
-	return fraction;
 }
 
 void Enemy::BeginCollision(GameObject* other)

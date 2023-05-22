@@ -14,6 +14,7 @@ public:
 	void Update(float frame_time);
 
 	float ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float fraction) override;
+	void InspectClosestFixture();
 
 	void BeginCollision(GameObject* other) override;
 
@@ -42,6 +43,8 @@ protected:
 	bool bPlayerInRange_ = false;
 	bool bSawPlayer = false;
 	float player_detection_range_ = 10.f;
+	float closest_fraction_ = 1.0f;
+	b2Fixture* closest_fixture_ = nullptr;
 
 	
 	//BulletManager bullet_manager_;

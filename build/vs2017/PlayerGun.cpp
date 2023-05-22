@@ -10,8 +10,6 @@
 
 void PlayerGun::Update(gef::Vector4 translation, InputActionManager* input, gef::Platform* platform, float dt) {
 
-	//gef::Vector4 screenPos = WorldToScreen(translation, platform);
-
 	if (input->getUsingKeyboard()) {
 		gef::Vector2 mouse_pos = input->getMousePos();
 		target_vector_ = mouse_pos - gef::Vector2(platform->width() * 0.5f, platform->height() * 0.5f);
@@ -29,9 +27,7 @@ void PlayerGun::Update(gef::Vector4 translation, InputActionManager* input, gef:
 	}
 
 	if (input->isPressed(Action::Reload)) {
-		//reloading_ = true;
 		Reload(&reloading_);
-		//reloading_ = false;
 	}
 
 	bullet_manager_.Update();
@@ -40,11 +36,9 @@ void PlayerGun::Update(gef::Vector4 translation, InputActionManager* input, gef:
 void PlayerGun::Reload(bool* reloading) {
 	if (!reloading_) {
 		reloading_ = true;
-		//gef::DebugOut("hey\n");
 		std::thread reload_thread([this] { 
 
 			this->reloadThreadFunc(); 
-			//gef::DebugOut("hi\n");
 			this->setReloading(false);
 		});
 		reload_thread.detach();
@@ -52,7 +46,6 @@ void PlayerGun::Reload(bool* reloading) {
 }
 
 void PlayerGun::reloadThreadFunc() {
-	//gef::DebugOut(("loaded: " + std::to_string(ammo_loaded_) + " reserve: " + std::to_string(ammo_reserve_) + " delta: " + std::to_string(30 - ammo_loaded_) + "\n").c_str());
 	if (ammo_reserve_ > (30 - ammo_loaded_)) {
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 		ammo_reserve_ -= (30 - ammo_loaded_);

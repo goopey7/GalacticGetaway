@@ -66,6 +66,7 @@ void Level::LoadFromFile(const char* filename)
 						Enemy* enemy = new Enemy();
 						enemy->Init(1, 1, 1, object["x"], 0-object["y"], b2_world_, sprite_animator3D_, &player_);
 						enemies_.push_back(enemy);
+						break;
 					}
 					else
 					{
