@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "primitive_builder.h"
 #include "graphics/renderer_3d.h"
+#include "system/debug_log.h"
 
 void GameObject::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, bool dynamic) {
 
@@ -20,8 +21,6 @@ void GameObject::Init(float size_x, float size_y, float size_z, float pos_x, flo
 	fixture.density = 1.f;
 	fixture.friction = 0.7f;
 	fixture.userData.pointer = reinterpret_cast<uintptr_t>(this);
-	fixture.restitution = 0.0f;
-	fixture.restitutionThreshold = 5;
 
 	physics_body_ = world->CreateBody(&body_def);
 	physics_body_->CreateFixture(&fixture);
@@ -52,6 +51,11 @@ void GameObject::EndCollision(GameObject* other)
 
 void GameObject::PreResolve(GameObject* other)
 {
+	if (other->GetTag() == GameObject::Tag::Crate) {
+		//if (physics_body_->GetLinearVelocity().LengthSquared() < 0.1f && other->GetBody()->GetLinearVelocity().LengthSquared() < 0.1f) {
+			physics_body_->SetLinearVelocity(b2Vec2(0, 0));
+		//}
+	}
 }
 
 void GameObject::PostResolve(GameObject* other)

@@ -41,7 +41,7 @@ void CollisionManager::PreSolve(b2Contact* contact, const b2Manifold* oldManifol
 {
 	auto* a = reinterpret_cast<GameObject*>(contact->GetFixtureA()->GetUserData().pointer);
  	auto* b = reinterpret_cast<GameObject*>(contact->GetFixtureB()->GetUserData().pointer);
- 
+
  	if(a != nullptr && !a->TimeToDie())
  	{
  		a->PreResolve(b);

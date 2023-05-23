@@ -2,6 +2,7 @@
 #include <input/keyboard.h>
 #include <maths/vector2.h>
 #include <maths/math_utils.h>
+#include "system/debug_log.h"
 
 #include "InputActionManager.h"
 
@@ -11,7 +12,7 @@ void Player::Init(float size_x, float size_y, float size_z, float pos_x, float p
 	sprite_animator3D_ = sprite_animator;
 	set_mesh(sprite_animator3D_->GetFirstFrame("PlayerIdle"));
 
-	gun_.Init(gef::Vector4(size_x * 0.33f, size_y, size_z * 1.5f), world, sprite_animator, "Player/Gun/gun.png");
+	gun_.Init(gef::Vector4(size_x * 0.33f, size_y, size_z), world, sprite_animator, "Player/Gun/gun.png");
 
 	physics_world_ = world;
 
@@ -94,7 +95,7 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 		animation_state_ = JUMPING;
 		set_mesh(sprite_animator3D_->GetFirstFrame("PlayerJumping"));
 		b2Vec2 grav = world_gravity_;
-		grav *= 20;
+		grav *= 40;
 		physics_body_->ApplyLinearImpulseToCenter(-grav, true);
 	}
 
@@ -167,6 +168,9 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 	physics_world_->SetGravity(grav);
 
 	UpdateBox2d();
+
+	//gef::DebugOut("\n");
+	//gef::DebugOut(std::to_string(physics_body_->GetLinearVelocity().LengthSquared()).c_str());
 
 	gun_.Update(transform().GetTranslation(), iam, platform_, frame_time);
 
