@@ -51,9 +51,13 @@ void Enemy::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnim
 void Enemy::Update(float frame_time)
 {
 	world_gravity_ = physics_world_->GetGravity();
-	if(std::abs(world_gravity_.y) > 0)
+	if(world_gravity_.y > 0)
 	{
-		world_gravity_direction_ = GRAVITY_VERTICAL;
+		world_gravity_direction_ = GRAVITY_UP;
+	}
+	else if (world_gravity_.y < 0)
+	{
+		world_gravity_direction_ = GRAVITY_DOWN;
 	}
 	else if(world_gravity_.x < 0)
 	{
@@ -83,17 +87,21 @@ void Enemy::Update(float frame_time)
 		animation_state_ = RUNNING;
 		switch (world_gravity_direction_)
 		{
-		case GRAVITY_VERTICAL:
+		case GRAVITY_UP:
+			//...
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2((moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time, 0), gef::DegToRad(180));
+			break;
+		case GRAVITY_DOWN:
 			//...
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2((moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time, 0), 0);
 			break;
 		case GRAVITY_LEFT:
 			//...
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? 1.f : -1.f) * move_speed_ * frame_time), 0);
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? 1.f : -1.f) * move_speed_ * frame_time), gef::DegToRad(-90));
 			break;
 		case GRAVITY_RIGHT:
 			//...
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time), 0);
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time), gef::DegToRad(90));
 			break;
 		}
 		gun_.SetTargetVector({ moving_left_ ? -1.f : 1.f, 0 });
@@ -156,7 +164,10 @@ void Enemy::InspectClosestFixture() {
 
 void Enemy::BeginCollision(GameObject* other)
 {
-	if(other->GetTag() != Tag::Bullet)
+	if (other->GetTag() == GameObject::Tag::Crate) {
+		physics_body_->SetLinearVelocity(b2Vec2(0, 0));
+	}
+	else if(other->GetTag() != Tag::Bullet)
 	{
 		moving_left_ = !moving_left_;
 	}

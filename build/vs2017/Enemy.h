@@ -35,8 +35,8 @@ protected:
 
 	bool gravity_lock_ = false;
 	bool jumping_ = false;
-	enum GravityDirection { GRAVITY_VERTICAL, GRAVITY_LEFT, GRAVITY_RIGHT };
-	GravityDirection world_gravity_direction_ = GRAVITY_VERTICAL;
+	enum GravityDirection { GRAVITY_UP, GRAVITY_DOWN, GRAVITY_LEFT, GRAVITY_RIGHT };
+	GravityDirection world_gravity_direction_ = GRAVITY_DOWN;
 	const gef::Platform* platform_;
 
 	const ::Player* player_ = nullptr;

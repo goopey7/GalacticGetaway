@@ -43,6 +43,9 @@ void GameObject::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder)
 
 void GameObject::BeginCollision(GameObject* other)
 {
+	if (other->GetTag() == GameObject::Tag::Crate && tag != GameObject::Tag::Crate) {
+		physics_body_->SetLinearVelocity(b2Vec2(0, 0));
+	}
 }
 
 void GameObject::EndCollision(GameObject* other)
@@ -51,11 +54,7 @@ void GameObject::EndCollision(GameObject* other)
 
 void GameObject::PreResolve(GameObject* other)
 {
-	if (other->GetTag() == GameObject::Tag::Crate) {
-		//if (physics_body_->GetLinearVelocity().LengthSquared() < 0.1f && other->GetBody()->GetLinearVelocity().LengthSquared() < 0.1f) {
-			physics_body_->SetLinearVelocity(b2Vec2(0, 0));
-		//}
-	}
+	
 }
 
 void GameObject::PostResolve(GameObject* other)
@@ -96,10 +95,16 @@ void GameObject::UpdateBox2d() {
 	gef::Matrix44 transform;
 	transform.SetIdentity();
 
-	gef::Matrix44 rotation;
-	rotation.RotationX(rotate_.x());
-	rotation.RotationZ(rotate_.z() + physics_body_->GetAngle());
-	rotation.RotationY(rotate_.y());
+	//gef::Matrix44 rotation;
+	gef::Matrix44 rotationX;
+	rotationX.RotationX(rotate_.x());
+	gef::Matrix44 rotationZ;
+	rotationZ.RotationZ(rotate_.z() + physics_body_->GetAngle());
+	gef::Matrix44 rotationY;
+	rotationY.RotationY(rotate_.y());
+	/*gef::DebugOut("\n");
+	gef::DebugOut(std::to_string(rotate_.y()).c_str());*/
+	gef::Matrix44 rotation = rotationX * rotationY * rotationZ;
 
 	gef::Matrix44 translation1;
 	translation1.SetIdentity();

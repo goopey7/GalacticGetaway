@@ -48,30 +48,29 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 		switch (player_gravity_direction_)
 		{
 		case GRAVITY_VERTICAL:
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(-8 * frame_time, 0), 0);
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(-8 * frame_time, 0), physics_body_->GetAngle());
 			break;
 		case GRAVITY_LEFT:
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), 0);
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), physics_body_->GetAngle());
 			break;
 		case GRAVITY_RIGHT:
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), 0);
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), physics_body_->GetAngle());
 			break;
 		default:
 			break;
 		}
-		physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(-8 * frame_time, 0), 0);
 	}
 	if (iam->isHeld(MoveRight)) {
 		switch (player_gravity_direction_)
 		{
 		case GRAVITY_VERTICAL:
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(8 * frame_time, 0), 0);
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(8 * frame_time, 0), physics_body_->GetAngle());
 			break;
 		case GRAVITY_LEFT:
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), 0);
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), physics_body_->GetAngle());
 			break;
 		case GRAVITY_RIGHT:
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), 0);
+			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), physics_body_->GetAngle());
 			break;
 		default:
 			break;
@@ -101,9 +100,6 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 
 	if (iam->isPressed(GravityUp)) {
 		world_gravity_ = b2Vec2(0, 1);
-		/*b2Vec2 grav = world_gravity_;
-		grav *= world_grav_mult;
-		physics_world_->SetGravity(grav);*/
 		physics_world_->SetAllowSleeping(false);
 		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(180));
 		world_gravity_direction_ = GRAVITY_VERTICAL;
@@ -111,9 +107,6 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 	}
 	else if (iam->isPressed(GravityDown)) {
 		world_gravity_ = b2Vec2(0, -1);
-		/*b2Vec2 grav = world_gravity_;
-		grav *= world_grav_mult;
-		physics_world_->SetGravity(grav);*/
 		physics_world_->SetAllowSleeping(false);
 		physics_body_->SetTransform(physics_body_->GetPosition(), 0);
 		world_gravity_direction_ = GRAVITY_VERTICAL;
@@ -121,21 +114,15 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 	}
 	else if (iam->isPressed(GravityLeft)) {
 		world_gravity_ = b2Vec2(-1, 0);
-		/*b2Vec2 grav = world_gravity_;
-		grav *= world_grav_mult;
-		physics_world_->SetGravity(grav);*/
 		physics_world_->SetAllowSleeping(false);
-		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(90));
+		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(-90));
 		world_gravity_direction_ = GRAVITY_LEFT;
 		if (!gravity_lock_) player_gravity_direction_ = GRAVITY_LEFT;
 	}
 	else if (iam->isPressed(GravityRight)) {
 		world_gravity_ = b2Vec2(1, 0);
-		/*b2Vec2 grav = world_gravity_;
-		grav *= world_grav_mult;
-		physics_world_->SetGravity(grav);*/
 		physics_world_->SetAllowSleeping(false);
-		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(-90));
+		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(90));
 		world_gravity_direction_ = GRAVITY_RIGHT;
 		if (!gravity_lock_) player_gravity_direction_ = GRAVITY_RIGHT;
 	}
@@ -169,9 +156,6 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 
 	UpdateBox2d();
 
-	//gef::DebugOut("\n");
-	//gef::DebugOut(std::to_string(physics_body_->GetLinearVelocity().LengthSquared()).c_str());
-
 	gun_.Update(transform().GetTranslation(), iam, platform_, frame_time);
 
 	anim_time_ += frame_time;
@@ -199,11 +183,14 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 }
 
 void Player::BeginCollision(GameObject* other) {
+	if (other->GetTag() == GameObject::Tag::Crate) {
+		physics_body_->SetLinearVelocity(b2Vec2(0, 0));
+	}
 	switch (other->GetTag())
 	{
 	case Tag::None:
-	case Tag::Crate:
 	case Tag::PressurePlate:
+	case Tag::Crate:
 	case Tag::Enemy:
 		if (jumping_) {
 			jumping_ = false;

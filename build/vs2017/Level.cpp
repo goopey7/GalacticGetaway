@@ -118,6 +118,7 @@ void Level::Init()
 
 	// Set collision manager as contact listener for the world
 	b2_world_->SetContactListener(&collision_manager_);
+	b2_world_->SetAutoClearForces(false);
 	
 	// initialise primitive builder to make create some 3D geometry easier
 	primitive_builder_ = new PrimitiveBuilder(*platform_);
@@ -139,6 +140,7 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 		progress += step;
 	}
 	//---------------
+	b2_world_->ClearForces();
 
 	player_.Update(iam_, frame_time);
 
