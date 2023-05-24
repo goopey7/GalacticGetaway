@@ -164,10 +164,7 @@ void Enemy::InspectClosestFixture() {
 
 void Enemy::BeginCollision(GameObject* other)
 {
-	if (other->GetTag() == GameObject::Tag::Crate) {
-		physics_body_->SetLinearVelocity(b2Vec2(0, 0));
-	}
-	else if(other->GetTag() != Tag::Bullet)
+	if(other->GetTag() != Tag::Bullet)
 	{
 		moving_left_ = !moving_left_;
 	}

@@ -183,9 +183,6 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 }
 
 void Player::BeginCollision(GameObject* other) {
-	if (other->GetTag() == GameObject::Tag::Crate) {
-		physics_body_->SetLinearVelocity(b2Vec2(0, 0));
-	}
 	switch (other->GetTag())
 	{
 	case Tag::None:

@@ -43,9 +43,6 @@ void GameObject::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder)
 
 void GameObject::BeginCollision(GameObject* other)
 {
-	if (other->GetTag() == GameObject::Tag::Crate && tag != GameObject::Tag::Crate) {
-		physics_body_->SetLinearVelocity(b2Vec2(0, 0));
-	}
 }
 
 void GameObject::EndCollision(GameObject* other)

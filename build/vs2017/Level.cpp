@@ -131,12 +131,12 @@ void Level::Init()
 void Level::Update(InputActionManager* iam_, float frame_time)
 {
 	//--------------- Adapted from Stack Overflow - remudada (2014) : https://stackoverflow.com/a/23038284 (Accessed: 22 March 2023)
-	float maximumStep = 1.0f / 165.0f;
+	float maximumStep = 1.0f / 60.0f;
 	float progress = 0.0;
 	while (progress < frame_time)
 	{
 		float step = min((frame_time - progress), maximumStep);
-		b2_world_->Step(step, 6, 2);
+		b2_world_->Step(step, 20, 20);
 		progress += step;
 	}
 	//---------------
