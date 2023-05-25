@@ -60,6 +60,7 @@ void Level::LoadFromFile(const char* filename)
 			{
 				auto playerJson = layer["objects"][0];
 				player_.Init(1, 1, 1, playerJson["x"], 0-playerJson["y"], b2_world_, sprite_animator3D_, &camera_);
+				camera_.SetPosition(gef::Vector4(playerJson["x"], 3 - playerJson["y"], 30));
 			}
 			if(layer["name"] == "DynamicSpawns")
 			{
