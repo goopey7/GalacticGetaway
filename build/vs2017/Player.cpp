@@ -6,8 +6,9 @@
 
 #include "InputActionManager.h"
 
-void Player::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, SpriteAnimator3D* sprite_animator) {
+void Player::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, SpriteAnimator3D* sprite_animator, Camera* cam) {
 	tag = Tag::Player;
+	camera_ = cam;
 	platform_ = sprite_animator->GetPlatform();
 	sprite_animator3D_ = sprite_animator;
 	set_mesh(sprite_animator3D_->GetFirstFrame("PlayerIdle"));
@@ -38,8 +39,8 @@ void Player::Init(float size_x, float size_y, float size_z, float pos_x, float p
 	UpdateBox2d();
 }
 
-void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator) {
-	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, sprite_animator);
+void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator, Camera* cam) {
+	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, sprite_animator, cam);
 }
 
 void Player::Update(InputActionManager* iam, float frame_time) {
@@ -99,6 +100,7 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 	}
 
 	if (iam->isPressed(GravityUp)) {
+		camera_->Warp();
 		world_gravity_ = b2Vec2(0, 1);
 		physics_world_->SetAllowSleeping(false);
 		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(180));
@@ -106,6 +108,7 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 		if (!gravity_lock_) player_gravity_direction_ = GRAVITY_VERTICAL;
 	}
 	else if (iam->isPressed(GravityDown)) {
+		camera_->Warp();
 		world_gravity_ = b2Vec2(0, -1);
 		physics_world_->SetAllowSleeping(false);
 		physics_body_->SetTransform(physics_body_->GetPosition(), 0);
@@ -113,6 +116,7 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 		if (!gravity_lock_) player_gravity_direction_ = GRAVITY_VERTICAL;
 	}
 	else if (iam->isPressed(GravityLeft)) {
+		camera_->Warp();
 		world_gravity_ = b2Vec2(-1, 0);
 		physics_world_->SetAllowSleeping(false);
 		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(-90));
@@ -120,6 +124,7 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 		if (!gravity_lock_) player_gravity_direction_ = GRAVITY_LEFT;
 	}
 	else if (iam->isPressed(GravityRight)) {
+		camera_->Warp();
 		world_gravity_ = b2Vec2(1, 0);
 		physics_world_->SetAllowSleeping(false);
 		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(90));
@@ -128,10 +133,12 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 	}
 
 	if (iam->isPressed(GravityStrenghtUp)) {
+		camera_->Warp();
 		grav_strength_changed_ = true;
 		world_grav_mult = 50.f;
 	}
 	else if (iam->isPressed(GravityStrengthDown)) {
+		camera_->Warp();
 		grav_strength_changed_ = true;
 		world_grav_mult = 0;
 		b2Body* body_list = physics_world_->GetBodyList();
@@ -156,7 +163,7 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 
 	UpdateBox2d();
 
-	gun_.Update(transform().GetTranslation(), iam, platform_, frame_time);
+	gun_.Update(transform().GetTranslation(), iam, platform_, camera_,frame_time);
 
 	anim_time_ += frame_time;
 	if (iam->isHeld(MoveLeft) || iam->isHeld(MoveRight)) {

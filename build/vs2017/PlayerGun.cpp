@@ -8,7 +8,7 @@
 #include <thread>
 #include <system/debug_log.h>
 
-void PlayerGun::Update(gef::Vector4 translation, InputActionManager* input, gef::Platform* platform, float dt) {
+void PlayerGun::Update(gef::Vector4 translation, InputActionManager* input, gef::Platform* platform, Camera* cam, float dt) {
 
 	if (input->getUsingKeyboard()) {
 		gef::Vector2 mouse_pos = input->getMousePos();
@@ -24,6 +24,7 @@ void PlayerGun::Update(gef::Vector4 translation, InputActionManager* input, gef:
 
 	if (input->getInputManager()->touch_manager()->is_button_down(0) || input->isHeld(Action::Fire)) {
 		Fire(dt, GameObject::Tag::Enemy);
+		cam->Shake();
 	}
 
 	if (input->isPressed(Action::Reload)) {

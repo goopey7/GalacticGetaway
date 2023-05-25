@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Scene.h"
 #include "SpriteAnimator3D.h"
+#include "Camera.h"
 
 class Text;
 class Enemy;
@@ -54,6 +55,8 @@ private:
 	std::vector<GameObject*> objects_to_destroy_;
 	
 	CollisionManager collision_manager_;
+
+	Camera camera_;
 
 	//HUD
 	std::map<HudElement, Text*> hud_text_;

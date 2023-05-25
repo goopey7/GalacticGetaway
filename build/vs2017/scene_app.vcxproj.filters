@@ -78,6 +78,12 @@
     <ClCompile Include="PlayerGun.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PressurePlate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scene_app.h">
@@ -144,6 +150,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PlayerGun.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PressurePlate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

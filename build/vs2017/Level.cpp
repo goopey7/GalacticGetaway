@@ -17,6 +17,9 @@
 #include "maths/math_utils.h"
 #include "system/debug_log.h"
 
+#include "InputActionManager.h"
+#include "input/input_manager.h"
+
 using nlohmann::json;
 
 float fixY(float y)
@@ -56,7 +59,7 @@ void Level::LoadFromFile(const char* filename)
 			if(layer["name"] == "PlayerSpawn")
 			{
 				auto playerJson = layer["objects"][0];
-				player_.Init(1, 1, 1, playerJson["x"], 0-playerJson["y"], b2_world_, sprite_animator3D_);
+				player_.Init(1, 1, 1, playerJson["x"], 0-playerJson["y"], b2_world_, sprite_animator3D_, &camera_);
 			}
 			if(layer["name"] == "DynamicSpawns")
 			{
@@ -197,6 +200,8 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 		ammoOss << "Ammo: " << player_.GetGun()->getAmmoLoaded() << "/" << player_.GetGun()->getAmmoReserve();
 	}
 	hud_text_[Ammo]->UpdateText(ammoOss.str());
+
+	camera_.Update(frame_time, getPlayerPosition());
 }
 
 void Level::Render(gef::Renderer3D* renderer_3d)
@@ -217,13 +222,7 @@ void Level::Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_ren
 	renderer_3d->set_projection_matrix(projection_matrix);
 	
 	// view
-	gef::Vector2 player_pos = getPlayerPosition();
-	gef::Vector4 camera_eye(player_pos.x, player_pos.y + 3, 30.0f);
-	gef::Vector4 camera_lookat(player_pos.x, player_pos.y, 0.0f);
-	gef::Vector4 camera_up(0.0f, 1.0f, 0.0f);
-	gef::Matrix44 view_matrix;
-	view_matrix.LookAt(camera_eye, camera_lookat, camera_up);
-	renderer_3d->set_view_matrix(view_matrix);
+	renderer_3d->set_view_matrix(camera_.GetViewMatrix());
 	
 	renderer_3d->Begin();
 		for(const GameObject* object : static_game_objects_)

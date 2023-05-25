@@ -3,13 +3,14 @@
 #include <graphics/renderer_3d.h>
 #include "PlayerGun.h"
 #include "SpriteAnimator3D.h"
+#include "Camera.h"
 
 class InputActionManager;
 
 class Player : public GameObject {
 public:
-	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, SpriteAnimator3D* sprite_animator);
-	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator);
+	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, SpriteAnimator3D* sprite_animator, Camera* cam);
+	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator, Camera* cam);
 	void Update(InputActionManager* iam, float frame_time);
 	bool GetGravityLock() const { return gravity_lock_; }
 	const PlayerGun* GetGun() const { return &gun_; }
@@ -17,6 +18,8 @@ public:
 	void Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder);
 
 protected:
+	Camera* camera_;
+
 	int health_ = 10;
 	PlayerGun gun_;
 
