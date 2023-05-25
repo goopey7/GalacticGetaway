@@ -12,7 +12,7 @@ void PlayerGun::Update(gef::Vector4 translation, InputActionManager* input, gef:
 
 	if (input->getUsingKeyboard()) {
 		gef::Vector2 mouse_pos = input->getMousePos();
-		target_vector_ = mouse_pos - gef::Vector2(platform->width() * 0.5f, platform->height() * 0.5f);
+		target_vector_ = mouse_pos - gef::Vector2(platform->width() * 0.5f, platform->height() * 0.5f + 100);
 	}
 	else {
 		gef::Vector2 stick_vec = gef::Vector2(input->getRightStickX(), input->getRightStickY());

@@ -50,22 +50,23 @@ void Camera::Update(float dt, gef::Vector2 target_pos) {
 	}
 	shake_time_ -= dt;
 
-	if (effect_state_ == EffectState::SHAKE) {
+	if (effect_state_ == EffectState::WARP) {
+		offset_ = gef::Vector4(sin(40 * shake_time_), sin(40 * shake_time_), 0);
+		camera_pos_ += offset_;
+	}
+	else if (effect_state_ == EffectState::SHAKE) {
 		if (move_state_ == MoveState::STATIONARY) camera_lookat_ = shake_start_lookat_;
 		offset_ = gef::Vector4(0.05 * sin(100 * shake_time_), 0.05 * sin(80 * shake_time_), 0);
 		camera_lookat_ += offset_;
 	}
-	else if (effect_state_ == EffectState::WARP) {
-		offset_ = gef::Vector4(sin(40 * shake_time_), sin(40 * shake_time_), 0);
-		camera_pos_ += offset_;
-	}
+
 
 	view_matrix_.SetIdentity();
 	view_matrix_.LookAt(camera_pos_, camera_lookat_, up_);
 }
 
 void Camera::Shake() {
-	if (effect_state_ != EffectState::SHAKE) {
+	if (effect_state_ == EffectState::NORMAL) {
 		effect_state_ = EffectState::SHAKE; 
 		shake_start_lookat_ = camera_lookat_;
 	}
