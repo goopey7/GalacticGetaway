@@ -18,6 +18,7 @@
 #include "system/debug_log.h"
 
 #include "InputActionManager.h"
+#include "LoadingScreen.h"
 #include "input/input_manager.h"
 
 using nlohmann::json;
@@ -27,8 +28,9 @@ float fixY(float y)
 	return y - 9.f;
 }
 
-void Level::LoadFromFile(const char* filename)
+void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen)
 {
+	loading_screen->SetStatusText("Reading level file...");
 	// load level from file
 	std::ifstream i(std::string("levels/") + std::string(filename));
 
@@ -39,8 +41,10 @@ void Level::LoadFromFile(const char* filename)
 	}
 	
 	// parse json into cpp object
+	loading_screen->SetStatusText("Parsing level JSON...");
 	json levelJson = json::parse(i);
 
+	loading_screen->SetStatusText("Initializing level...");
 	Init();
 
 	// initialize all layers
@@ -62,6 +66,9 @@ void Level::LoadFromFile(const char* filename)
 						old_scale.set_x(scale.x());
 						old_scale.set_y(scale.y());
 						old_scale.set_z(scale.z());
+						
+						// TODO load mesh once not for every object
+						loading_screen->SetStatusText("Loading crate mesh...");
 						if (obj_loader.Load("Models/Generic/crate2/crate2.obj", *platform_, mesh_map, scale)) {
 							new_mesh = mesh_map["Crate_1__Default_0"];
 						}
@@ -71,6 +78,7 @@ void Level::LoadFromFile(const char* filename)
 						}
 					}
 
+					loading_screen->SetStatusText("Creating static game object...");
 					static_game_objects_.emplace_back(new GameObject());
 					static_game_objects_.back()->Init(obj["width"] / 2.f, obj["height"] / 2.f, 1.f, (float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), b2_world_, primitive_builder_);
 					static_game_objects_.back()->set_mesh(new_mesh);
@@ -78,12 +86,14 @@ void Level::LoadFromFile(const char* filename)
 			}
 			if(layer["name"] == "PlayerSpawn")
 			{
+				loading_screen->SetStatusText("Creating player...");
 				auto playerJson = layer["objects"][0];
 				player_.Init(1, 1, 1, playerJson["x"], 0-playerJson["y"], b2_world_, sprite_animator3D_, &camera_);
 				camera_.SetPosition(gef::Vector4(playerJson["x"], 1-playerJson["y"], 30));
 			}
 			if(layer["name"] == "DynamicSpawns")
 			{
+				loading_screen->SetStatusText("Creating dynamic game objects...");
 				OBJMeshLoader obj_loader;
 				MeshMap mesh_map;
 				gef::Mesh* crate_mesh;
@@ -102,12 +112,14 @@ void Level::LoadFromFile(const char* filename)
 					
 					if(type == "enemy")
 					{
+						loading_screen->SetStatusText("Creating enemy...");
 						Enemy* enemy = new Enemy();
 						enemy->Init(1, 1, 1, object["x"], 0-object["y"], b2_world_, sprite_animator3D_, &player_);
 						enemies_.push_back(enemy);
 					}
 					else if(type == "plate")
 					{
+						loading_screen->SetStatusText("Creating pressure plate...");
 						PressurePlate* plate = new PressurePlate();
 						
 						float threshold = std::find_if(object["properties"].begin(), object["properties"].end(), [](const json& element)
@@ -120,6 +132,9 @@ void Level::LoadFromFile(const char* filename)
 					}
 					else
 					{
+						if(type == "crate") loading_screen->SetStatusText("Creating crate...");
+						else loading_screen->SetStatusText("Creating dynamic game object...");
+						
 						dynamic_game_objects_.emplace_back(new GameObject());
 						GameObject* dynObject = dynamic_game_objects_.back();
 						dynObject->Init(0.6f, 0.6f, 0.6f, object["x"], 0-object["y"], b2_world_, primitive_builder_, true);
@@ -129,7 +144,6 @@ void Level::LoadFromFile(const char* filename)
 							if (crate_mesh) {
 								dynObject->set_mesh(crate_mesh);
 							}
-							
 						}
 					}
 				}

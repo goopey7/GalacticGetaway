@@ -232,6 +232,7 @@
     <ClCompile Include="Gun.cpp" />
     <ClCompile Include="InputActionManager.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="LoadingScreen.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerGun.cpp" />
@@ -256,6 +257,7 @@
     <ClInclude Include="InputActionManager.h" />
     <ClInclude Include="json.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LoadingScreen.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerGun.h" />

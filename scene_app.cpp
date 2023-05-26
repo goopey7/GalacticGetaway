@@ -14,6 +14,7 @@
 #include "InputActionManager.h"
 #include "StateManager.h"
 #include "Level.h"
+#include "LoadingScreen.h"
 #include "Menu.h"
 #include "Text.h"
 
@@ -39,7 +40,9 @@ void SceneApp::Init()
 		iam_->getInputManager()->touch_manager()->EnablePanel(0);
 	}
 
-	state_manager_ = new StateManager();
+	LoadingScreen* loading_screen = new LoadingScreen(platform_, *state_manager_);
+	loading_screen->SetStatusText("Loading...");
+	state_manager_ = new StateManager(loading_screen);
 	Level* level = new Level(platform_, *state_manager_);
 	Menu* menu = new Menu(platform_, *state_manager_);
 	menu->AddUIElement(new Text({0.5,0.5}, "Main Menu"));
