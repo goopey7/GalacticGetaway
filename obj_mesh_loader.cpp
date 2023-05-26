@@ -17,7 +17,7 @@
 #include <algorithm>
 #include <cassert>
 
-bool OBJMeshLoader::Load(const char* filename, gef::Platform& platform, MeshMap& mesh_map)
+bool OBJMeshLoader::Load(const char* filename, gef::Platform& platform, MeshMap& mesh_map, gef::Vector4& scale)
 {
 	// Get folder name. May be empty if there is no folder the OBJ file is stored in
 	std::string folder_name = GetFolderName(filename);
@@ -192,7 +192,7 @@ bool OBJMeshLoader::Load(const char* filename, gef::Platform& platform, MeshMap&
 
 			std::vector<Int32> face_data(face_indices.begin() + object_start_index, face_indices.begin() + end);
 
-			gef::Mesh* mesh = CreateMesh(platform, face_data, positions, normals, uvs, material_list, primitive_indices[i], texture_indices[i]);
+			gef::Mesh* mesh = CreateMesh(platform, face_data, positions, normals, uvs, material_list, primitive_indices[i], texture_indices[i], scale);
 			if (mesh)
 				mesh_map[object_names[i]] = mesh;
 		}
@@ -236,7 +236,7 @@ const std::string OBJMeshLoader::GetFolderName(const char* filename)
 	return folder_name;
 }
 
-gef::Mesh* OBJMeshLoader::CreateMesh(gef::Platform& platform, std::vector<Int32>& face_indices, std::vector<gef::Vector4>& positions, std::vector<gef::Vector4>& normals, std::vector<gef::Vector2>& uvs, std::vector<gef::Material*>& material_list, std::vector<Int32>& primitive_indices, std::vector<Int32>& texture_indices)
+gef::Mesh* OBJMeshLoader::CreateMesh(gef::Platform& platform, std::vector<Int32>& face_indices, std::vector<gef::Vector4>& positions, std::vector<gef::Vector4>& normals, std::vector<gef::Vector2>& uvs, std::vector<gef::Material*>& material_list, std::vector<Int32>& primitive_indices, std::vector<Int32>& texture_indices, gef::Vector4& scale)
 {
 	if (face_indices.empty())
 		return nullptr;
@@ -257,6 +257,11 @@ gef::Mesh* OBJMeshLoader::CreateMesh(gef::Platform& platform, std::vector<Int32>
 	{
 		gef::Mesh::Vertex* vertex = &vertices[vertex_num];
 		gef::Vector4 position = positions[face_indices[vertex_num * 3] - 1];
+
+		position.set_x(position.x() * scale.x());
+		position.set_y(position.y() * scale.y());
+		position.set_z(position.z() * scale.z());
+
 		gef::Vector2 uv = uvs[face_indices[vertex_num * 3 + 1] - 1];
 		gef::Vector4 normal = normals[face_indices[vertex_num * 3 + 2] - 1];
 

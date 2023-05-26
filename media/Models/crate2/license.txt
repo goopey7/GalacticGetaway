@@ -1,0 +1,11 @@
+Model Information:
+* title:	Sci Fi Crate 1
+* source:	https://sketchfab.com/3d-models/sci-fi-crate-1-92fb9a66eb374d66ba944515768a66b4
+* author:	forest_cat (https://sketchfab.com/forest_cat)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Sci Fi Crate 1" (https://sketchfab.com/3d-models/sci-fi-crate-1-92fb9a66eb374d66ba944515768a66b4) by forest_cat (https://sketchfab.com/forest_cat) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

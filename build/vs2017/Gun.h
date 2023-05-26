@@ -17,10 +17,11 @@ public:
 	const BulletManager* getBulletManager() const { return &bullet_manager_; }
 	BulletManager* getBulletManager() { return &bullet_manager_; }
 	void Render(gef::Renderer3D* renderer_3d) const;
+	virtual int* loaded() { return &ammo_loaded_; }
 	~Gun();
 
 protected:
-	virtual int* loaded() { return &ammo_loaded_; }
+
 	virtual void decreaseLoaded() { ammo_loaded_--; }
 	virtual float GetFireRate() { return fire_rate_; }
 	void UpdateTransform(gef::Vector4 translation);
