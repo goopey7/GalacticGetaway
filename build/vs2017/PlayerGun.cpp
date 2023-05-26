@@ -4,15 +4,18 @@
 #include <input/touch_input_manager.h>
 #include <maths/math_utils.h>
 #include "SpriteAnimator3D.h"
+#include "Player.h"
 #include <cmath>
 #include <thread>
 #include <system/debug_log.h>
 
-void PlayerGun::Update(gef::Vector4 translation, InputActionManager* input, gef::Platform* platform, Camera* cam, float dt) {
+void PlayerGun::Update(gef::Vector4 translation, GravityDirection grav_dir, InputActionManager* input, gef::Platform* platform, Camera* cam, float dt) {
+
+	
 
 	if (input->getUsingKeyboard()) {
 		gef::Vector2 mouse_pos = input->getMousePos();
-		target_vector_ = mouse_pos - gef::Vector2(platform->width() * 0.5f, platform->height() * 0.5f + 100);
+		target_vector_ = mouse_pos - gef::Vector2(platform->width() * 0.5f, platform->height() * 0.5f + (grav_dir != GravityDirection::GRAVITY_UP ? 130 : -130));
 	}
 	else {
 		gef::Vector2 stick_vec = gef::Vector2(input->getRightStickX(), input->getRightStickY());
@@ -20,7 +23,7 @@ void PlayerGun::Update(gef::Vector4 translation, InputActionManager* input, gef:
 	}
 	target_vector_.Normalise();
 
-	UpdateTransform(translation);
+	UpdateTransform(translation, grav_dir);
 
 	if (input->getInputManager()->touch_manager()->is_button_down(0) || input->isHeld(Action::Fire)) {
 		Fire(dt, GameObject::Tag::Enemy);

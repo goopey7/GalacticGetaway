@@ -5,7 +5,7 @@
 #include <string>
 
 void Camera::Update(float dt, gef::Vector2 target_pos) {
-	target_pos_ = gef::Vector4(target_pos.x, target_pos.y + 3, 0);
+	target_pos_ = gef::Vector4(target_pos.x, target_pos.y + (above_player_ ? 3 : -3), 0);
 
 	switch (move_state_)
 	{
@@ -44,22 +44,23 @@ void Camera::Update(float dt, gef::Vector2 target_pos) {
 
 	camera_pos_ = camera_lookat_ + gef::Vector4(0, 0, 30);
 
-	if (shake_time_ <= 0.0f) {
-		effect_state_ = EffectState::NORMAL;
-		shake_time_ = 0.2f;
-	}
-	shake_time_ -= dt;
+	if (effect_state_ != EffectState::NORMAL) {
+		if (shake_time_ <= 0.0f) {
+			effect_state_ = EffectState::NORMAL;
+			shake_time_ = 0.2f;
+		}
+		shake_time_ -= dt;
 
-	if (effect_state_ == EffectState::WARP) {
-		offset_ = gef::Vector4(sin(40 * shake_time_), sin(40 * shake_time_), 0);
-		camera_pos_ += offset_;
+		if (effect_state_ == EffectState::WARP) {
+			offset_ = gef::Vector4(sin(40 * shake_time_), sin(40 * shake_time_), 0);
+			camera_pos_ += offset_;
+		}
+		else if (effect_state_ == EffectState::SHAKE) {
+			if (move_state_ == MoveState::STATIONARY) camera_lookat_ = shake_start_lookat_;
+			offset_ = gef::Vector4(0.05 * sin(100 * shake_time_), 0.05 * sin(80 * shake_time_), 0);
+			camera_lookat_ += offset_;
+		}
 	}
-	else if (effect_state_ == EffectState::SHAKE) {
-		if (move_state_ == MoveState::STATIONARY) camera_lookat_ = shake_start_lookat_;
-		offset_ = gef::Vector4(0.05 * sin(100 * shake_time_), 0.05 * sin(80 * shake_time_), 0);
-		camera_lookat_ += offset_;
-	}
-
 
 	view_matrix_.SetIdentity();
 	view_matrix_.LookAt(camera_pos_, camera_lookat_, up_);
@@ -73,6 +74,7 @@ void Camera::Shake() {
 }
 
 void Camera::SetPosition(gef::Vector4 pos) {
+	target_pos_ = gef::Vector4(pos.x(), pos.y() + 3 , 0);
 	camera_pos_ = pos; 
-	camera_lookat_ = camera_pos_ - gef::Vector4(0, 0, 30);
+	camera_lookat_ = gef::Vector4(pos.x(), pos.y() + 3, 0);
 }

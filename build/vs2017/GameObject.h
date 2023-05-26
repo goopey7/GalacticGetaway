@@ -6,6 +6,8 @@
 #include "maths/vector2.h"
 #include "SpriteAnimator3D.h"
 
+enum class GravityDirection { GRAVITY_UP, GRAVITY_DOWN, GRAVITY_LEFT, GRAVITY_RIGHT };
+
 class GameObject : public gef::MeshInstance {
 	
 public:

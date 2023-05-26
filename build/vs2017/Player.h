@@ -31,9 +31,9 @@ protected:
 
 	bool gravity_lock_ = false;
 	bool jumping_ = false;
-	enum GravityDirection { GRAVITY_VERTICAL, GRAVITY_LEFT, GRAVITY_RIGHT };
-	GravityDirection world_gravity_direction_ = GRAVITY_VERTICAL;
-	GravityDirection player_gravity_direction_ = GRAVITY_VERTICAL;
+
+	GravityDirection world_gravity_direction_ = GravityDirection::GRAVITY_DOWN;
+	GravityDirection player_gravity_direction_ = GravityDirection::GRAVITY_DOWN;
 	gef::Platform* platform_;
 
 	enum AnimationState { IDLE, RUNNING, JUMPING };

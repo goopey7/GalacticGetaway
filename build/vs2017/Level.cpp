@@ -53,16 +53,22 @@ void Level::LoadFromFile(const char* filename)
 				OBJMeshLoader obj_loader;
 				MeshMap mesh_map;
 				gef::Mesh* new_mesh;
+				gef::Vector4 old_scale;
 
 				for(const auto& obj : layer["objects"])
 				{
 					gef::Vector4 scale = gef::Vector4(obj["width"], obj["height"], 10.f);
-					if (obj_loader.Load("Models/Generic/crate2/crate2.obj", *platform_, mesh_map, scale)) {
-						new_mesh = mesh_map["Crate_1__Default_0"];
-					}
-					else {
-						gef::DebugOut(obj_loader.GetLastError().c_str());
-						gef::DebugOut("\n");
+					if (scale.x() != old_scale.x() || scale.y() != old_scale.y() || scale.z() != old_scale.z()) {
+						old_scale.set_x(scale.x());
+						old_scale.set_y(scale.y());
+						old_scale.set_z(scale.z());
+						if (obj_loader.Load("Models/Generic/crate2/crate2.obj", *platform_, mesh_map, scale)) {
+							new_mesh = mesh_map["Crate_1__Default_0"];
+						}
+						else {
+							gef::DebugOut(obj_loader.GetLastError().c_str());
+							gef::DebugOut("\n");
+						}
 					}
 
 					static_game_objects_.emplace_back(new GameObject());
@@ -74,7 +80,7 @@ void Level::LoadFromFile(const char* filename)
 			{
 				auto playerJson = layer["objects"][0];
 				player_.Init(1, 1, 1, playerJson["x"], 0-playerJson["y"], b2_world_, sprite_animator3D_, &camera_);
-				camera_.SetPosition(gef::Vector4(playerJson["x"], 3 - playerJson["y"], 30));
+				camera_.SetPosition(gef::Vector4(playerJson["x"], 1-playerJson["y"], 30));
 			}
 			if(layer["name"] == "DynamicSpawns")
 			{

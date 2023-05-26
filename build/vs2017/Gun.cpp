@@ -1,4 +1,5 @@
 #include "Gun.h"
+#include "Player.h"
 #include "InputActionManager.h"
 #include <input/input_manager.h>
 #include <input/touch_input_manager.h>
@@ -14,16 +15,16 @@ void Gun::Init(gef::Vector4 size, b2World* world, SpriteAnimator3D* sprite_anima
 	getBulletManager()->Init(world, sprite_animator->GetPrimitiveBuilder());
 }
 
-void Gun::Update(float frame_time, gef::Vector4 translation) {
+void Gun::Update(float frame_time, gef::Vector4 translation, GravityDirection grav_dir) {
 	ammo_reserve_ = INT_MAX;
 	ammo_loaded_ = INT_MAX;
 
-	UpdateTransform(translation);
+	UpdateTransform(translation, GravityDirection::GRAVITY_DOWN);
 
 	bullet_manager_.Update(frame_time);
 }
 
-void Gun::UpdateTransform(gef::Vector4 translation) {
+void Gun::UpdateTransform(gef::Vector4 translation, GravityDirection grav_dir) {
 	transform_.SetTranslation(translation);
 
 	gef::Matrix44 rotation_z;
@@ -32,17 +33,60 @@ void Gun::UpdateTransform(gef::Vector4 translation) {
 
 	gef::Matrix44 translate1;
 	translate1.SetIdentity();
-	translate1.SetTranslation(gef::Vector4(0, -1.f, (angle >= 0) ? 0.1 : -0.1));
+	//if (grav_dir == GravityDirection::GRAVITY_UP) {
+	//	
+	//}
+	//else {
+	//	
+	//}
+	gef::DebugOut("\n");
+	gef::DebugOut(std::to_string(angle).c_str());
+
+	switch (grav_dir)
+	{
+	case GravityDirection::GRAVITY_UP:
+		translate1.SetTranslation(gef::Vector4(0, -1.f, (angle <= 0) ? 0.1 : -0.1));
+		if (angle > 0) {
+			gef::Matrix44 rotation_y;
+			rotation_y.RotationY(FRAMEWORK_PI);
+			translate1 = translate1 * rotation_y;
+		}
+		break;
+	case GravityDirection::GRAVITY_DOWN:
+		translate1.SetTranslation(gef::Vector4(0, -1.f, (angle >= 0) ? 0.1 : -0.1));
+		if (angle < 0) {
+			gef::Matrix44 rotation_y;
+			rotation_y.RotationY(FRAMEWORK_PI);
+			translate1 = translate1 * rotation_y;
+		}
+		break;
+	case GravityDirection::GRAVITY_LEFT:
+		translate1.SetTranslation(gef::Vector4(0, -1.f, (angle >= 1.5708 || angle <= -1.5708) ? -0.1 : 0.1));
+		if (angle > 1.5708 || angle < -1.5708) {
+			gef::Matrix44 rotation_y;
+			rotation_y.RotationY(FRAMEWORK_PI);
+			translate1 = translate1 * rotation_y;
+		}
+		break;
+	case GravityDirection::GRAVITY_RIGHT:
+		translate1.SetTranslation(gef::Vector4(0, -1.f, (angle <= 1.5708 && angle >= -1.5708) ? -0.1 : 0.1));
+		if (angle < 1.5708 && angle > -1.5708) {
+			gef::Matrix44 rotation_y;
+			rotation_y.RotationY(FRAMEWORK_PI);
+			translate1 = translate1 * rotation_y;
+		}
+		break;
+	default:
+		break;
+	}
+
+
+
 
 	gef::Matrix44 translate2;
 	translate2.SetIdentity();
 	translate2.SetTranslation(translation);
 
-	if (angle < 0) {
-		gef::Matrix44 rotation_y;
-		rotation_y.RotationY(FRAMEWORK_PI);
-		translate1 = translate1 * rotation_y;
-	}
 	translate1 = translate1 * rotation_z * translate2;
 
 	set_transform(translate1);

@@ -9,7 +9,7 @@ class InputActionManager;
 
 class PlayerGun : public Gun {
 public:
-	void Update(gef::Vector4 translation, InputActionManager* input, gef::Platform* platform, Camera* cam, float dt);
+	void Update(gef::Vector4 translation, GravityDirection grav_dir, InputActionManager* input, gef::Platform* platform, Camera* cam, float dt);
 	void Reload(bool* reloading) override;
 	int getAmmoLoaded() const { return ammo_loaded_; }
 	int getAmmoReserve() const { return ammo_reserve_; }

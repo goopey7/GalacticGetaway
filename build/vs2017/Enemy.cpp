@@ -53,19 +53,19 @@ void Enemy::Update(float frame_time)
 	world_gravity_ = physics_world_->GetGravity();
 	if(world_gravity_.y > 0)
 	{
-		world_gravity_direction_ = GRAVITY_UP;
+		world_gravity_direction_ = GravityDirection::GRAVITY_UP;
 	}
 	else if (world_gravity_.y < 0)
 	{
-		world_gravity_direction_ = GRAVITY_DOWN;
+		world_gravity_direction_ = GravityDirection::GRAVITY_DOWN;
 	}
-	else if(world_gravity_.x < 0)
+	else if (world_gravity_.x < 0)
 	{
-		world_gravity_direction_ = GRAVITY_LEFT;
+		world_gravity_direction_ = GravityDirection::GRAVITY_LEFT;
 	}
-	else if(world_gravity_.x > 0)
+	else if (world_gravity_.x > 0)
 	{
-		world_gravity_direction_ = GRAVITY_RIGHT;
+		world_gravity_direction_ = GravityDirection::GRAVITY_RIGHT;
 	}
 
 	// Raycast to check if player is in range
@@ -87,32 +87,32 @@ void Enemy::Update(float frame_time)
 		animation_state_ = RUNNING;
 		switch (world_gravity_direction_)
 		{
-		case GRAVITY_UP:
+		case GravityDirection::GRAVITY_UP:
 			//...
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2((moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time, 0), gef::DegToRad(180));
 			break;
-		case GRAVITY_DOWN:
+		case GravityDirection::GRAVITY_DOWN:
 			//...
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2((moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time, 0), 0);
 			break;
-		case GRAVITY_LEFT:
+		case GravityDirection::GRAVITY_LEFT:
 			//...
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? 1.f : -1.f) * move_speed_ * frame_time), gef::DegToRad(-90));
 			break;
-		case GRAVITY_RIGHT:
+		case GravityDirection::GRAVITY_RIGHT:
 			//...
 			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time), gef::DegToRad(90));
 			break;
 		}
 		gun_.SetTargetVector({ moving_left_ ? -1.f : 1.f, 0 });
-		gun_.Update(frame_time, transform().GetTranslation());
+		gun_.Update(frame_time, transform().GetTranslation(), world_gravity_direction_);
 	}
 	else
 	{
 		animation_state_ = IDLE;
 		b2Vec2 dir = player_->GetBody()->GetPosition() - GetBody()->GetPosition();
 		gun_.SetTargetVector({ dir.x,-dir.y });
-		gun_.Update(frame_time, transform().GetTranslation());
+		gun_.Update(frame_time, transform().GetTranslation(), world_gravity_direction_);
 		gun_.Fire(frame_time, GameObject::Tag::Player);
 	}
 

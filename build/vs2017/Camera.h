@@ -12,6 +12,7 @@ public:
 	void Warp() { shake_time_ = 0.2f; effect_state_ = EffectState::WARP; }
 	void Shake();
 	void SetPosition(gef::Vector4 pos);
+	void SetAbovePlayer(bool value) { above_player_ = value; }
 protected:
 	gef::Vector4 target_pos_ = gef::Vector4(0.0f, 0.0f, 0.0f);
 	gef::Vector4 camera_pos_ = gef::Vector4(0.0f, 0.0f, 0.0f);
@@ -28,5 +29,6 @@ protected:
 	float lerp_time_ = 0.2f;
 	std::queue<gef::Vector4> prev_lookats_;
 	gef::Vector4 shake_start_lookat_;
+	bool above_player_ = true;
 };
 
