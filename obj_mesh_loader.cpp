@@ -17,7 +17,7 @@
 #include <algorithm>
 #include <cassert>
 
-bool OBJMeshLoader::Load(const char* filename, gef::Platform& platform, MeshMap& mesh_map, gef::Vector4& scale)
+bool OBJMeshLoader::Load(MeshResource mr, const char* filename, const char* meshmap_key, gef::Platform& platform)
 {
 	// Get folder name. May be empty if there is no folder the OBJ file is stored in
 	std::string folder_name = GetFolderName(filename);
@@ -187,20 +187,21 @@ bool OBJMeshLoader::Load(const char* filename, gef::Platform& platform, MeshMap&
 		// Iterate through each object, extract the 
 		for (int i = 0; i < object_names.size(); i++)
 		{
+			if(object_names[i] != meshmap_key)
+				continue;
+			
 			int object_start_index = object_indices[i];
 			int end = ((i + 1) < object_indices.size()) ? object_indices[(i + 1)] : face_indices.size();
 
-			std::vector<Int32> face_data(face_indices.begin() + object_start_index, face_indices.begin() + end);
+			//std::vector<Int32> face_data(face_indices.begin() + object_start_index, face_indices.begin() + end);
 
-			gef::Mesh* mesh = CreateMesh(platform, face_data, positions, normals, uvs, material_list, primitive_indices[i], texture_indices[i], scale);
-			if (mesh)
-				mesh_map[object_names[i]] = mesh;
+			mesh_data_map_[mr] = new MeshData(platform,face_indices,positions, normals, uvs, material_list, primitive_indices[i], texture_indices[i]);
 		}
 	}
 	catch (std::exception& exception)
 	{
 		last_error_ = exception.what();
-		mesh_map.clear();
+		//mesh_map.clear();
 		return false;
 	}
 
@@ -210,6 +211,11 @@ bool OBJMeshLoader::Load(const char* filename, gef::Platform& platform, MeshMap&
 	obj_file_data = NULL;
 
 	return true;
+}
+
+gef::Mesh* OBJMeshLoader::GetMesh(MeshResource mr, gef::Vector4& scale)
+{
+	return CreateMesh(mr, scale);
 }
 
 const std::string OBJMeshLoader::GetFolderName(const char* filename)
@@ -236,15 +242,17 @@ const std::string OBJMeshLoader::GetFolderName(const char* filename)
 	return folder_name;
 }
 
-gef::Mesh* OBJMeshLoader::CreateMesh(gef::Platform& platform, std::vector<Int32>& face_indices, std::vector<gef::Vector4>& positions, std::vector<gef::Vector4>& normals, std::vector<gef::Vector2>& uvs, std::vector<gef::Material*>& material_list, std::vector<Int32>& primitive_indices, std::vector<Int32>& texture_indices, gef::Vector4& scale)
+gef::Mesh* OBJMeshLoader::CreateMesh(MeshResource mr, gef::Vector4& scale)
 {
-	if (face_indices.empty())
+	MeshData& md = *mesh_data_map_[mr];
+	
+	if (md.face_indices.empty())
 		return nullptr;
 
-	gef::Mesh* mesh = new gef::Mesh(platform);
+	gef::Mesh* mesh = new gef::Mesh(md.platform);
 
 	// start building the mesh
-	Int32 num_faces = (Int32)face_indices.size() / 9;
+	Int32 num_faces = (Int32)md.face_indices.size() / 9;
 	Int32 num_vertices = num_faces * 3;
 
 	// create vertex buffer
@@ -256,14 +264,15 @@ gef::Mesh* OBJMeshLoader::CreateMesh(gef::Platform& platform, std::vector<Int32>
 	for (Int32 vertex_num = 0; vertex_num < num_vertices; ++vertex_num)
 	{
 		gef::Mesh::Vertex* vertex = &vertices[vertex_num];
-		gef::Vector4 position = positions[face_indices[vertex_num * 3] - 1];
+		int ind = md.face_indices[vertex_num * 3] - 1;
+		gef::Vector4 position = md.positions[md.face_indices[vertex_num * 3] - 1];
 
 		position.set_x(position.x() * scale.x());
 		position.set_y(position.y() * scale.y());
 		position.set_z(position.z() * scale.z());
 
-		gef::Vector2 uv = uvs[face_indices[vertex_num * 3 + 1] - 1];
-		gef::Vector4 normal = normals[face_indices[vertex_num * 3 + 2] - 1];
+		gef::Vector2 uv = md.uvs[md.face_indices[vertex_num * 3 + 1] - 1];
+		gef::Vector4 normal = md.normals[md.face_indices[vertex_num * 3 + 2] - 1];
 
 		vertex->px = position.x();
 		vertex->py = position.y();
@@ -297,23 +306,21 @@ gef::Mesh* OBJMeshLoader::CreateMesh(gef::Platform& platform, std::vector<Int32>
 	mesh->set_bounding_sphere(sphere);
 
 
-	
-
-	mesh->InitVertexBuffer(platform, vertices, num_vertices, sizeof(gef::Mesh::Vertex));
+	mesh->InitVertexBuffer(md.platform, vertices, num_vertices, sizeof(gef::Mesh::Vertex));
 
 	// create primitives
-	mesh->AllocatePrimitives((UInt32)primitive_indices.size());
+	mesh->AllocatePrimitives((UInt32)md.primitive_indices.size());
 
 	std::vector<UInt32*> indices;
-	indices.resize(primitive_indices.size());
-	for (UInt32 primitive_num = 0; primitive_num < primitive_indices.size(); ++primitive_num)
+	indices.resize(md.primitive_indices.size());
+	for (UInt32 primitive_num = 0; primitive_num < md.primitive_indices.size(); ++primitive_num)
 	{
 		Int32 index_count = 0;
 
-		if (primitive_num == primitive_indices.size() - 1)
-			index_count = (Int32)face_indices.size() - primitive_indices[primitive_num];
+		if (primitive_num == md.primitive_indices.size() - 1)
+			index_count = (Int32)md.face_indices.size() - md.primitive_indices[primitive_num];
 		else
-			index_count = primitive_indices[primitive_num + 1] - primitive_indices[primitive_num];
+			index_count = md.primitive_indices[primitive_num + 1] - md.primitive_indices[primitive_num];
 
 		// 9 indices per triangle, index count is the number of vertices in this primitive
 		index_count /= 3;
@@ -321,18 +328,18 @@ gef::Mesh* OBJMeshLoader::CreateMesh(gef::Platform& platform, std::vector<Int32>
 		indices[primitive_num] = new UInt32[index_count];
 
 		for (Int32 index = 0; index < index_count; ++index)
-			indices[primitive_num][index] = primitive_indices[primitive_num] + index;
+			indices[primitive_num][index] = md.primitive_indices[primitive_num] + index;
 
 		mesh->GetPrimitive(primitive_num)->set_type(gef::TRIANGLE_LIST);
-		mesh->GetPrimitive(primitive_num)->InitIndexBuffer(platform, indices[primitive_num], index_count, sizeof(UInt32));
+		mesh->GetPrimitive(primitive_num)->InitIndexBuffer(md.platform, indices[primitive_num], index_count, sizeof(UInt32));
 		//			mesh->GetPrimitive(primitive_num)->InitIndexBuffer(platform, indices[primitive_num], 3, sizeof(UInt32));
 
 
-		Int32 texture_index = texture_indices[primitive_num];
+		Int32 texture_index = md.texture_indices[primitive_num];
 		if (texture_index == -1)
 			mesh->GetPrimitive(primitive_num)->set_material(NULL);
 		else
-			mesh->GetPrimitive(primitive_num)->set_material(material_list[texture_index]);
+			mesh->GetPrimitive(primitive_num)->set_material(md.material_list[texture_index]);
 		//mesh->GetPrimitive(primitive_num)->set_texture(textures_[0]);
 	}
 

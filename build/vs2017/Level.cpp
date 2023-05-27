@@ -46,7 +46,22 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen)
 
 	loading_screen->SetStatusText("Initializing level...");
 	Init();
+	
+	loading_screen->SetStatusText("Loading 3D meshes...");
+	OBJMeshLoader obj_loader;
+	if(!obj_loader.Load(MeshResource::Level, "Models/Generic/crate2/crate2.obj", "Crate_1__Default_0", *platform_))
+	{
+		gef::DebugOut(obj_loader.GetLastError().c_str());
+		gef::DebugOut("\n");
+	}
 
+	//Poole (2019) Sci-fi Crate V2. Available at: https://skfb.ly/6TNVo (Accessed: 21 March 2023)
+	if (!obj_loader.Load(Crate, "Models/crate/crate.obj", "scificrate_low_lambert2_0", *platform_))
+	{
+		gef::DebugOut(obj_loader.GetLastError().c_str());
+		gef::DebugOut("\n");
+	}
+		
 	// initialize all layers
 	for(const auto& layer : levelJson["layers"])
 	{
@@ -54,8 +69,6 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen)
 		{
 			if(layer["name"] == "StaticLevelCollisions")
 			{
-				OBJMeshLoader obj_loader;
-				MeshMap mesh_map;
 				gef::Mesh* new_mesh;
 				gef::Vector4 old_scale;
 
@@ -67,15 +80,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen)
 						old_scale.set_y(scale.y());
 						old_scale.set_z(scale.z());
 						
-						// TODO load mesh once not for every object
-						loading_screen->SetStatusText("Loading crate mesh...");
-						if (obj_loader.Load("Models/Generic/crate2/crate2.obj", *platform_, mesh_map, scale)) {
-							new_mesh = mesh_map["Crate_1__Default_0"];
-						}
-						else {
-							gef::DebugOut(obj_loader.GetLastError().c_str());
-							gef::DebugOut("\n");
-						}
+						new_mesh = obj_loader.GetMesh(MeshResource::Level, scale);
 					}
 
 					loading_screen->SetStatusText("Creating static game object...");
@@ -94,17 +99,9 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen)
 			if(layer["name"] == "DynamicSpawns")
 			{
 				loading_screen->SetStatusText("Creating dynamic game objects...");
-				OBJMeshLoader obj_loader;
-				MeshMap mesh_map;
 				gef::Mesh* crate_mesh;
 				gef::Vector4 scale = gef::Vector4(1.f, 1.f, 1.f);
-				if (obj_loader.Load("Models/crate/crate.obj", *platform_, mesh_map, scale)) { //Poole (2019) Sci-fi Crate V2. Available at: https://skfb.ly/6TNVo (Accessed: 21 March 2023)
-					crate_mesh = mesh_map["scificrate_low_lambert2_0"];
-				}
-				else {
-					gef::DebugOut(obj_loader.GetLastError().c_str());
-					gef::DebugOut("\n");
-				}
+				crate_mesh = obj_loader.GetMesh(Crate, scale);
 				for(const auto& object : layer["objects"])
 				{
 					std::string type = std::find_if(object["properties"].begin(), object["properties"].end(), [](const json& element)
