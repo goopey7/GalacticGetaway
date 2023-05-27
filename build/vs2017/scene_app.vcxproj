@@ -173,6 +173,7 @@
       <AdditionalIncludeDirectories>.;..\..;..\..\..\gef_abertay;..\..\..\Box2D\include</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>
       </DisableSpecificWarnings>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
