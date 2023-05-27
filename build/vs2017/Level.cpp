@@ -46,6 +46,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen)
 
 	loading_screen->SetStatusText("Initializing level...");
 	Init();
+	camera_.GetBackground()->set_mesh(sprite_animator3D_->CreateMesh("space.png", gef::Vector4(960, 540, 0)));
 	
 	loading_screen->SetStatusText("Loading 3D meshes...");
 	OBJMeshLoader obj_loader;
@@ -61,6 +62,21 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen)
 		gef::DebugOut(obj_loader.GetLastError().c_str());
 		gef::DebugOut("\n");
 	}
+
+	if (!obj_loader.Load(BackWall, "Models/Wall/Wall/new/untitled.obj", "defaultMaterial.001", *platform_))
+	{
+		gef::DebugOut(obj_loader.GetLastError().c_str());
+		gef::DebugOut("\n");
+	}
+
+	/*scene_loader_.ReadSceneFromFile(*platform_, "Models/Window/window.scn");
+	scene_loader_.CreateMaterials(*platform_);
+	scene_loader_.CreateMeshes(*platform_);*/
+	if (!obj_loader.Load(Window, "Models/Window2/window.obj", "defaultMaterial.001", *platform_))
+	{
+		gef::DebugOut(obj_loader.GetLastError().c_str());
+		gef::DebugOut("\n");
+	}
 		
 	// initialize all layers
 	for(const auto& layer : levelJson["layers"])
@@ -69,6 +85,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen)
 		{
 			if(layer["name"] == "StaticLevelCollisions")
 			{
+				loading_screen->SetStatusText("Creating static game objects...");
 				gef::Mesh* new_mesh;
 				gef::Vector4 old_scale;
 
@@ -83,10 +100,39 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen)
 						new_mesh = obj_loader.GetMesh(MeshResource::Level, scale);
 					}
 
-					loading_screen->SetStatusText("Creating static game object...");
 					static_game_objects_.emplace_back(new GameObject());
 					static_game_objects_.back()->Init(obj["width"] / 2.f, obj["height"] / 2.f, 1.f, (float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), b2_world_, primitive_builder_);
 					static_game_objects_.back()->set_mesh(new_mesh);
+				}
+			}
+			if (layer["name"] == "Background") {
+				loading_screen->SetStatusText("Creating background scenery...");
+				gef::Matrix44 transform_matrix;
+				transform_matrix.SetIdentity();
+				gef::Mesh* new_mesh;
+				gef::Vector4 old_scale;
+
+				for (const auto& obj : layer["objects"])
+				{
+					std::string type = std::find_if(obj["properties"].begin(), obj["properties"].end(), [](const json& element)
+						{ return element["name"] == "type"; }).value()["value"];
+					gef::Vector4 scale = gef::Vector4(obj["width"], obj["height"], 1.f);
+					if (scale.x() != old_scale.x() || scale.y() != old_scale.y() || scale.z() != old_scale.z()) {
+						old_scale.set_x(scale.x());
+						old_scale.set_y(scale.y());
+						old_scale.set_z(scale.z());
+					}
+					if (type == "wall") {
+						new_mesh = obj_loader.GetMesh(MeshResource::BackWall, scale);
+					}
+					else if (type == "window") {
+						new_mesh = obj_loader.GetMesh(MeshResource::Window, scale);
+					}
+
+					transform_matrix.SetTranslation(gef::Vector4((float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), -5.f));
+					background_objects_.emplace_back(new gef::MeshInstance());
+					background_objects_.back()->set_transform(transform_matrix);
+					background_objects_.back()->set_mesh(new_mesh);
 				}
 			}
 			if(layer["name"] == "PlayerSpawn")
@@ -260,6 +306,11 @@ void Level::Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_ren
 	renderer_3d->set_view_matrix(camera_.GetViewMatrix());
 	
 	renderer_3d->Begin();
+		renderer_3d->DrawMesh(*camera_.GetBackground());
+		for (const gef::MeshInstance* object : background_objects_)
+		{
+			renderer_3d->DrawMesh(*object);
+		}
 		for(const GameObject* object : static_game_objects_)
 		{
 			object->Render(renderer_3d, primitive_builder_);

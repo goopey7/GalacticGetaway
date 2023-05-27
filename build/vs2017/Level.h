@@ -53,6 +53,7 @@ private:
 	Player player_;
 	std::vector<Enemy*> enemies_;
 	SpriteAnimator3D* sprite_animator3D_;
+	gef::Scene scene_loader_;
 
 	std::vector<GameObject*> objects_to_destroy_;
 	

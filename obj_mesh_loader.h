@@ -33,6 +33,8 @@ enum MeshResource
 {
 	Crate,
 	Level,
+	BackWall,
+	Window
 };
 
 class OBJMeshLoader
