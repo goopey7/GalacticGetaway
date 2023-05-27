@@ -22,6 +22,7 @@ public:
 	bool ReachedEnd(const char* anim_name) { return animations_[anim_name].reached_end_; }
 	void Reset(const char* anim_name) { animations_[anim_name].reached_end_ = false; }
 	gef::Mesh* CreateMesh(const char* filepath, const gef::Vector4& half_size, gef::Vector4 centre = gef::Vector4(0, 0, 0));
+	static gef::Texture* CreateTexture(const char* filepath, gef::Platform* platform);
 	PrimitiveBuilder* GetPrimitiveBuilder() { return builder_; }
 	gef::Platform* GetPlatform() { return platform_; }
 protected:

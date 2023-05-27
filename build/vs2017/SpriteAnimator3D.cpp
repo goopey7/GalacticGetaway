@@ -88,6 +88,14 @@ gef::Mesh* SpriteAnimator3D::CreateMesh(const char* filepath, const gef::Vector4
 	return nullptr;
 }
 
+gef::Texture* SpriteAnimator3D::CreateTexture(const char* filepath, gef::Platform* platform) {
+	gef::PNGLoader png_loader;
+	gef::ImageData image_data;
+	png_loader.Load(filepath, *platform, image_data);
+	gef::Texture* texture = gef::Texture::Create(*platform, image_data);
+	return texture;
+}
+
 const gef::Mesh* SpriteAnimator3D::GetFirstFrame(const char* anim_name) {
 	return &animations_[anim_name].frames_.front();
 }

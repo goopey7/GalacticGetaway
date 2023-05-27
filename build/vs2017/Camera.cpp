@@ -4,6 +4,10 @@
 #include "system/debug_log.h"
 #include <string>
 
+Camera::Camera() {
+	transform_matrix_.SetIdentity();
+}
+
 void Camera::Update(float dt, gef::Vector2 target_pos) {
 	target_pos_ = gef::Vector4(target_pos.x, target_pos.y + (above_player_ ? 3 : -3), 0);
 
@@ -62,8 +66,10 @@ void Camera::Update(float dt, gef::Vector2 target_pos) {
 		}
 	}
 
-	view_matrix_.SetIdentity();
 	view_matrix_.LookAt(camera_pos_, camera_lookat_, up_);
+
+	transform_matrix_.SetTranslation(camera_pos_ + gef::Vector4(0, 0, -1300));
+	background_.set_transform(transform_matrix_);
 }
 
 void Camera::Shake() {

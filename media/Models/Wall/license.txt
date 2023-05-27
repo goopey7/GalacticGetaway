@@ -1,0 +1,11 @@
+Model Information:
+* title:	Hardsurface-Window Sci-Fi
+* source:	https://sketchfab.com/3d-models/hardsurface-window-sci-fi-69e35d9a26c94e95bba66b90aaf97258
+* author:	Christian.Bittner (https://sketchfab.com/Christian.Bittner)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Hardsurface-Window Sci-Fi" (https://sketchfab.com/3d-models/hardsurface-window-sci-fi-69e35d9a26c94e95bba66b90aaf97258) by Christian.Bittner (https://sketchfab.com/Christian.Bittner) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

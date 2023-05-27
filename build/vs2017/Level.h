@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "SpriteAnimator3D.h"
 #include "Camera.h"
+#include "graphics/scene.h"
 
 class Text;
 class Enemy;
@@ -48,6 +49,7 @@ private:
 	
 	std::vector<GameObject*> static_game_objects_;
 	std::vector<GameObject*> dynamic_game_objects_;
+	std::vector<gef::MeshInstance*> background_objects_;
 	Player player_;
 	std::vector<Enemy*> enemies_;
 	SpriteAnimator3D* sprite_animator3D_;
