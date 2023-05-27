@@ -65,7 +65,7 @@
               "buttons": [ "X" ]
             },
             {
-              "action": "Quit",
+              "action": "Pause",
               "keys": [ "ESCAPE", "CAPSLOCK" ],
               "buttons": [ "START" ]
             },
@@ -76,13 +76,13 @@
             },
             {
               "action": "MenuSelectRight",
-              "keys": [ "RIGHT" ],
-              "buttons": [ "RIGHT" ]
+              "keys": [ "RIGHT" , "DOWN"],
+              "buttons": [ "RIGHT", "DOWN"]
             },
             {
               "action": "MenuSelectLeft",
-              "keys": [ "LEFT" ],
-              "buttons": [ "LEFT" ]
+              "keys": [ "LEFT" , "UP"],
+              "buttons": [ "LEFT" , "UP"]
             }
           ]
 }

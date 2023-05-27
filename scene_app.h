@@ -54,6 +54,8 @@ private:
 
 	float fps_;
 	std::string gravity_lock_;
+
+	bool should_run_ = true;
 };
 
 #endif // _SCENE_APP_H

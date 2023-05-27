@@ -9,6 +9,7 @@
 #include "graphics/scene.h"
 #include "Door.h"
 
+class Menu;
 class Text;
 class Enemy;
 class GameObject;
@@ -34,6 +35,9 @@ public:
 	void Render(gef::Renderer3D* renderer_3d) override;
 	void Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) override;
 	void Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_renderer, gef::Font* font) override;
+	void SetPauseMenu(Menu* pause_menu) {pause_menu_ = pause_menu;}
+	void Pause() {is_paused_ = true;}
+	void Unpause() {is_paused_ = false;}
 	gef::Vector2 getPlayerPosition() const;
 	const Player* getPlayer() const;
 	const Gun* getGun() const;
@@ -65,4 +69,7 @@ private:
 
 	//HUD
 	std::map<HudElement, Text*> hud_text_;
+
+	Menu* pause_menu_ = nullptr;
+	bool is_paused_ = false;
 };

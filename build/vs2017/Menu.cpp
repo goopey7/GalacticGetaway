@@ -65,7 +65,7 @@ void Menu::Update(InputActionManager* iam, float frame_time)
 void Menu::Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font)
 {
 	// Render UI Elements
-	sprite_renderer->Begin(true);
+	sprite_renderer->Begin(!is_hud_);
 	for (auto& element : ui_elements_)
 	{
 		element->Render(sprite_renderer, font);

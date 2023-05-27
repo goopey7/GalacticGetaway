@@ -205,7 +205,6 @@ bool OBJMeshLoader::Load(MeshResource mr, const char* filename, const char* mesh
 		return false;
 	}
 
-
 	// don't need the obj file data any more
 	free(obj_file_data);
 	obj_file_data = NULL;
@@ -264,7 +263,6 @@ gef::Mesh* OBJMeshLoader::CreateMesh(MeshResource mr, gef::Vector4& scale)
 	for (Int32 vertex_num = 0; vertex_num < num_vertices; ++vertex_num)
 	{
 		gef::Mesh::Vertex* vertex = &vertices[vertex_num];
-		int ind = md.face_indices[vertex_num * 3] - 1;
 		gef::Vector4 position = md.positions[md.face_indices[vertex_num * 3] - 1];
 
 		position.set_x(position.x() * scale.x());

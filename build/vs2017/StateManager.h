@@ -3,6 +3,7 @@
 #include <memory>
 #include <queue>
 
+class Menu;
 class LoadingScreen;
 class Level;
 
@@ -20,12 +21,19 @@ class StateManager
 {
 public:
 	StateManager(LoadingScreen* loading_screen);
+	void SetMainMenu(Menu* main_menu) {main_menu_ = main_menu;}
 	void Update(InputActionManager* iam, float frame_time);
 	void Render(gef::Renderer3D* renderer_3d);
 	void Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_renderer, gef::Font* font);
 	void PushScene(Scene* scene);
 	void PushLevel(Level* level, const char* file_name);
+	void Pause();
+	void Unpause();
+	
 	Scene* NextScene();
+	void SwitchToMainMenu();
+	void SetPauseMenu(Menu* pause_menu);
+
 private:
 	Scene* current_scene_ = nullptr;
 	std::queue<Scene*> scenes_;
@@ -33,4 +41,7 @@ private:
 	std::atomic<bool> is_loading_ = false;
 	std::thread loading_thread_;
 	LoadingScreen* loading_screen_;
+	Menu* main_menu_;
+	bool on_main_menu_ = true;
+	Menu* pause_menu_ = nullptr;
 };

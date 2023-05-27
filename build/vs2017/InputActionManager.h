@@ -30,7 +30,7 @@ DEFINE_ACTIONS(
 	Fire,
 	Grapple,
 	Reload,
-	Quit,
+	Pause,
 	MenuSelect,
 	MenuSelectRight,
 	MenuSelectLeft,

@@ -9,7 +9,7 @@ class UIElement;
 class Menu : public Scene
 {
 public:
-	Menu(gef::Platform& platform, StateManager& state_manager) : Scene(platform, state_manager) {}
+	Menu(gef::Platform& platform, StateManager& state_manager, bool is_hud) : Scene(platform, state_manager), is_hud_(is_hud) {}
 	void AddUIElement(UIElement* element);
 	void Update(InputActionManager* iam, float frame_time) override;
 	void Render(gef::Renderer3D* renderer_3d) override {}
@@ -20,4 +20,5 @@ private:
 	UIElement* selected_element_ = nullptr;
 	int selected_element_index_ = 0;
 	std::vector<int> selectable_indices_;
+	bool is_hud_ = false;
 };

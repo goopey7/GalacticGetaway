@@ -27,10 +27,6 @@ void Door::Open() {
 
 }
 
-void Door::Open() {
-
-}
-
 void Door::Render(gef::Renderer3D* renderer_3d) const {
 	door_->Render(renderer_3d);
 	renderer_3d->DrawMesh(door_frame_);
