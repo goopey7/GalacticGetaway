@@ -233,7 +233,7 @@ void Player::BeginCollision(GameObject* other) {
 	}
 }
 
-void Player::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) {
+void Player::Render(gef::Renderer3D* renderer_3d) {
 	renderer_3d->set_override_material(NULL);
 	renderer_3d->DrawMesh(*this);
 	gun_.Render(renderer_3d);

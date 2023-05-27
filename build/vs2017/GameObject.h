@@ -28,7 +28,7 @@ public:
 	void Translate(gef::Vector4 translation) { translate_ = translation; };
 	void Rotate(gef::Vector4 rotation) { rotate_ = rotation; };
 	virtual void Update(float frame_time);
-	virtual void Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) const;
+	virtual void Render(gef::Renderer3D* renderer_3d) const;
 	virtual void BeginCollision(GameObject* other);
 	virtual void EndCollision(GameObject* other);
 	virtual void PreResolve(GameObject* other);

@@ -36,7 +36,7 @@ void GameObject::Update(float frame_time) {
 	UpdateBox2d();
 }
 
-void GameObject::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) const
+void GameObject::Render(gef::Renderer3D* renderer_3d) const
 {
 	renderer_3d->DrawMesh(*this);
 }

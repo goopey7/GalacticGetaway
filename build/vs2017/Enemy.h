@@ -18,7 +18,7 @@ public:
 
 	void BeginCollision(GameObject* other) override;
 
-	void Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) const;
+	void Render(gef::Renderer3D* renderer_3d) const;
 	
 protected:
 	int health_ = 10;

@@ -60,9 +60,8 @@ void PressurePlate::Update(float frame_time)
 	}
 }
 
-void PressurePlate::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) const
+void PressurePlate::Render(gef::Renderer3D* renderer_3d) const
 {
-	renderer_3d->set_override_material(&builder->green_material());
 	renderer_3d->DrawMesh(*this);
 }
 

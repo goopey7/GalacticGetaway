@@ -57,22 +57,41 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen)
 	}
 
 	//Poole (2019) Sci-fi Crate V2. Available at: https://skfb.ly/6TNVo (Accessed: 21 March 2023)
-	if (!obj_loader.Load(Crate, "Models/crate/crate.obj", "scificrate_low_lambert2_0", *platform_))
+	if (!obj_loader.Load(MeshResource::Crate, "Models/crate/crate.obj", "scificrate_low_lambert2_0", *platform_))
 	{
 		gef::DebugOut(obj_loader.GetLastError().c_str());
 		gef::DebugOut("\n");
 	}
 
-	if (!obj_loader.Load(BackWall, "Models/Wall/Wall/new/untitled.obj", "defaultMaterial.001", *platform_))
+	if (!obj_loader.Load(MeshResource::BackWall, "Models/Wall/Wall/new/untitled.obj", "defaultMaterial.001", *platform_))
 	{
 		gef::DebugOut(obj_loader.GetLastError().c_str());
 		gef::DebugOut("\n");
 	}
+
+	if (!obj_loader.Load(MeshResource::DoorWall, "Models/Door/DoorWall.obj", "Crate_1__Default_0.001", *platform_))
+	{
+		gef::DebugOut(obj_loader.GetLastError().c_str());
+		gef::DebugOut("\n");
+	}
+
+	if (!obj_loader.Load(MeshResource::DoorFrame, "Models/Door/DoorFrame.obj", "Door_Frame_Mat_Door_Main_0", *platform_))
+	{
+		gef::DebugOut(obj_loader.GetLastError().c_str());
+		gef::DebugOut("\n");
+	}
+
+	if (!obj_loader.Load(MeshResource::Door, "Models/Door/Door.obj", "Door_Left_Mat_Door_Main_0", *platform_))
+	{
+		gef::DebugOut(obj_loader.GetLastError().c_str());
+		gef::DebugOut("\n");
+	}
+
 
 	/*scene_loader_.ReadSceneFromFile(*platform_, "Models/Window/window.scn");
 	scene_loader_.CreateMaterials(*platform_);
 	scene_loader_.CreateMeshes(*platform_);*/
-	if (!obj_loader.Load(Window, "Models/Window2/window.obj", "defaultMaterial.001", *platform_))
+	if (!obj_loader.Load(MeshResource::Window, "Models/Window2/window.obj", "defaultMaterial.001", *platform_))
 	{
 		gef::DebugOut(obj_loader.GetLastError().c_str());
 		gef::DebugOut("\n");
@@ -91,18 +110,28 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen)
 
 				for(const auto& obj : layer["objects"])
 				{
-					gef::Vector4 scale = gef::Vector4(obj["width"], obj["height"], 10.f);
-					if (scale.x() != old_scale.x() || scale.y() != old_scale.y() || scale.z() != old_scale.z()) {
-						old_scale.set_x(scale.x());
-						old_scale.set_y(scale.y());
-						old_scale.set_z(scale.z());
-						
-						new_mesh = obj_loader.GetMesh(MeshResource::Level, scale);
-					}
+					std::string type = std::find_if(obj["properties"].begin(), obj["properties"].end(), [](const json& element)
+						{ return element["name"] == "type"; }).value()["value"];
 
-					static_game_objects_.emplace_back(new GameObject());
-					static_game_objects_.back()->Init(obj["width"] / 2.f, obj["height"] / 2.f, 1.f, (float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), b2_world_, primitive_builder_);
-					static_game_objects_.back()->set_mesh(new_mesh);
+					if (type == "level") {
+						gef::Vector4 scale = gef::Vector4(obj["width"], obj["height"], 10.f);
+						if (scale.x() != old_scale.x() || scale.y() != old_scale.y()) {
+							old_scale.set_x(scale.x());
+							old_scale.set_y(scale.y());
+							new_mesh = obj_loader.GetMesh(MeshResource::Level, scale);
+						}
+						static_game_objects_.emplace_back(new GameObject());
+						static_game_objects_.back()->Init(obj["width"] / 2.f, obj["height"] / 2.f, 1.f, (float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), b2_world_, primitive_builder_);
+						static_game_objects_.back()->set_mesh(new_mesh);
+					}
+					else if (type == "door") {
+						gef::Vector4 scale = gef::Vector4(obj["width"], obj["height"], 10.f);
+						gef::Mesh* door_wall = obj_loader.GetMesh(MeshResource::DoorWall, scale);
+						gef::Mesh* door_frame = obj_loader.GetMesh(MeshResource::DoorFrame, scale);
+						gef::Mesh* door = obj_loader.GetMesh(MeshResource::Door, scale);
+
+						door_objects_.push_back(new Door(gef::Vector4(obj["width"] / 2.f, obj["height"] / 2.f, 0.f), gef::Vector4((float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), 0.f), b2_world_, primitive_builder_, door_wall, door_frame, door));
+					}
 				}
 			}
 			if (layer["name"] == "Background") {
@@ -117,10 +146,9 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen)
 					std::string type = std::find_if(obj["properties"].begin(), obj["properties"].end(), [](const json& element)
 						{ return element["name"] == "type"; }).value()["value"];
 					gef::Vector4 scale = gef::Vector4(obj["width"], obj["height"], 1.f);
-					if (scale.x() != old_scale.x() || scale.y() != old_scale.y() || scale.z() != old_scale.z()) {
+					if (scale.x() != old_scale.x() || scale.y() != old_scale.y()) {
 						old_scale.set_x(scale.x());
 						old_scale.set_y(scale.y());
-						old_scale.set_z(scale.z());
 					}
 					if (type == "wall") {
 						new_mesh = obj_loader.GetMesh(MeshResource::BackWall, scale);
@@ -147,7 +175,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen)
 				loading_screen->SetStatusText("Creating dynamic game objects...");
 				gef::Mesh* crate_mesh;
 				gef::Vector4 scale = gef::Vector4(1.f, 1.f, 1.f);
-				crate_mesh = obj_loader.GetMesh(Crate, scale);
+				crate_mesh = obj_loader.GetMesh(MeshResource::Crate, scale);
 				for(const auto& object : layer["objects"])
 				{
 					std::string type = std::find_if(object["properties"].begin(), object["properties"].end(), [](const json& element)
@@ -313,17 +341,21 @@ void Level::Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_ren
 		}
 		for(const GameObject* object : static_game_objects_)
 		{
-			object->Render(renderer_3d, primitive_builder_);
+			object->Render(renderer_3d);
+		}
+		for(const Door* object : door_objects_)
+		{
+			object->Render(renderer_3d);
 		}
 		renderer_3d->set_override_material(NULL);
 		for(const GameObject* object : dynamic_game_objects_)
 		{
-			object->Render(renderer_3d, primitive_builder_);
+			object->Render(renderer_3d);
 		}
-		player_.Render(renderer_3d, primitive_builder_);
+		player_.Render(renderer_3d);
 		for(const Enemy* enemy : enemies_)
 		{
-			enemy->Render(renderer_3d, primitive_builder_);
+			enemy->Render(renderer_3d);
 		}
 
 	renderer_3d->End();

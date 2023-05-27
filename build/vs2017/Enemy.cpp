@@ -185,7 +185,7 @@ void Enemy::BeginCollision(GameObject* other)
 	}
 }
 
-void Enemy::Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder) const
+void Enemy::Render(gef::Renderer3D* renderer_3d) const
 {
 	renderer_3d->DrawMesh(*this);
 	gun_.Render(renderer_3d);

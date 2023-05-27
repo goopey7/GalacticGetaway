@@ -15,7 +15,7 @@ public:
 	bool GetGravityLock() const { return gravity_lock_; }
 	const PlayerGun* GetGun() const { return &gun_; }
 	void BeginCollision(GameObject* other) override;
-	void Render(gef::Renderer3D* renderer_3d, PrimitiveBuilder* builder);
+	void Render(gef::Renderer3D* renderer_3d);
 
 protected:
 	Camera* camera_;

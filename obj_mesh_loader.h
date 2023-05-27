@@ -29,12 +29,15 @@ struct MeshData
 	std::vector<Int32> texture_indices;
 };
 
-enum MeshResource
+enum class MeshResource
 {
 	Crate,
 	Level,
 	BackWall,
-	Window
+	Window,
+	DoorWall, 
+	DoorFrame,
+	Door
 };
 
 class OBJMeshLoader
