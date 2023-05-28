@@ -68,6 +68,9 @@ private:
 
 	Camera camera_;
 
+	enum EndState { NONE, WIN, LOSE };
+	EndState end_state_ = NONE;
+
 	//HUD
 	std::map<HudElement, Text*> hud_text_;
 

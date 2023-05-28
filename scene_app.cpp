@@ -9,7 +9,7 @@
 #include <input/touch_input_manager.h>
 #include <platform/d3d11/system/platform_d3d11.h>
 #include <string>
-
+#include <chrono>
 #include "Button.h"
 #include "InputActionManager.h"
 #include "StateManager.h"
@@ -45,7 +45,7 @@ void SceneApp::Init()
 
 	LoadingScreen* loading_screen = new LoadingScreen(platform_, *state_manager_);
 	loading_screen->SetStatusText("Loading...");
-	state_manager_ = new StateManager(loading_screen);
+	state_manager_ = new StateManager(loading_screen, &should_run_);
 	
 	// MAIN MENU
 	Menu* menu = new Menu(platform_, *state_manager_, false);
@@ -96,6 +96,8 @@ void SceneApp::Init()
 	});
 	pause->AddUIElement(mainMenuButton);
 	pause->AddUIElement(quitButton);
+
+
 	//Level* next_level = new Level(platform_, *state_manager_);
 
 	

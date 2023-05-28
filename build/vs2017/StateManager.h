@@ -22,7 +22,7 @@ class Scene;
 class StateManager
 {
 public:
-	StateManager(LoadingScreen* loading_screen);
+	StateManager(LoadingScreen* loading_screen, bool* should_run);
 	void SetMainMenu(Menu* main_menu) {main_menu_ = main_menu;}
 	void Update(InputActionManager* iam, float frame_time);
 	void Render(gef::Renderer3D* renderer_3d);
@@ -35,6 +35,7 @@ public:
 	Scene* NextScene();
 	void SwitchToMainMenu();
 	void SetPauseMenu(Menu* pause_menu);
+	void SetShouldRun(bool should_run) { *should_run_ = should_run; }
 
 private:
 	Scene* current_scene_ = nullptr;
@@ -46,4 +47,5 @@ private:
 	Menu* main_menu_;
 	bool on_main_menu_ = true;
 	Menu* pause_menu_ = nullptr;
+	bool* should_run_;
 };
