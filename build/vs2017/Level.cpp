@@ -286,6 +286,8 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 	
 	if(!is_paused_)
 	{
+		// Fixed Time Step caused weird jumpy physics issues
+		/*
 		//--------------- Adapted from Stack Overflow - remudada (2014) : https://stackoverflow.com/a/23038284 (Accessed: 22 March 2023)
 		float maximumStep = 1.0f / 60.0f;
 		float progress = 0.0;
@@ -296,6 +298,9 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 			progress += step;
 		}
 		//---------------
+		*/
+		
+		b2_world_->Step(frame_time, 20, 20);
 		b2_world_->ClearForces();
 
 		player_.Update(iam_, frame_time);
