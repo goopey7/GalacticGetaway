@@ -60,4 +60,6 @@ protected:
 
 	std::vector<GameObject*>* dynamic_game_objects_ = nullptr;
 	PrimitiveBuilder* primitive_builder_ = nullptr;
+
+	float drop_probability_ = 0.5f;
 };

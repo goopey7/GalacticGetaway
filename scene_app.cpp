@@ -25,6 +25,7 @@ SceneApp::SceneApp(gef::Platform& platform) :
 	font_(NULL)
 {
 	platform_d3d_ = reinterpret_cast<gef::PlatformD3D11*>(&platform);
+	srand(static_cast<unsigned int>(time(0)));
 }
 
 void SceneApp::Init()

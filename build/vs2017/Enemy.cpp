@@ -7,7 +7,6 @@
 #include <maths/math_utils.h>
 
 #include "Pickup.h"
-#include "system/debug_log.h"
 
 void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world,
 				PrimitiveBuilder* builder, SpriteAnimator3D* sprite_animator, const Player* player, std::vector<GameObject*>&
@@ -48,12 +47,15 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 	dynamic_game_objects_ = &dynamic_game_objects;
 	primitive_builder_ = builder;
 
-	//TODO probablility of spawning a pickup
-	auto pos = GetBody()->GetPosition();
-	pickup_ = new Pickup();
-	pickup_->Init(0.3,0.3,0.3, pos.x, pos.y, physics_world_, primitive_builder_, true);
-	pickup_->SetTargetBody(GetBody());
-	dynamic_game_objects_->push_back(pickup_);
+	const float random_float_between_0_and_1 = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+	if(random_float_between_0_and_1 < drop_probability_)
+	{
+		auto pos = GetBody()->GetPosition();
+		pickup_ = new Pickup();
+		pickup_->Init(0.3,0.3,0.3, pos.x, pos.y, physics_world_, primitive_builder_, true);
+		pickup_->SetTargetBody(GetBody());
+		dynamic_game_objects_->push_back(pickup_);
+	}
 }
 
 void Enemy::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, SpriteAnimator3D* sprite_animator, const
@@ -193,10 +195,13 @@ void Enemy::BeginCollision(GameObject* other)
 			
 			if(health_ <= 0 && !dead)
 			{
-				// TODO select pickup type
-				Pickup::Type type;
-				type = Pickup::Type::MaxAmmo;
-				pickup_->Activate(type);
+				if(pickup_ != nullptr)
+				{
+					// TODO select pickup type
+					Pickup::Type type;
+					type = Pickup::Type::MaxAmmo;
+					pickup_->Activate(type);
+				}
 				Kill();
 			}
 		}
