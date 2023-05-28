@@ -25,6 +25,8 @@ void SpriteAnimator3D::Init() {
    
 	AddAnimation("EnemyIdle", "Enemy/Idle", 0.2);
 	AddAnimation("EnemyRunning", "Enemy/Run", 0.1);
+
+	AddAnimation("MaxAmmoPickup", "Pickups/MaxAmmo", 0.0);
 }
 
 void SpriteAnimator3D::AddAnimation(const char* anim_name, const char* folder_name, float speed, bool looping) {

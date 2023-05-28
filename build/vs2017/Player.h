@@ -24,7 +24,7 @@ protected:
 	int health_ = 10;
 	PlayerGun gun_;
 
-	b2World* physics_world_;
+	b2World* physics_world_ = nullptr;
 	b2Vec2 world_gravity_ = b2Vec2(0, -1);
 	float world_grav_mult = 10;
 	bool grav_strength_changed_ = false;

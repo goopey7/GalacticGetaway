@@ -12,6 +12,7 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 				PrimitiveBuilder* builder, SpriteAnimator3D* sprite_animator, const Player* player, std::vector<GameObject*>&
 				dynamic_game_objects)
 {
+	sprite_animator_ = sprite_animator;
 	size_y_ = size_y;
 	player_ = player;
 	tag = Tag::Enemy;
@@ -52,8 +53,12 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 	{
 		auto pos = GetBody()->GetPosition();
 		pickup_ = new Pickup();
+		pickup_->set_mesh(sprite_animator3D_->GetFirstFrame("MaxAmmoPickup"));
 		pickup_->Init(0.3,0.3,0.3, pos.x, pos.y, physics_world_, primitive_builder_, true);
 		pickup_->SetTargetBody(GetBody());
+		Pickup::Type type;
+		type = Pickup::Type::MaxAmmo;
+		pickup_->SetType(type);
 		dynamic_game_objects_->push_back(pickup_);
 	}
 }
@@ -197,10 +202,7 @@ void Enemy::BeginCollision(GameObject* other)
 			{
 				if(pickup_ != nullptr)
 				{
-					// TODO select pickup type
-					Pickup::Type type;
-					type = Pickup::Type::MaxAmmo;
-					pickup_->Activate(type);
+					pickup_->Activate();
 				}
 				Kill();
 			}

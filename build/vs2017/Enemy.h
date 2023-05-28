@@ -62,4 +62,6 @@ protected:
 	PrimitiveBuilder* primitive_builder_ = nullptr;
 
 	float drop_probability_ = 0.5f;
+
+	SpriteAnimator3D* sprite_animator_ = nullptr;
 };

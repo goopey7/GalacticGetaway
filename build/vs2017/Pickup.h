@@ -16,6 +16,8 @@ public:
 	void Update(float frame_time) override;
 	void Render(gef::Renderer3D* renderer_3d) const override;
 	void BeginCollision(GameObject* other) override;
+	void SetType(Type type);
+	void Activate();
 	void Activate(Type type);
 private:
 	bool is_active_ = false;
