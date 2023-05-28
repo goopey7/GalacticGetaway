@@ -47,8 +47,8 @@ Level::~Level()
 	}
 	for(auto& object : door_objects_)
 	{
-		delete object;
-		object = nullptr;
+		delete object.second;
+		object.second = nullptr;
 	}
 	for(auto& object : enemies_)
 	{
