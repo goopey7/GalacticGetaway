@@ -16,10 +16,12 @@
 #include "graphics/sprite_renderer.h"
 #include "maths/math_utils.h"
 #include "system/debug_log.h"
-
+#include "input/input_manager.h"
+#include "input/keyboard.h"
 #include "InputActionManager.h"
 #include "LoadingScreen.h"
 #include "Menu.h"
+#include "Button.h"
 #include "audio/audio_manager.h"
 
 using nlohmann::json;
@@ -295,8 +297,38 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 	{
 		is_paused_ = !is_paused_;
 	}
-	
-	if(!is_paused_)
+	if (iam_->getInputManager()->keyboard()->IsKeyPressed(gef::Keyboard::KC_X))
+	{
+		end_state_ = WIN;
+	}
+	else if (iam_->getInputManager()->keyboard()->IsKeyPressed(gef::Keyboard::KC_V))
+	{
+		end_state_ = LOSE;
+	}
+
+	if (end_state_ != NONE) {
+		Menu* end = new Menu(*platform_, *state_manager_, false);
+		Button* mainMenuButton = new Button({ 0.5,0.6 }, *platform_, "Main Menu", 200.f, 50.f, gef::Colour(1, 1, 1, 1));
+		Button* quitButton = new Button({ 0.5,0.7 }, *platform_, "Quit", 200.f, 50.f, gef::Colour(1, 0, 0, 1));
+		mainMenuButton->SetOnClick([this]
+			{
+				state_manager_->SwitchToMainMenu();
+			});
+		quitButton->SetOnClick([this]
+			{
+				state_manager_->SetShouldRun(false);
+			});
+		end->AddUIElement(mainMenuButton);
+		end->AddUIElement(quitButton);
+		
+		if(end_state_ == WIN) end->AddUIElement(new Text({ 0.5,0.25 }, "You Win!"));
+		else if(end_state_ == LOSE) end->AddUIElement(new Text({ 0.5,0.25 }, "Game Over"));
+
+		state_manager_->PushScene(end);
+		state_manager_->NextScene();
+	}
+
+	else if(!is_paused_)
 	{
 		// Fixed Time Step caused weird jumpy physics issues
 		/*

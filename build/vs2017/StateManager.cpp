@@ -5,8 +5,9 @@
 #include "Menu.h"
 #include "Scene.h"
 
-StateManager::StateManager(LoadingScreen* loading_screen)
-	: loading_screen_(loading_screen)
+StateManager::StateManager(LoadingScreen* loading_screen, bool* should_run)
+	: loading_screen_(loading_screen),
+	should_run_(should_run)
 {
 }
 

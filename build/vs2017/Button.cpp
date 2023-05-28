@@ -35,6 +35,7 @@ void Button::Selected(InputActionManager* iam)
 	if(iam->isLMBPressed()
 		|| iam->isPressed(MenuSelect))
 	{
+		Deselect();
 		OnClick_();
 	}
 }
