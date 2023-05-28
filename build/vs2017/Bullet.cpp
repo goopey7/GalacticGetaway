@@ -28,20 +28,12 @@ void Bullet::Update(float frame_time)
 	GameObject::Update(frame_time);
 }
 
-void Bullet::PreResolve(GameObject* other)
-{
-}
-
 void Bullet::EndCollision(GameObject* other)
 {
 	if(other->GetTag() != Tag::Player)
 	{
 		damage_ = 0;
 	}
-}
-
-void Bullet::PostResolve(GameObject* other)
-{
 }
 
 void Bullet::BeginCollision(GameObject* other)

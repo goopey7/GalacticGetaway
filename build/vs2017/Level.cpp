@@ -224,7 +224,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 					{
 						loading_screen->SetStatusText("Creating enemy...");
 						Enemy* enemy = new Enemy();
-						enemy->Init(1, 1, 1, object["x"], 0-object["y"], b2_world_, sprite_animator3D_, &player_);
+						enemy->Init(1, 1, 1, object["x"], 0-object["y"], b2_world_, primitive_builder_, sprite_animator3D_, &player_, dynamic_game_objects_);
 						enemies_.push_back(enemy);
 					}
 					else if(type == "plate")

@@ -5,10 +5,13 @@
 #include "Bullet.h"
 #include "Player.h"
 #include <maths/math_utils.h>
+
+#include "Pickup.h"
 #include "system/debug_log.h"
 
 void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world,
-	SpriteAnimator3D* sprite_animator, const ::Player* player)
+				PrimitiveBuilder* builder, SpriteAnimator3D* sprite_animator, const Player* player, std::vector<GameObject*>&
+				dynamic_game_objects)
 {
 	size_y_ = size_y;
 	player_ = player;
@@ -41,11 +44,21 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 	physics_body_->SetFixedRotation(true);
 
 	UpdateBox2d();
+
+	dynamic_game_objects_ = &dynamic_game_objects;
+	primitive_builder_ = builder;
+	
+	auto pos = GetBody()->GetPosition();
+	pickup_ = new Pickup();
+	pickup_->Init(1.f,1.f,1.f, pos.x, pos.y, physics_world_, primitive_builder_, true);
+	pickup_->SetTargetBody(GetBody());
+	dynamic_game_objects_->push_back(pickup_);
 }
 
-void Enemy::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator, const ::Player* player)
+void Enemy::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, SpriteAnimator3D* sprite_animator, const
+				Player* player, std::vector<GameObject*>& dynamic_game_objects)
 {
-	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, sprite_animator, player);
+	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, builder, sprite_animator, player, dynamic_game_objects);
 }
 
 void Enemy::Update(float frame_time)
@@ -177,8 +190,9 @@ void Enemy::BeginCollision(GameObject* other)
 			bullet->setDamage(0);
 			bullet->Kill();
 			
-			if(health_ <= 0)
+			if(health_ <= 0 && !dead)
 			{
+				pickup_->Activate();
 				Kill();
 			}
 		}
