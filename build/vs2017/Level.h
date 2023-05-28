@@ -56,7 +56,7 @@ private:
 	std::vector<GameObject*> static_game_objects_;
 	std::vector<GameObject*> dynamic_game_objects_;
 	std::vector<gef::MeshInstance*> background_objects_;
-	std::vector<Door*> door_objects_;
+	std::unordered_map<int, Door*> door_objects_;
 	Player player_;
 	std::vector<Enemy*> enemies_;
 	SpriteAnimator3D* sprite_animator3D_;

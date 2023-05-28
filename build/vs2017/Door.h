@@ -14,6 +14,10 @@ private:
 	gef::MeshInstance door_frame_;
 	GameObject* door_;
 	gef::Vector4 closed_pos_;
-	enum State { OPENING, CLOSING, IDLE };
+	gef::Vector4 open_pos_;
+	gef::Vector4 start_pos_;
+	enum class State { OPENING, CLOSING, IDLE };
+	State current_state_ = State::IDLE;
+	float lerp_time_ = 0.f;
 };
 
