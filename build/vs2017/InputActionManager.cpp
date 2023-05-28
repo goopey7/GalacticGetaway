@@ -49,22 +49,12 @@ bool InputActionManager::isPressed(Action action)
 
 bool InputActionManager::isLMBPressed()
 {
-	if(!lmb_pressed_ && inputManager->touch_manager()->is_button_down(0))
-	{
-		lmb_pressed_ = true;
-		return true;
-	}
-	return false;
+	return !lmb_pressed_ && inputManager->touch_manager()->is_button_down(0);
 }
 
 bool InputActionManager::isRMBPressed()
 {
-	if(!rmb_pressed_ && inputManager->touch_manager()->is_button_down(1))
-	{
-		rmb_pressed_ = true;
-		return true;
-	}
-	return false;
+	return !rmb_pressed_ && inputManager->touch_manager()->is_button_down(1);
 }
 
 bool InputActionManager::isHeld(Action action)
