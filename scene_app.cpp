@@ -47,10 +47,11 @@ void SceneApp::Init()
 	// MAIN MENU
 	Menu* menu = new Menu(platform_, *state_manager_, false);
 	state_manager_->SetMainMenu(menu);
-	menu->AddUIElement(new Text({0.5,0.5}, "Main Menu"));
-	Button* menuStartButton = new Button({0.5,0.6}, platform_, "Start", 150.f, 50.f, gef::Colour(1,1,1,1));
-	Button* menuEnemyButton = new Button({0.1,0.6}, platform_, "Enemy Testing", 200.f, 50.f, gef::Colour(1,1,0,1));
-	Button* menuPuzzleButton = new Button({0.8,0.6}, platform_, "Puzzle Testing", 200.f, 50.f, gef::Colour(1,1,0,1));
+	menu->AddUIElement(new Text({0.5,0.25}, "Main Menu"));
+	Button* menuStartButton = new Button({0.5,0.4}, platform_, "Start", 200.f, 50.f, gef::Colour(1,1,1,1));
+	Button* menuEnemyButton = new Button({0.5,0.5}, platform_, "Enemy Testing", 200.f, 50.f, gef::Colour(1,1,0,1));
+	Button* menuPuzzleButton = new Button({0.5,0.6}, platform_, "Puzzle Testing", 200.f, 50.f, gef::Colour(1,1,0,1));
+	Button* quitButton = new Button({0.5,0.7}, platform_, "Quit", 200.f, 50.f, gef::Colour(1,0,0,1));
 	menuStartButton->SetOnClick([this]
 	{
 		state_manager_->PushLevel(new Level(platform_, *state_manager_), "level.json", mesh_loader_);
@@ -66,31 +67,31 @@ void SceneApp::Init()
 		state_manager_->PushLevel(new Level(platform_, *state_manager_), "puzzle.json", mesh_loader_);
 		state_manager_->NextScene();
 	});
-	menu->AddUIElement(menuEnemyButton);
+	quitButton->SetOnClick([this]
+	{
+		should_run_ = false;
+	});
 	menu->AddUIElement(menuStartButton);
+	menu->AddUIElement(menuEnemyButton);
 	menu->AddUIElement(menuPuzzleButton);
+	menu->AddUIElement(quitButton);
 
 	// PAUSE MENU
 	Menu* pause = new Menu(platform_, *state_manager_, true);
 	state_manager_->SetPauseMenu(pause);
 	pause->AddUIElement(new Text({0.5,0.25}, "Paused"));
-	Button* resumeButton = new Button({0.5,0.5}, platform_, "Resume", 300.f, 50.f, gef::Colour(1,1,1,1));
+	Button* resumeButton = new Button({0.5,0.5}, platform_, "Resume", 200.f, 50.f, gef::Colour(1,1,1,1));
 	resumeButton->SetOnClick([this]
 	{
 		state_manager_->Unpause();
 	});
 	pause->AddUIElement(resumeButton);
-	Button* mainMenuButton = new Button({0.5,0.6}, platform_, "Main Menu", 300.f, 50.f, gef::Colour(1,1,1,1));
+	Button* mainMenuButton = new Button({0.5,0.6}, platform_, "Main Menu", 200.f, 50.f, gef::Colour(1,1,1,1));
 	mainMenuButton->SetOnClick([this]
 	{
 		state_manager_->SwitchToMainMenu();
 	});
 	pause->AddUIElement(mainMenuButton);
-	Button* quitButton = new Button({0.5,0.7}, platform_, "Quit Application", 300.f, 50.f, gef::Colour(1,0,0,1));
-	quitButton->SetOnClick([this]
-	{
-		should_run_ = false;
-	});
 	pause->AddUIElement(quitButton);
 	//Level* next_level = new Level(platform_, *state_manager_);
 
