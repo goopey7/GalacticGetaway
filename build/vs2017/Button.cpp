@@ -32,7 +32,7 @@ Button::Button(const gef::Vector2& anchor, const gef::Platform& platform, std::s
 void Button::Selected(InputActionManager* iam)
 {
 	button.set_colour(hover_color_.GetABGR());
-	if(iam->getInputManager()->touch_manager()->is_button_down(0)
+	if(iam->isLMBPressed()
 		|| iam->isPressed(MenuSelect))
 	{
 		OnClick_();

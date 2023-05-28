@@ -47,6 +47,26 @@ bool InputActionManager::isPressed(Action action)
 	return actionMapPressed[action];
 }
 
+bool InputActionManager::isLMBPressed()
+{
+	if(!lmb_pressed_ && inputManager->touch_manager()->is_button_down(0))
+	{
+		lmb_pressed_ = true;
+		return true;
+	}
+	return false;
+}
+
+bool InputActionManager::isRMBPressed()
+{
+	if(!rmb_pressed_ && inputManager->touch_manager()->is_button_down(1))
+	{
+		rmb_pressed_ = true;
+		return true;
+	}
+	return false;
+}
+
 bool InputActionManager::isHeld(Action action)
 {
 	return actionMapHeld[action];
@@ -59,6 +79,9 @@ bool InputActionManager::isReleased(Action action)
 
 void InputActionManager::Update()
 {
+	lmb_pressed_ = inputManager->touch_manager()->is_button_down(0);
+	rmb_pressed_ = inputManager->touch_manager()->is_button_down(1);
+	
 	auto kb = inputManager->keyboard();
 
 	auto controller = inputManager->controller_input()->GetController(0);

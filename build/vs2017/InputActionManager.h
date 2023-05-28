@@ -41,6 +41,8 @@ DEFINE_ACTIONS(
 public:
 	explicit InputActionManager(gef::Platform& platform);
 	bool isPressed(Action action);
+	bool isLMBPressed();
+	bool isRMBPressed();
 	bool isHeld(Action action);
 	bool isReleased(Action action);
 	void Update();
@@ -68,4 +70,6 @@ private:
 	gef::Platform* platform_;
 	gef::Vector2 mouse_pos_;
 	bool using_keyboard_ = true;
+	bool lmb_pressed_ = false;
+	bool rmb_pressed_ = false;
 };
