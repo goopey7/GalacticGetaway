@@ -38,7 +38,7 @@ void Bullet::EndCollision(GameObject* other)
 
 void Bullet::BeginCollision(GameObject* other)
 {
-	if(other->GetTag() == Tag::Bullet)
+	if(other->GetTag() == Tag::Bullet || other->GetTag() == Tag::Pickup)
 	{
 		return;
 	}

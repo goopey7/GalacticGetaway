@@ -66,3 +66,9 @@ void PlayerGun::reloadThreadFunc() {
 PlayerGun::~PlayerGun()
 {
 }
+
+void PlayerGun::maxAmmo()
+{
+	ammo_loaded_ = max_ammo_loaded_;
+	ammo_reserve_ = max_ammo_reserve_;
+}

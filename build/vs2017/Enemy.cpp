@@ -47,10 +47,11 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 
 	dynamic_game_objects_ = &dynamic_game_objects;
 	primitive_builder_ = builder;
-	
+
+	//TODO probablility of spawning a pickup
 	auto pos = GetBody()->GetPosition();
 	pickup_ = new Pickup();
-	pickup_->Init(1.f,1.f,1.f, pos.x, pos.y, physics_world_, primitive_builder_, true);
+	pickup_->Init(0.3,0.3,0.3, pos.x, pos.y, physics_world_, primitive_builder_, true);
 	pickup_->SetTargetBody(GetBody());
 	dynamic_game_objects_->push_back(pickup_);
 }
@@ -192,7 +193,10 @@ void Enemy::BeginCollision(GameObject* other)
 			
 			if(health_ <= 0 && !dead)
 			{
-				pickup_->Activate();
+				// TODO select pickup type
+				Pickup::Type type;
+				type = Pickup::Type::MaxAmmo;
+				pickup_->Activate(type);
 				Kill();
 			}
 		}

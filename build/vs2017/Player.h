@@ -14,6 +14,7 @@ public:
 	void Update(InputActionManager* iam, float frame_time);
 	bool GetGravityLock() const { return gravity_lock_; }
 	const PlayerGun* GetGun() const { return &gun_; }
+	PlayerGun* GetGun() { return &gun_; }
 	void BeginCollision(GameObject* other) override;
 	void Render(gef::Renderer3D* renderer_3d);
 

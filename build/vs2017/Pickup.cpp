@@ -1,5 +1,7 @@
 ﻿#include "Pickup.h"
 
+#include "Player.h"
+
 Pickup::Pickup()
 {
 	tag = Tag::Pickup;
@@ -43,10 +45,19 @@ void Pickup::Render(gef::Renderer3D* renderer_3d) const
 
 void Pickup::BeginCollision(GameObject* other)
 {
-		GameObject::BeginCollision(other);
+	if(is_active_ && other->GetTag() == Tag::Player)
+	{
+		auto* player = dynamic_cast<Player*>(other);
+		if(type_ == MaxAmmo)
+		{
+			player->GetGun()->maxAmmo();
+		}
+		Kill();
+	}
 }
 
-void Pickup::Activate()
+void Pickup::Activate(Type type)
 {
+	type_ = type;
 	is_active_ = true;
 }

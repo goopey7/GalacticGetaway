@@ -16,14 +16,18 @@ public:
 	bool getReloading() const { return reloading_; }
 	void setReloading(bool r) { reloading_ = r; }
 	~PlayerGun();
+	void maxAmmo();
 
 protected:
 	void reloadThreadFunc();
 	float GetFireRate() override { return fire_rate_; }
 	int* loaded() override { return &ammo_loaded_; }
 	void decreaseLoaded() override { ammo_loaded_--; }
-	int ammo_reserve_ = 100;
-	int ammo_loaded_ = 30;
+	const int max_ammo_loaded_ = 30;
+	const int max_ammo_reserve_ = 100;
+	
+	int ammo_reserve_ = max_ammo_reserve_;
+	int ammo_loaded_ = max_ammo_loaded_;
 	int damage_ = 5;
 	float fire_rate_ = 1.f / 15.f;
 };
