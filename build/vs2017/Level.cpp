@@ -167,7 +167,9 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 						gef::Mesh* door_frame = obj_loader.GetMesh(MeshResource::DoorFrame, scale);
 						gef::Mesh* door = obj_loader.GetMesh(MeshResource::Door, scale);
 
-						door_objects_.push_back(new Door(gef::Vector4(obj["width"] / 2.f, obj["height"] / 2.f, 0.f), gef::Vector4((float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), 0.f), b2_world_, primitive_builder_, door_wall, door_frame, door));
+						int ID = std::find_if(obj["properties"].begin(), obj["properties"].end(), [](const json& element)
+							{ return element["name"] == "ID"; }).value()["value"];
+						door_objects_[ID] = new Door(gef::Vector4(obj["width"] / 2.f, obj["height"] / 2.f, 0.f), gef::Vector4((float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), 0.f), b2_world_, primitive_builder_, door_wall, door_frame, door);
 					}
 				}
 			}
@@ -232,10 +234,12 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 						
 						float threshold = std::find_if(object["properties"].begin(), object["properties"].end(), [](const json& element)
 						{ return element["name"] == "threshold";}).value()["value"];
+						int door_ID = std::find_if(object["properties"].begin(), object["properties"].end(), [](const json& element)
+							{ return element["name"] == "Door ID"; }).value()["value"];
 						
 						plate->Init(object["width"]/2.f,object["height"]/2.f,1,object["x"] + object["width"]/2.f, (-(float)object["y"]) - ((float)object["height"]/2.f), b2_world_, primitive_builder_, threshold);
-						plate->SetOnActivate([]{ gef::DebugOut("Plate Activated\n");});
-						plate->SetOnDeactivate([]{ gef::DebugOut("Plate Deactivated\n");});
+						plate->SetOnActivate([this, door_ID]{ door_objects_[door_ID]->Open(); });
+						plate->SetOnDeactivate([this, door_ID] { door_objects_[door_ID]->Close(); });
 						static_game_objects_.push_back(plate);
 					}
 					else
@@ -308,6 +312,10 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 		for(int i=0; i < static_game_objects_.size(); i++)
 		{
 			static_game_objects_[i]->Update(frame_time);
+		}
+		for (const std::pair<const int, Door*> object : door_objects_)
+		{
+			object.second->Update(frame_time);
 		}
 
 		for(int i = 0; i < dynamic_game_objects_.size(); i++)
@@ -397,9 +405,9 @@ void Level::Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_ren
 		{
 			object->Render(renderer_3d);
 		}
-		for(const Door* object : door_objects_)
+		for(const std::pair<const int, Door*> object : door_objects_)
 		{
-			object->Render(renderer_3d);
+			object.second->Render(renderer_3d);
 		}
 		renderer_3d->set_override_material(NULL);
 		for(const GameObject* object : dynamic_game_objects_)
