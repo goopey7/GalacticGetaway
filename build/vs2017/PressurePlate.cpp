@@ -1,10 +1,12 @@
 ﻿#include "PressurePlate.h"
 #include "graphics/renderer_3d.h"
 
-void PressurePlate::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, float threshold)
+void PressurePlate::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, float
+						threshold, bool is_fussy)
 {
  	tag = Tag::PressurePlate;
 	threshold_ = threshold;
+	is_fussy_ = is_fussy;
  
 	set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y, size_z)));
  	physics_world_ = world;
@@ -33,7 +35,7 @@ void PressurePlate::Init(float size_x, float size_y, float size_z, float pos_x, 
 
 void PressurePlate::Update(float frame_time)
 {
-	const bool wasActivated = current_load_ >= threshold_;
+	const bool wasActivated = (current_load_ >= threshold_ && !is_fussy_) || (current_load_ == threshold_ && is_fussy_);
 	
 	if(GetBody()->GetContactList() == nullptr)
 	{
@@ -50,11 +52,11 @@ void PressurePlate::Update(float frame_time)
 	current_load_ = 0.f;
 	TraverseContactChain(reinterpret_cast<GameObject*>(GetBody()->GetContactList()->other->GetUserData().pointer), visited_objects, current_load_);
 
-	if(!wasActivated && current_load_ >= threshold_)
+	if(!wasActivated && ((current_load_ >= threshold_ && !is_fussy_) || (current_load_ == threshold_ && is_fussy_)))
 	{
 		on_activate_();
 	}
-	else if(wasActivated && current_load_ < threshold_)
+	else if(wasActivated && (current_load_ < threshold_ || (current_load_ != threshold_ && is_fussy_)))
 	{
 		on_deactivate_();
 	}
@@ -65,9 +67,9 @@ void PressurePlate::Render(gef::Renderer3D* renderer_3d) const
 	renderer_3d->DrawMesh(*this);
 }
 
-void PressurePlate::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, float threshold)
+void PressurePlate::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, float threshold, bool is_fussy)
 {
-	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, builder, threshold);
+	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, builder, threshold, is_fussy);
 }
 
 void PressurePlate::TraverseContactChain(GameObject* game_object, std::set<GameObject*>& visited_objects, float& total_weight)

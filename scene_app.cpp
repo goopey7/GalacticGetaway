@@ -1,6 +1,5 @@
 #include "scene_app.h"
 
-#include <random>
 #include <system/platform.h>
 #include <graphics/sprite_renderer.h>
 #include <graphics/font.h>

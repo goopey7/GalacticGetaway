@@ -1641,6 +1641,11 @@
                          "value":0
                         }, 
                         {
+                         "name":"fussy",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
                          "name":"threshold",
                          "type":"float",
                          "value":2
@@ -1726,7 +1731,7 @@
  "nextobjectid":233,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.10.1",
+ "tiledversion":"1.10.0",
  "tileheight":1,
  "tilesets":[
         {

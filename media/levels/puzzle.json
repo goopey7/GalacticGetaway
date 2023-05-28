@@ -1641,6 +1641,11 @@
                          "value":0
                         }, 
                         {
+                         "name":"fussy",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"threshold",
                          "type":"float",
                          "value":2
@@ -1672,8 +1677,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":60.9130434782609,
-                 "y":19.6956521739131
+                 "x":61,
+                 "y":22
                 }, 
                 {
                  "height":0,
@@ -1690,8 +1695,26 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":56,
+                 "x":61,
                  "y":23
+                }, 
+                {
+                 "height":0,
+                 "id":233,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"crate"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":60.99609375,
+                 "y":22.3359375
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1723,10 +1746,10 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":233,
+ "nextobjectid":234,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.10.1",
+ "tiledversion":"1.10.0",
  "tileheight":1,
  "tilesets":[
         {

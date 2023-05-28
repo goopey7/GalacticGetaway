@@ -7,9 +7,9 @@
 class PressurePlate : public GameObject
 {
 public:
-	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, float threshold);
+	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, float threshold, bool is_fussy = false);
 	void TraverseContactChain(GameObject* game_object, std::set<GameObject*>& visited_objects, float& total_weight);
-	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, float threshold);
+	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, float threshold, bool is_fussy = false);
 	void Update(float frame_time) override;
 	void Render(gef::Renderer3D* renderer_3d) const override;
 	void SetOnActivate(const std::function<void()>& on_activate) { on_activate_ = on_activate; }
@@ -20,4 +20,5 @@ private:
 	float current_load_ = 0.f;
 	std::function<void()> on_activate_;
 	std::function<void()> on_deactivate_;
+	bool is_fussy_ = false;
 };

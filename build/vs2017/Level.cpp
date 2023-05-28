@@ -237,15 +237,17 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 					}
 					else if(type == "plate")
 					{
-						loading_screen->SetStatusText("Creating pressure plate...");
+						loading_screen->SetStatusText("Creating pressure plates...");
 						PressurePlate* plate = new PressurePlate();
 						
 						float threshold = std::find_if(object["properties"].begin(), object["properties"].end(), [](const json& element)
 						{ return element["name"] == "threshold";}).value()["value"];
 						int door_ID = std::find_if(object["properties"].begin(), object["properties"].end(), [](const json& element)
 							{ return element["name"] == "Door ID"; }).value()["value"];
+						bool fussy = std::find_if(object["properties"].begin(), object["properties"].end(), [](const json& element)
+							{ return element["name"] == "fussy"; }).value()["value"];
 						
-						plate->Init(object["width"]/2.f,object["height"]/2.f,1,object["x"] + object["width"]/2.f, (-(float)object["y"]) - ((float)object["height"]/2.f), b2_world_, primitive_builder_, threshold);
+						plate->Init(object["width"]/2.f,object["height"]/2.f,1,object["x"] + object["width"]/2.f, (-(float)object["y"]) - ((float)object["height"]/2.f), b2_world_, primitive_builder_, threshold, fussy);
 						plate->SetOnActivate([this, door_ID]{ door_objects_[door_ID]->Open(); });
 						plate->SetOnDeactivate([this, door_ID] { door_objects_[door_ID]->Close(); });
 						static_game_objects_.push_back(plate);
