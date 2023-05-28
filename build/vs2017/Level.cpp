@@ -20,7 +20,6 @@
 #include "InputActionManager.h"
 #include "LoadingScreen.h"
 #include "Menu.h"
-#include "input/input_manager.h"
 
 using nlohmann::json;
 
@@ -29,7 +28,45 @@ float fixY(float y)
 	return y - 9.f;
 }
 
-void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen)
+Level::~Level()
+{
+	for(auto& object : static_game_objects_)
+	{
+		delete object;
+		object = nullptr;
+	}
+	for(auto& object : dynamic_game_objects_)
+	{
+		delete object;
+		object = nullptr;
+	}
+	for(auto& object : background_objects_)
+	{
+		delete object;
+		object = nullptr;
+	}
+	for(auto& object : door_objects_)
+	{
+		delete object;
+		object = nullptr;
+	}
+	for(auto& object : enemies_)
+	{
+		delete object;
+		object = nullptr;
+	}
+	
+	delete b2_world_;
+	b2_world_ = nullptr;
+	
+	delete primitive_builder_;
+	primitive_builder_ = nullptr;
+	
+	delete sprite_animator3D_;
+	sprite_animator3D_ = nullptr;
+}
+
+void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OBJMeshLoader& obj_loader)
 {
 	loading_screen->SetStatusText("Reading level file...");
 	// load level from file
@@ -50,7 +87,6 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen)
 	camera_.GetBackground()->set_mesh(sprite_animator3D_->CreateMesh("space.png", gef::Vector4(960, 540, 0)));
 	
 	loading_screen->SetStatusText("Loading 3D meshes...");
-	OBJMeshLoader obj_loader;
 	if(!obj_loader.Load(MeshResource::Level, "Models/Generic/crate2/crate2.obj", "Crate_1__Default_0", *platform_))
 	{
 		gef::DebugOut(obj_loader.GetLastError().c_str());

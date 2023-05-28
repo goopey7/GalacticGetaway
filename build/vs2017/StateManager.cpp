@@ -64,13 +64,13 @@ void StateManager::PushScene(Scene* scene)
 	current_scene_ = scenes_.front();
 }
 
-void StateManager::PushLevel(Level* level, const char* file_name)
+void StateManager::PushLevel(Level* level, const char* file_name, OBJMeshLoader& mesh_loader)
 {
 	level->SetPauseMenu(pause_menu_);
-	loading_thread_ = std::thread([this, level, file_name]
+	loading_thread_ = std::thread([this, level, file_name, &mesh_loader]
 	{
 		is_loading_ = true;
-		level->LoadFromFile(file_name, loading_screen_);
+		level->LoadFromFile(file_name, loading_screen_, mesh_loader);
 		is_loading_ = false;
 	});
 	loading_thread_.detach();

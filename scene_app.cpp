@@ -53,17 +53,17 @@ void SceneApp::Init()
 	Button* menuPuzzleButton = new Button({0.8,0.6}, platform_, "Puzzle Testing", 200.f, 50.f, gef::Colour(1,1,0,1));
 	menuStartButton->SetOnClick([this]
 	{
-		state_manager_->PushLevel(new Level(platform_, *state_manager_), "level.json");
+		state_manager_->PushLevel(new Level(platform_, *state_manager_), "level.json", mesh_loader_);
 		state_manager_->NextScene();
 	});
 	menuEnemyButton->SetOnClick([this]
 	{
-		state_manager_->PushLevel(new Level(platform_, *state_manager_), "enemy.json");
+		state_manager_->PushLevel(new Level(platform_, *state_manager_), "enemy.json", mesh_loader_);
 		state_manager_->NextScene();
 	});
 	menuPuzzleButton->SetOnClick([this]
 	{
-		state_manager_->PushLevel(new Level(platform_, *state_manager_), "puzzle.json");
+		state_manager_->PushLevel(new Level(platform_, *state_manager_), "puzzle.json", mesh_loader_);
 		state_manager_->NextScene();
 	});
 	menu->AddUIElement(menuEnemyButton);

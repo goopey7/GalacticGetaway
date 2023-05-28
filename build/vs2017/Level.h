@@ -30,7 +30,8 @@ class Level : public Scene
 {
 public:
 	Level(gef::Platform& platform, StateManager& state_manager) : Scene(platform, state_manager) {}
-	void LoadFromFile(const char* filename, LoadingScreen* loading_screen);
+	~Level();
+	void LoadFromFile(const char* filename, LoadingScreen* loading_screen, OBJMeshLoader& obj_loader);
 	void Update(InputActionManager* iam_,float frame_time) override;
 	void Render(gef::Renderer3D* renderer_3d) override;
 	void Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) override;

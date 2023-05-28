@@ -19,6 +19,8 @@
 
 bool OBJMeshLoader::Load(MeshResource mr, const char* filename, const char* meshmap_key, gef::Platform& platform)
 {
+	if(mesh_data_map_.contains(mr))
+		return true;
 	// Get folder name. May be empty if there is no folder the OBJ file is stored in
 	std::string folder_name = GetFolderName(filename);
 
@@ -195,7 +197,7 @@ bool OBJMeshLoader::Load(MeshResource mr, const char* filename, const char* mesh
 
 			//std::vector<Int32> face_data(face_indices.begin() + object_start_index, face_indices.begin() + end);
 
-			mesh_data_map_[mr] = new MeshData(platform,face_indices,positions, normals, uvs, material_list, primitive_indices[i], texture_indices[i]);
+			mesh_data_map_[mr] = new MeshData(platform,face_indices,positions, normals, uvs, material_list, primitive_indices[i], texture_indices[i], true);
 		}
 	}
 	catch (std::exception& exception)
@@ -215,6 +217,15 @@ bool OBJMeshLoader::Load(MeshResource mr, const char* filename, const char* mesh
 gef::Mesh* OBJMeshLoader::GetMesh(MeshResource mr, gef::Vector4& scale)
 {
 	return CreateMesh(mr, scale);
+}
+
+OBJMeshLoader::~OBJMeshLoader()
+{
+	for(auto& mesh_data : mesh_data_map_)
+	{
+		delete mesh_data.second;
+		mesh_data.second = NULL;
+	}
 }
 
 const std::string OBJMeshLoader::GetFolderName(const char* filename)

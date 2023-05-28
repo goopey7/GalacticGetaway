@@ -27,6 +27,7 @@ struct MeshData
 	std::vector<gef::Material*> material_list;
 	std::vector<Int32> primitive_indices;
 	std::vector<Int32> texture_indices;
+	bool filled = false;
 };
 
 enum class MeshResource
@@ -46,6 +47,7 @@ public:
 	bool Load(MeshResource mr, const char* filename, const char* meshmap_key, gef::Platform& platform);
 	const std::string& GetLastError() { return last_error_; }
 	gef::Mesh* GetMesh(MeshResource mr, gef::Vector4& scale);
+	~OBJMeshLoader();
 
 private:
 	const std::string GetFolderName(const char* filename);

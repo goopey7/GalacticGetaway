@@ -3,6 +3,8 @@
 #include <memory>
 #include <queue>
 
+#include "obj_mesh_loader.h"
+
 class Menu;
 class LoadingScreen;
 class Level;
@@ -26,7 +28,7 @@ public:
 	void Render(gef::Renderer3D* renderer_3d);
 	void Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_renderer, gef::Font* font);
 	void PushScene(Scene* scene);
-	void PushLevel(Level* level, const char* file_name);
+	void PushLevel(Level* level, const char* file_name, OBJMeshLoader& mesh_loader);
 	void Pause();
 	void Unpause();
 	

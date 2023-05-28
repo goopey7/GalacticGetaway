@@ -5,6 +5,8 @@
 #include "Player.h"
 #include <string>
 
+#include "obj_mesh_loader.h"
+
 class StateManager;
 
 namespace gef
@@ -56,6 +58,7 @@ private:
 	std::string gravity_lock_;
 
 	bool should_run_ = true;
+	OBJMeshLoader mesh_loader_;
 };
 
 #endif // _SCENE_APP_H
