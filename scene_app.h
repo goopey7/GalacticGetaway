@@ -59,6 +59,8 @@ private:
 
 	bool should_run_ = true;
 	OBJMeshLoader mesh_loader_;
+
+	gef::AudioManager* audio_manager_ = nullptr;
 };
 
 #endif // _SCENE_APP_H

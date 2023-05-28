@@ -1,6 +1,6 @@
 ﻿#include "Enemy.h"
 
-#include <d3d10.h>
+#include <random>
 
 #include "Bullet.h"
 #include "Player.h"
@@ -9,9 +9,10 @@
 #include "Pickup.h"
 
 void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world,
-				PrimitiveBuilder* builder, SpriteAnimator3D* sprite_animator, const Player* player, std::vector<GameObject*>&
+				PrimitiveBuilder* builder, SpriteAnimator3D* sprite_animator, gef::AudioManager* am, const Player* player, std::vector<GameObject*>&
 				dynamic_game_objects)
 {
+	audio_manager_ = am;
 	sprite_animator_ = sprite_animator;
 	size_y_ = size_y;
 	player_ = player;
@@ -22,7 +23,7 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 
 	physics_world_ = world;
 
-	gun_.Init(gef::Vector4(size_x * 0.4f, size_y, size_z), world, sprite_animator, "Enemy/Gun/gun.png");
+	gun_.Init(gef::Vector4(size_x * 0.4f, size_y, size_z), world, sprite_animator, audio_manager_, "Enemy/Gun/gun.png");
 
 	b2BodyDef body_def;
 	body_def.type = b2_dynamicBody;
@@ -48,13 +49,16 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 	dynamic_game_objects_ = &dynamic_game_objects;
 	primitive_builder_ = builder;
 
-	const float random_float_between_0_and_1 = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-	if(random_float_between_0_and_1 < drop_probability_)
+	//const float random_float_between_0_and_1 = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution dist(0.f, 1.f);
+	if(dist(gen) < drop_probability_)
 	{
 		auto pos = GetBody()->GetPosition();
 		pickup_ = new Pickup();
 		pickup_->set_mesh(sprite_animator3D_->GetFirstFrame("MaxAmmoPickup"));
-		pickup_->Init(0.3,0.3,0.3, pos.x, pos.y, physics_world_, primitive_builder_, true);
+		pickup_->Init(0.3,0.3,0.3, pos.x, pos.y, physics_world_, primitive_builder_, am, true);
 		pickup_->SetTargetBody(GetBody());
 		Pickup::Type type;
 		type = Pickup::Type::MaxAmmo;
@@ -63,10 +67,10 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 	}
 }
 
-void Enemy::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, SpriteAnimator3D* sprite_animator, const
+void Enemy::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, SpriteAnimator3D* sprite_animator, gef::AudioManager* am, const
 				Player* player, std::vector<GameObject*>& dynamic_game_objects)
 {
-	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, builder, sprite_animator, player, dynamic_game_objects);
+	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, builder, sprite_animator, am, player, dynamic_game_objects);
 }
 
 void Enemy::Update(float frame_time)

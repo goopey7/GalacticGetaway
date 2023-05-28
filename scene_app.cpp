@@ -1,5 +1,6 @@
 #include "scene_app.h"
 
+#include <random>
 #include <system/platform.h>
 #include <graphics/sprite_renderer.h>
 #include <graphics/font.h>
@@ -17,6 +18,7 @@
 #include "LoadingScreen.h"
 #include "Menu.h"
 #include "Text.h"
+#include "audio/audio_manager.h"
 
 SceneApp::SceneApp(gef::Platform& platform) :
 	Application(platform),
@@ -25,7 +27,6 @@ SceneApp::SceneApp(gef::Platform& platform) :
 	font_(NULL)
 {
 	platform_d3d_ = reinterpret_cast<gef::PlatformD3D11*>(&platform);
-	srand(static_cast<unsigned int>(time(0)));
 }
 
 void SceneApp::Init()
@@ -34,6 +35,8 @@ void SceneApp::Init()
 
 	// create the renderer for draw 3D geometry
 	renderer_3d_ = gef::Renderer3D::Create(platform_);
+
+	audio_manager_ = gef::AudioManager::Create();
 
 	// initialise input action manager
 	iam_ = new InputActionManager(platform_);
@@ -55,17 +58,17 @@ void SceneApp::Init()
 	Button* quitButton = new Button({0.5,0.7}, platform_, "Quit", 200.f, 50.f, gef::Colour(1,0,0,1));
 	menuStartButton->SetOnClick([this]
 	{
-		state_manager_->PushLevel(new Level(platform_, *state_manager_), "level.json", mesh_loader_);
+		state_manager_->PushLevel(new Level(platform_, *state_manager_, audio_manager_), "level.json", mesh_loader_);
 		state_manager_->NextScene();
 	});
 	menuEnemyButton->SetOnClick([this]
 	{
-		state_manager_->PushLevel(new Level(platform_, *state_manager_), "enemy.json", mesh_loader_);
+		state_manager_->PushLevel(new Level(platform_, *state_manager_, audio_manager_), "enemy.json", mesh_loader_);
 		state_manager_->NextScene();
 	});
 	menuPuzzleButton->SetOnClick([this]
 	{
-		state_manager_->PushLevel(new Level(platform_, *state_manager_), "puzzle.json", mesh_loader_);
+		state_manager_->PushLevel(new Level(platform_, *state_manager_, audio_manager_), "puzzle.json", mesh_loader_);
 		state_manager_->NextScene();
 	});
 	quitButton->SetOnClick([this]

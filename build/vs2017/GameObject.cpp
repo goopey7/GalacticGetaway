@@ -3,8 +3,11 @@
 #include "graphics/renderer_3d.h"
 #include "system/debug_log.h"
 
-void GameObject::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, bool dynamic) {
+void GameObject::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::
+					AudioManager* am, bool dynamic) {
 
+	audio_manager_ = am;
+	
 	size_ = gef::Vector4(size_x, size_y, size_z);
 	set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y, size_z)));
 
@@ -28,8 +31,8 @@ void GameObject::Init(float size_x, float size_y, float size_z, float pos_x, flo
 	UpdateBox2d();
 }
 
-void GameObject::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, bool dynamic) {
-	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, builder, dynamic);
+void GameObject::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::AudioManager* am, bool dynamic) {
+	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, builder, am, dynamic);
 }
 
 void GameObject::Update(float frame_time) {

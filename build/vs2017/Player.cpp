@@ -13,7 +13,7 @@ void Player::Init(float size_x, float size_y, float size_z, float pos_x, float p
 	sprite_animator3D_ = sprite_animator;
 	set_mesh(sprite_animator3D_->GetFirstFrame("PlayerIdle"));
 
-	gun_.Init(gef::Vector4(size_x * 0.33f, size_y, size_z), world, sprite_animator, "Player/Gun/gun.png");
+	gun_.Init(gef::Vector4(size_x * 0.33f, size_y, size_z), world, sprite_animator, audio_manager_, "Player/Gun/gun.png");
 
 	physics_world_ = world;
 

@@ -1,7 +1,7 @@
 #include "Door.h"
 #include "graphics/renderer_3d.h"
 
-Door::Door(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::Mesh* door_wall, gef::Mesh* door_frame, gef::Mesh* door) {
+Door::Door(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::AudioManager* am, gef::Mesh* door_wall, gef::Mesh* door_frame, gef::Mesh* door) {
 
 	gef::Matrix44 transform_matrix;
 	transform_matrix.SetIdentity();
@@ -13,7 +13,7 @@ Door::Door(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder
 	door_frame_.set_mesh(door_frame);
 
 	door_ = new GameObject();
-	door_->Init(size, pos, world, builder);
+	door_->Init(size, pos, world, builder, am);
 	door_->set_mesh(door);
 
 	closed_pos_ = pos;

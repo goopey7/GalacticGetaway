@@ -4,7 +4,7 @@
 
 class Door {
 public:
-	Door(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::Mesh* door_wall, gef::Mesh* door_frame, gef::Mesh* door);
+	Door(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::AudioManager* am, gef::Mesh* door_wall, gef::Mesh* door_frame, gef::Mesh* door);
 	void Update(float dt);
 	void Open();
 	void Close();

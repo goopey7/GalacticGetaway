@@ -23,8 +23,8 @@ public:
 		Pickup,
 	};
 	
-	virtual void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, bool dynamic = false);
-	virtual void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, bool dynamic = false);
+	virtual void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::AudioManager* am, bool dynamic = false);
+	virtual void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::AudioManager* am, bool dynamic = false);
 	void UpdateBox2d();
 	void Translate(gef::Vector4 translation) { translate_ = translation; };
 	void Rotate(gef::Vector4 rotation) { rotate_ = rotation; };
@@ -57,5 +57,6 @@ protected:
 	SpriteAnimator3D* sprite_animator3D_;
 	float weight_ = 1;
 	float anim_time_ = 0;
+	gef::AudioManager* audio_manager_ = nullptr;
 };
 

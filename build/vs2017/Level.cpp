@@ -20,6 +20,7 @@
 #include "InputActionManager.h"
 #include "LoadingScreen.h"
 #include "Menu.h"
+#include "audio/audio_manager.h"
 
 using nlohmann::json;
 
@@ -30,6 +31,7 @@ float fixY(float y)
 
 Level::~Level()
 {
+	audio_manager_->UnloadAllSamples();
 	for(auto& object : static_game_objects_)
 	{
 		delete object;
@@ -86,6 +88,12 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 	Init();
 	camera_.GetBackground()->set_mesh(sprite_animator3D_->CreateMesh("space.png", gef::Vector4(960, 540, 0)));
 	
+	// LOAD AUDIO
+	loading_screen->SetStatusText("Loading Music...");
+	loading_screen->SetStatusText("Loading SFX...");
+	audio_manager_->LoadSample("sounds/MaxAmmo.ogg", *platform_);
+	
+	// LOAD 3D MODELS
 	loading_screen->SetStatusText("Loading 3D meshes...");
 	if(!obj_loader.Load(MeshResource::Level, "Models/Generic/crate2/crate2.obj", "Crate_1__Default_0", *platform_))
 	{
@@ -158,7 +166,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 							new_mesh = obj_loader.GetMesh(MeshResource::Level, scale);
 						}
 						static_game_objects_.emplace_back(new GameObject());
-						static_game_objects_.back()->Init(obj["width"] / 2.f, obj["height"] / 2.f, 1.f, (float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), b2_world_, primitive_builder_);
+						static_game_objects_.back()->Init(obj["width"] / 2.f, obj["height"] / 2.f, 1.f, (float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), b2_world_, primitive_builder_, audio_manager_);
 						static_game_objects_.back()->set_mesh(new_mesh);
 					}
 					else if (type == "door") {
@@ -169,7 +177,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 
 						int ID = std::find_if(obj["properties"].begin(), obj["properties"].end(), [](const json& element)
 							{ return element["name"] == "ID"; }).value()["value"];
-						door_objects_[ID] = new Door(gef::Vector4(obj["width"] / 2.f, obj["height"] / 2.f, 0.f), gef::Vector4((float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), 0.f), b2_world_, primitive_builder_, door_wall, door_frame, door);
+						door_objects_[ID] = new Door(gef::Vector4(obj["width"] / 2.f, obj["height"] / 2.f, 0.f), gef::Vector4((float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), 0.f), b2_world_, primitive_builder_, audio_manager_, door_wall, door_frame, door);
 					}
 				}
 			}
@@ -224,7 +232,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 					{
 						loading_screen->SetStatusText("Creating enemy...");
 						Enemy* enemy = new Enemy();
-						enemy->Init(1, 1, 1, object["x"], 0-object["y"], b2_world_, primitive_builder_, sprite_animator3D_, &player_, dynamic_game_objects_);
+						enemy->Init(1, 1, 1, object["x"], 0-object["y"], b2_world_, primitive_builder_, sprite_animator3D_, audio_manager_, &player_, dynamic_game_objects_);
 						enemies_.push_back(enemy);
 					}
 					else if(type == "plate")
@@ -249,7 +257,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 						
 						dynamic_game_objects_.emplace_back(new GameObject());
 						GameObject* dynObject = dynamic_game_objects_.back();
-						dynObject->Init(0.6f, 0.6f, 0.6f, object["x"], 0-object["y"], b2_world_, primitive_builder_, true);
+						dynObject->Init(0.6f, 0.6f, 0.6f, object["x"], 0-object["y"], b2_world_, primitive_builder_, audio_manager_, true);
 						if(type == "crate")
 						{
 							dynObject->SetTag(GameObject::Tag::Crate);

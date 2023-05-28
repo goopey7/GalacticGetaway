@@ -1,6 +1,7 @@
 ﻿#include "Pickup.h"
 
 #include "Player.h"
+#include "audio/audio_manager.h"
 
 Pickup::Pickup()
 {
@@ -8,8 +9,9 @@ Pickup::Pickup()
 }
 
 void Pickup::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world,
-	PrimitiveBuilder* builder, bool dynamic)
+				PrimitiveBuilder* builder, gef::AudioManager* am, bool dynamic)
 {
+	audio_manager_ = am;
 	//size_ = gef::Vector4(size_x, size_y, size_z);
 	//set_mesh(builder->CreateBoxMesh(gef::Vector4(size_x, size_y, size_z)));
 
@@ -36,9 +38,9 @@ void Pickup::Init(float size_x, float size_y, float size_z, float pos_x, float p
 	GetBody()->SetGravityScale(0.f);
 }
 
-void Pickup::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, bool dynamic)
+void Pickup::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::AudioManager* am, bool dynamic)
 {
-	Init(size, pos, world, builder, dynamic);
+	Init(size, pos, world, builder, am, dynamic);
 }
 
 void Pickup::SetTargetBody(b2Body* target_body)
@@ -72,6 +74,7 @@ void Pickup::BeginCollision(GameObject* other)
 		if(type_ == MaxAmmo)
 		{
 			player->GetGun()->maxAmmo();
+			audio_manager_->PlaySample(0);
 		}
 		Kill();
 	}

@@ -8,7 +8,7 @@ enum class GravityDirection;
 
 class Gun : public gef::MeshInstance {
 public:
-	void Init(gef::Vector4 size, b2World* world, SpriteAnimator3D* sprite_animator, const char* filename);
+	void Init(gef::Vector4 size, b2World* world, SpriteAnimator3D* sprite_animator, gef::AudioManager* am, const char* filename);
 	void Update(float frame_time, gef::Vector4 translation, GravityDirection grav_dir);
 	void Fire(float dt, GameObject::Tag target);
 	virtual void Reload(bool* reloading) {};
@@ -39,5 +39,6 @@ private:
 	int ammo_loaded_ = INT_MAX;
 	int damage_ = 1;
 	float fire_rate_ = 1;
+	gef::AudioManager* am_;
 };
 

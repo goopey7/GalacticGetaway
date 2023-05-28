@@ -9,10 +9,11 @@
 #include <thread>
 #include <system/debug_log.h>
 
-void Gun::Init(gef::Vector4 size, b2World* world, SpriteAnimator3D* sprite_animator, const char* filename)
+void Gun::Init(gef::Vector4 size, b2World* world, SpriteAnimator3D* sprite_animator, gef::AudioManager* am, const char* filename)
 {
+	am_ = am;
 	set_mesh(sprite_animator->CreateMesh(filename, size));
-	getBulletManager()->Init(world, sprite_animator->GetPrimitiveBuilder());
+	getBulletManager()->Init(world, sprite_animator->GetPrimitiveBuilder(), am_);
 }
 
 void Gun::Update(float frame_time, gef::Vector4 translation, GravityDirection grav_dir) {

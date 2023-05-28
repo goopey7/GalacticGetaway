@@ -29,7 +29,7 @@ class Gun;
 class Level : public Scene
 {
 public:
-	Level(gef::Platform& platform, StateManager& state_manager) : Scene(platform, state_manager) {}
+	Level(gef::Platform& platform, StateManager& state_manager, gef::AudioManager* am) : Scene(platform, state_manager), audio_manager_(am) {}
 	~Level();
 	void LoadFromFile(const char* filename, LoadingScreen* loading_screen, OBJMeshLoader& obj_loader);
 	void Update(InputActionManager* iam_,float frame_time) override;
@@ -73,4 +73,6 @@ private:
 
 	Menu* pause_menu_ = nullptr;
 	bool is_paused_ = false;
+
+	gef::AudioManager* audio_manager_ = nullptr;
 };

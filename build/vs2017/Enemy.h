@@ -10,8 +10,10 @@ class Player;
 class Enemy : public GameObject, public b2RayCastCallback
 {
 public:
-	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, SpriteAnimator3D* sprite_animator, const ::Player* player, std::vector<GameObject*>& dynamic_game_objects);
-	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, SpriteAnimator3D* sprite_animator, const ::Player* player, std::vector<GameObject*>& dynamic_game_objects);
+	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, SpriteAnimator3D
+			* sprite_animator, gef::AudioManager* am, const Player* player, std::vector<GameObject*>& dynamic_game_objects);
+	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, SpriteAnimator3D* sprite_animator, gef
+			::AudioManager* am, const Player* player, std::vector<GameObject*>& dynamic_game_objects);
 	void Update(float frame_time);
 
 	float ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float fraction) override;
