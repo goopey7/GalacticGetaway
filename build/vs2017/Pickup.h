@@ -24,4 +24,6 @@ private:
 	bool is_active_ = false;
 	b2Body* target_body_ = nullptr;
 	Type type_ = None;
+	float bobbing_time_ = 0.0f;
+	b2Vec2 start_pos_;
 };

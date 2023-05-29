@@ -1,5 +1,5 @@
 ﻿#include "Pickup.h"
-
+#include <cmath>
 #include "Player.h"
 #include "audio/audio_manager.h"
 
@@ -36,6 +36,7 @@ void Pickup::Init(float size_x, float size_y, float size_z, float pos_x, float p
 	
 	EnableCollisionResolution(false);
 	GetBody()->SetGravityScale(0.f);
+
 }
 
 void Pickup::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::AudioManager* am, bool dynamic)
@@ -52,7 +53,9 @@ void Pickup::Update(float frame_time)
 {
 	if(is_active_)
 	{
-		GameObject::Update(frame_time);
+		bobbing_time_ += frame_time;
+		GetBody()->SetTransform(b2Vec2(start_pos_.x, start_pos_.y + 0.5*sin(bobbing_time_*3)), 0.f);
+		UpdateBox2d();
 	}
 	else
 	{
@@ -93,6 +96,7 @@ void Pickup::SetType(Type type)
 void Pickup::Activate()
 {
 	is_active_ = true;
+	start_pos_ = GetBody()->GetTransform().p;
 }
 
 void Pickup::Activate(Type type)

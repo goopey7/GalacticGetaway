@@ -8,6 +8,7 @@
 
 #include "Pickup.h"
 #include "audio/audio_manager.h"
+#include "system/debug_log.h"
 
 void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world,
 				PrimitiveBuilder* builder, SpriteAnimator3D* sprite_animator, gef::AudioManager* am, const Player* player, std::vector<GameObject*>&
@@ -54,6 +55,9 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution dist(0.f, 1.f);
+	float chance = dist(gen);
+	gef::DebugOut("\nchance: ");
+	gef::DebugOut(std::to_string(chance).c_str());
 	if(dist(gen) < drop_probability_)
 	{
 		auto pos = GetBody()->GetPosition();
