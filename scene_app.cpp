@@ -45,7 +45,7 @@ void SceneApp::Init()
 
 	LoadingScreen* loading_screen = new LoadingScreen(platform_, *state_manager_);
 	loading_screen->SetStatusText("Loading...");
-	state_manager_ = new StateManager(loading_screen, &should_run_);
+	state_manager_ = new StateManager(loading_screen, &should_run_, audio_manager_, &platform_);
 	
 	// MAIN MENU
 	Menu* menu = new Menu(platform_, *state_manager_, false);
@@ -57,7 +57,7 @@ void SceneApp::Init()
 	Button* quitButton = new Button({0.5,0.7}, platform_, "Quit", 200.f, 50.f, gef::Colour(1,0,0,1));
 	menuStartButton->SetOnClick([this]
 	{
-		state_manager_->PushLevel(new Level(platform_, *state_manager_, audio_manager_), "level.json", mesh_loader_);
+		state_manager_->PushLevel(new Level(platform_, *state_manager_, audio_manager_), "lvl_1.json", mesh_loader_);
 		state_manager_->NextScene();
 	});
 	menuEnemyButton->SetOnClick([this]
