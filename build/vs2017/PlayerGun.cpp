@@ -20,6 +20,11 @@ void PlayerGun::Update(gef::Vector4 translation, GravityDirection grav_dir, Inpu
 	else {
 		gef::Vector2 stick_vec = gef::Vector2(input->getRightStickX(), input->getRightStickY());
 		if (!(stick_vec.x == 0 && stick_vec.y == 0)) target_vector_ = stick_vec;
+		//gef::DebugOut("\n");
+		//gef::DebugOut(std::to_string(stick_vec.x).c_str());
+		//gef::DebugOut(", ");
+		//gef::DebugOut(std::to_string(stick_vec.y).c_str());
+
 	}
 	target_vector_.Normalise();
 

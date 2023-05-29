@@ -1,6 +1,7 @@
 ﻿#include "InputActionManager.h"
 #include <fstream>
 #include <input/input_manager.h>
+#include <input/sony_controller_input_manager.h>
 #include <input/keyboard.h>
 #include <input/touch_input_manager.h>
 #include "StringToGefInputEnum.h"
@@ -59,11 +60,27 @@ bool InputActionManager::isRMBPressed()
 
 bool InputActionManager::isHeld(Action action)
 {
+	if (!using_keyboard_) {
+		if (action == Action::MoveLeft) {
+			return getLeftStickX() < 0 ? true : false;
+		}
+		else if (action == Action::MoveRight) {
+			return getLeftStickX() > 0 ? true : false;
+		}
+	}
 	return actionMapHeld[action];
 }
 
 bool InputActionManager::isReleased(Action action)
 {
+	if (!using_keyboard_) {
+		if (action == Action::MoveLeft) {
+			return getLeftStickX() >= 0 ? true : false;
+		}
+		else if (action == Action::MoveRight) {
+			return getLeftStickX() <= 0 ? true : false;
+		}
+	}
 	return actionMapReleased[action];
 }
 

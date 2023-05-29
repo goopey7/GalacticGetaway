@@ -6,6 +6,8 @@
 
 #include <queue>
 
+enum class EffectState { NORMAL, SHAKE, WARP };
+
 class Camera
 {
 public:
@@ -17,6 +19,7 @@ public:
 	void SetPosition(gef::Vector4 pos);
 	void SetAbovePlayer(bool value) { above_player_ = value; }
 	gef::MeshInstance* GetBackground() { return &background_; }
+	EffectState GetEffectState() { return effect_state_; }
 protected:
 	gef::Vector4 target_pos_ = gef::Vector4(0.0f, 0.0f, 0.0f);
 	gef::Vector4 camera_pos_ = gef::Vector4(0.0f, 0.0f, 0.0f);
@@ -25,7 +28,6 @@ protected:
 	gef::Vector4 offset_ = gef::Vector4(0.0f, 0.0f, 0.0f);
 	gef::Vector4 up_ = gef::Vector4(0.0f, 1.0f, 0.0f);
 	gef::Matrix44 view_matrix_;
-	enum class EffectState { NORMAL, SHAKE, WARP };
 	EffectState effect_state_ = EffectState::NORMAL;
 	float shake_time_ = 0.2f;
 	enum class MoveState { STATIONARY, LERP, TRACK };
