@@ -232,6 +232,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Gun.cpp" />
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="InputActionManager.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LoadingScreen.cpp" />
@@ -258,6 +259,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gun.h" />
+    <ClInclude Include="Image.h" />
     <ClInclude Include="InputActionManager.h" />
     <ClInclude Include="json.h" />
     <ClInclude Include="Level.h" />
