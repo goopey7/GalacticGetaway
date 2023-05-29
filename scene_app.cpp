@@ -17,6 +17,7 @@
 #include "Level.h"
 #include "LoadingScreen.h"
 #include "Menu.h"
+#include "SplashScreen.h"
 #include "Text.h"
 #include "audio/audio_manager.h"
 #include "graphics/image_data.h"
@@ -46,22 +47,37 @@ void SceneApp::Init()
 		iam_->getInputManager()->touch_manager()->EnablePanel(0);
 	}
 
+	// LOADING SCREEN
 	LoadingScreen* loading_screen = new LoadingScreen(platform_, *state_manager_);
 	loading_screen->SetStatusText("Loading...");
 	state_manager_ = new StateManager(loading_screen, &should_run_, audio_manager_, &platform_);
+
+	// SPLASH SCREEN
+	SplashScreen* splash_screen = new SplashScreen(platform_, *state_manager_);
+	
+	splash_screen->AddUIElement(new Text({0.5,0.5}, "DarkSpace Studios Presents", platform_));
+	
+	gef::Sprite* splash1 = new gef::Sprite();
+	gef::ImageData image_data("menu_images/logo.png");
+	splash1->set_texture(gef::Texture::Create(platform_, image_data));
+	splash1->set_width(image_data.width());
+	splash1->set_height(image_data.height());
+	Image* splash_img = new Image({0.5,0.5}, splash1, platform_);
+	splash_screen->AddUIElement(splash_img);
+	state_manager_->SetSplashScreen(splash_screen);
+	
+	gef::Sprite* logo2_sprite = new gef::Sprite();
+	gef::ImageData menu_image_data("menu_images/logo2.png");
+	logo2_sprite->set_texture(gef::Texture::Create(platform_, menu_image_data));
+	logo2_sprite->set_width(menu_image_data.width());
+	logo2_sprite->set_height(menu_image_data.height());
+	Image* logo2 = new Image({0.5,0.5}, logo2_sprite, platform_);
+	splash_screen->AddUIElement(logo2);
 	
 	// MAIN MENU
 	Menu* menu = new Menu(platform_, *state_manager_, false);
 	state_manager_->SetMainMenu(menu);
-	//menu->AddUIElement(new Text({0.5,0.25}, "Main Menu"));
-	gef::Sprite* sprite = new gef::Sprite();
-	gef::ImageData image_data("menu_images/logo2.png");
-	sprite->set_texture(gef::Texture::Create(platform_, image_data));
-	sprite->set_width(image_data.width());
-	sprite->set_height(image_data.height());
-	Image* img = new Image({0.5,0.25}, sprite, platform_);
-	img->SetAlpha(0.5f);
-	menu->AddUIElement(img);
+	menu->AddUIElement(new Text({0.5,0.25}, "Main Menu"));
 	Button* menuStartButton = new Button({0.5,0.4}, platform_, "Start", 200.f, 50.f, gef::Colour(1,1,1,1));
 	Button* menuEnemyButton = new Button({0.5,0.5}, platform_, "Enemy Testing", 200.f, 50.f, gef::Colour(1,1,0,1));
 	Button* menuPuzzleButton = new Button({0.5,0.6}, platform_, "Puzzle Testing", 200.f, 50.f, gef::Colour(1,1,0,1));

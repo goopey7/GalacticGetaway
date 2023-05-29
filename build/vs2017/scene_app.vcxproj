@@ -241,6 +241,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerGun.cpp" />
     <ClCompile Include="PressurePlate.cpp" />
+    <ClCompile Include="SplashScreen.cpp" />
     <ClCompile Include="SpriteAnimator3D.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="Text.cpp" />
@@ -270,6 +271,7 @@
     <ClInclude Include="PlayerGun.h" />
     <ClInclude Include="PressurePlate.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="SpriteAnimator3D.h" />
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="StringToGefInputEnum.h" />

@@ -4,6 +4,7 @@
 #include "LoadingScreen.h"
 #include "Menu.h"
 #include "Scene.h"
+#include "SplashScreen.h"
 #include "audio/audio_manager.h"
 
 StateManager::StateManager(LoadingScreen* loading_screen, bool* should_run, gef::AudioManager* audio_manager, gef::Platform* platform)
@@ -25,11 +26,15 @@ void StateManager::Update(InputActionManager* iam, float frame_time)
 	{
 		loading_screen_->Update(iam, frame_time);
 	}
+	else if(on_splash_screen_ && splash_screen_ != nullptr)
+	{
+		splash_screen_->Update(iam, frame_time);
+	}
 	else if(on_main_menu_ && main_menu_ != nullptr)
 	{
 		main_menu_->Update(iam, frame_time);
 	}
-	else
+	else if(current_scene_ != nullptr)
 	{
 		current_scene_->Update(iam, frame_time);
 	}
@@ -37,18 +42,7 @@ void StateManager::Update(InputActionManager* iam, float frame_time)
 
 void StateManager::Render(gef::Renderer3D* renderer_3d)
 {
-	if(is_loading_)
-	{
-		loading_screen_->Render(renderer_3d);
-	}
-	else if(on_main_menu_ && main_menu_ != nullptr)
-	{
-		main_menu_->Render(renderer_3d);
-	}
-	else
-	{
-		current_scene_->Render(renderer_3d);
-	}
+
 }
 
 void StateManager::Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_renderer, gef::Font* font)
@@ -57,11 +51,15 @@ void StateManager::Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* spr
 	{
 		loading_screen_->Render(renderer_3d, sprite_renderer, font);
 	}
+	else if(on_splash_screen_ && splash_screen_ != nullptr)
+	{
+		splash_screen_->Render(renderer_3d, sprite_renderer, font);
+	}
 	else if(on_main_menu_ && main_menu_ != nullptr)
 	{
 		main_menu_->Render(renderer_3d, sprite_renderer, font);
 	}
-	else
+	else if(current_scene_ != nullptr)
 	{
 		current_scene_->Render(renderer_3d, sprite_renderer, font);
 	}
