@@ -16,8 +16,6 @@
 #include "graphics/sprite_renderer.h"
 #include "maths/math_utils.h"
 #include "system/debug_log.h"
-#include "input/input_manager.h"
-#include "input/keyboard.h"
 #include "InputActionManager.h"
 #include "LoadingScreen.h"
 #include "Menu.h"
@@ -33,46 +31,13 @@ float fixY(float y)
 
 Level::~Level()
 {
-	audio_manager_->UnloadAllSamples();
-	for(auto& object : static_game_objects_)
-	{
-		delete object;
-		object = nullptr;
-	}
-	for(auto& object : dynamic_game_objects_)
-	{
-		delete object;
-		object = nullptr;
-	}
-	for(auto& object : background_objects_)
-	{
-		delete object;
-		object = nullptr;
-	}
-	for(auto& object : door_objects_)
-	{
-		delete object.second;
-		object.second = nullptr;
-	}
-	for(auto& object : enemies_)
-	{
-		delete object;
-		object = nullptr;
-	}
-	
-	delete b2_world_;
-	b2_world_ = nullptr;
-	
-	delete primitive_builder_;
-	primitive_builder_ = nullptr;
-	
-	delete sprite_animator3D_;
-	sprite_animator3D_ = nullptr;
+	CleanUp();
 }
 
 void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OBJMeshLoader& obj_loader)
 {
-	
+	obj_loader_ = &obj_loader;
+	file_name_ = filename;
 	loading_screen->SetStatusText("Reading level file...");
 	// load level from file
 	std::ifstream i(std::string("levels/") + std::string(filename));
@@ -301,6 +266,52 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 	}
 }
 
+void Level::CleanUp()
+{
+	audio_manager_->UnloadAllSamples();
+	for(auto& object : static_game_objects_)
+	{
+		delete object;
+		object = nullptr;
+	}
+	for(auto& object : dynamic_game_objects_)
+	{
+		delete object;
+		object = nullptr;
+	}
+	for(auto& object : background_objects_)
+	{
+		delete object;
+		object = nullptr;
+	}
+	for(auto& object : door_objects_)
+	{
+		delete object.second;
+		object.second = nullptr;
+	}
+	for(auto& object : enemies_)
+	{
+		delete object;
+		object = nullptr;
+	}
+	
+	delete b2_world_;
+	b2_world_ = nullptr;
+	
+	delete primitive_builder_;
+	primitive_builder_ = nullptr;
+	
+	delete sprite_animator3D_;
+	sprite_animator3D_ = nullptr;
+}
+
+void Level::Reset()
+{
+	end_state_ = NONE;
+	CleanUp();
+	Init();
+}
+
 void Level::Init()
 {
 	// initialize box2d world
@@ -350,8 +361,43 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 		end->AddUIElement(mainMenuButton);
 		end->AddUIElement(quitButton);
 		
-		if(end_state_ == WIN) end->AddUIElement(new Text({ 0.5,0.25 }, "You Win!"));
-		else if(end_state_ == LOSE) end->AddUIElement(new Text({ 0.5,0.25 }, "Game Over"));
+		if(end_state_ == WIN)
+		{
+			if(std::string(file_name_) == std::string("lvl_2.json"))
+			{
+				end->AddUIElement(new Text({ 0.5,0.25 }, "Thanks For Playing!"));
+			}
+			else
+			{
+				end->AddUIElement(new Text({ 0.5,0.25 }, "Level Complete"));
+				Button* nextLevelButton = new Button({ 0.5,0.5 }, *platform_, "Next Level", 200.f, 50.f, gef::Colour(1, 1, 1, 1));
+
+				std::string nlf = file_name_;
+				nlf = nlf.substr(nlf.find(".json") - 1, 1);
+				nlf = "lvl_" + std::to_string(std::stoi(nlf) + 1) + ".json";
+				nextLevelButton->SetOnClick([this, nlf]
+					{
+						CleanUp();
+						state_manager_->PushLevel(new Level(*platform_, *state_manager_, audio_manager_), nlf.c_str(), *obj_loader_);
+						state_manager_->NextScene();
+						delete this;
+					});
+				end->AddUIElement(nextLevelButton);
+			}
+		}
+		else if(end_state_ == LOSE)
+		{
+			Button* restartButton = new Button({ 0.5,0.5 }, *platform_, "Restart Level", 200.f, 50.f, gef::Colour(1, 1, 1, 1));
+			restartButton->SetOnClick([this]
+				{
+					CleanUp();
+					state_manager_->PushLevel(new Level(*platform_, *state_manager_, audio_manager_), file_name_, *obj_loader_);
+					state_manager_->NextScene();
+					delete this;
+				});
+			end->AddUIElement(restartButton);
+			end->AddUIElement(new Text({ 0.5,0.25 }, "Game Over"));
+		}
 
 		state_manager_->PushScene(end);
 		state_manager_->NextScene();

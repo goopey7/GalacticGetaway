@@ -34,6 +34,7 @@ public:
 	Level(gef::Platform& platform, StateManager& state_manager, gef::AudioManager* am) : Scene(platform, state_manager), audio_manager_(am) {}
 	~Level();
 	void LoadFromFile(const char* filename, LoadingScreen* loading_screen, OBJMeshLoader& obj_loader);
+	void CleanUp();
 	void Update(InputActionManager* iam_,float frame_time) override;
 	void Render(gef::Renderer3D* renderer_3d) override;
 	void Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) override;
@@ -46,7 +47,8 @@ public:
 	const Gun* getGun() const;
 	std::vector<GameObject*>& getBodiesToDestroy() {return objects_to_destroy_;}
 	void SetEndState(EndState end_state) { end_state_ = end_state; }
-	
+	void Reset();
+
 private:
 	enum HudElement
 	{
@@ -82,4 +84,6 @@ private:
 	bool is_paused_ = false;
 
 	gef::AudioManager* audio_manager_ = nullptr;
+	const char* file_name_ = nullptr;
+	OBJMeshLoader* obj_loader_ = nullptr;
 };
