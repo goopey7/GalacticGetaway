@@ -33,11 +33,11 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 	body_def.userData.pointer = reinterpret_cast<uintptr_t>(this);
 
 	b2PolygonShape shape;
-	shape.SetAsBox(size_x, size_y);
+	shape.SetAsBox(size_x * 0.5f, size_y);
 
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
-	fixture.density = 1.f;
+	fixture.density = 2.f;
 	fixture.friction = 0.7f;
 	fixture.userData.pointer = reinterpret_cast<uintptr_t>(this);
 
