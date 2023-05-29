@@ -69,5 +69,11 @@ void Button::Update(InputActionManager* iam, float frame_time)
 void Button::Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font)
 {
 	sprite_renderer->DrawSprite(button);
-	font->RenderText(sprite_renderer, gef::Vector4(platform_->width() * anchor_.x, platform_->height() * anchor_.y - button.height() / 4.f, -0.9f), 1.0f, 0xff000000, gef::TJ_CENTRE,text_.c_str()); 
+	font->RenderText(sprite_renderer, gef::Vector4(platform_->width() * anchor_.x, platform_->height() * anchor_.y - button.height() / 4.f, -0.9f), 1.0f, text_color_.GetABGR(), gef::TJ_CENTRE,text_.c_str()); 
+}
+
+void Button::SetAlpha(float alpha)
+{
+	button.set_colour(0x00ffffff | (static_cast<unsigned int>(alpha * 255) << 24));
+	text_color_.SetFromAGBR(text_color_.GetABGR() | static_cast<unsigned int>(alpha * 255) << 24);
 }

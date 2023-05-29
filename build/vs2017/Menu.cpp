@@ -72,3 +72,11 @@ void Menu::Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font)
 	}
 	sprite_renderer->End();
 }
+
+void Menu::SetAlpha(float alpha)
+{
+	for(auto& element : ui_elements_)
+	{
+		element->SetAlpha(alpha);
+	}
+}

@@ -17,5 +17,8 @@ void Image::Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font)
 
 void Image::SetAlpha(float alpha)
 {
-	sprite_->set_colour(0x00ffffff | (static_cast<unsigned int>(alpha * 255) << 24));
+	if(!ignore_alpha_)
+		sprite_->set_colour(0x00ffffff | (static_cast<unsigned int>(alpha * 255) << 24));
+	else
+		sprite_->set_colour(0xffffffff);
 }

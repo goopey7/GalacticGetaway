@@ -27,6 +27,7 @@ public:
 	void Select();
 	void Deselect();
 	bool IsSelectable();
+	void SetIgnoreAlpha(bool ignore_alpha) {ignore_alpha_ = ignore_alpha;}
 	virtual void SetAlpha(float alpha) = 0;
 
 protected:
@@ -34,4 +35,5 @@ protected:
 	gef::Vector2 anchor_;
 	bool is_selected = false;
 	bool is_selectable = false;
+	bool ignore_alpha_ = false;
 };

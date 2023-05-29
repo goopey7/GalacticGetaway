@@ -44,7 +44,7 @@ public:
 	void SetOnSplashScreen(bool on_splash_screen) {on_splash_screen_ = on_splash_screen;}
 	
 	Scene* NextScene();
-	void SwitchToMainMenu();
+	void SwitchToMainMenu(bool fade_in=false);
 	void SetPauseMenu(Menu* pause_menu);
 	void SetShouldRun(bool should_run) { *should_run_ = should_run; }
 	void SwitchToSettingsMenu();
@@ -69,4 +69,7 @@ private:
 	
 	gef::AudioManager* audio_manager_ = nullptr;
 	gef::Platform* platform_ = nullptr;
+	float main_menu_alpha_ = 1.f;
+	const float main_menu_fade_speed_ = 1.0f;
+	float main_menu_fade_timer_ = main_menu_fade_speed_;
 };

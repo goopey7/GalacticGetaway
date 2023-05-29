@@ -1,5 +1,6 @@
 ﻿#include "SplashScreen.h"
 
+#include "Image.h"
 #include "InputActionManager.h"
 #include "UIElement.h"
 #include "graphics/sprite_renderer.h"
@@ -15,7 +16,7 @@ void SplashScreen::Update(InputActionManager* iam, float frame_time)
 	if(ui_elements_.empty() || iam->isPressed(Action::Jump))
 	{
 		state_manager_->SetOnSplashScreen(false);
-		state_manager_->SwitchToMainMenu();
+		state_manager_->SwitchToMainMenu(true);
 		return;
 	}
 	
@@ -44,7 +45,16 @@ void SplashScreen::Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font)
 	if(!ui_elements_.empty())
 	{
 		sprite_renderer->Begin(true);
+		if(background_ != nullptr)
+		{
+			background_->Render(sprite_renderer, font);
+		}
 		ui_elements_.front()->Render(sprite_renderer, font);
 		sprite_renderer->End();
 	}
+}
+
+void SplashScreen::SetBkg(Image* image)
+{
+	background_ = image;
 }

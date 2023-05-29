@@ -32,7 +32,16 @@ void StateManager::Update(InputActionManager* iam, float frame_time)
 	}
 	else if(on_main_menu_ && main_menu_ != nullptr)
 	{
-		main_menu_->Update(iam, frame_time);
+		if(main_menu_fade_timer_ < main_menu_fade_speed_)
+		{
+			main_menu_fade_timer_ += frame_time;
+			main_menu_alpha_ = main_menu_fade_timer_ / main_menu_fade_speed_;
+			main_menu_->SetAlpha(main_menu_alpha_);
+		}
+		else
+		{
+			main_menu_->Update(iam, frame_time);
+		}
 	}
 	else if(on_settings_menu_ && settings_menu_ != nullptr)
 	{
@@ -123,8 +132,13 @@ Scene* StateManager::NextScene()
 	return oldScene;
 }
 
-void StateManager::SwitchToMainMenu()
+void StateManager::SwitchToMainMenu(bool fade_in)
 {
+	if(fade_in)
+	{
+		main_menu_fade_timer_ = 0.f;
+		main_menu_->SetAlpha(0.f);
+	}
 	on_settings_menu_ = false;
 	while (!scenes_.empty())
 	{

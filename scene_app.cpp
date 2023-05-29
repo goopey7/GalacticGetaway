@@ -64,9 +64,18 @@ void SceneApp::Init()
 	loading_screen->SetStatusText("Loading...");
 	state_manager_ = new StateManager(loading_screen, &should_run_, audio_manager_, &platform_);
 
+	gef::Sprite* menuBkg = new gef::Sprite();
+	gef::ImageData menu_img_data("space.png");
+	menuBkg->set_texture(gef::Texture::Create(platform_, menu_img_data));
+	menuBkg->set_width(platform_.width());
+	menuBkg->set_height(platform_.height());
+	Image* menuBkg_img = new Image({0.5f,0.5f}, menuBkg, platform_);
+	menuBkg_img->SetIgnoreAlpha(true);
+	
 	// SPLASH SCREEN
 	SplashScreen* splash_screen = new SplashScreen(platform_, *state_manager_);
-	
+
+	splash_screen->SetBkg(menuBkg_img);
 	splash_screen->AddUIElement(new Text({0.5,0.5}, "DarkSpace Studios Presents", platform_));
 	
 	gef::Sprite* splash1 = new gef::Sprite();
@@ -88,6 +97,8 @@ void SceneApp::Init()
 	
 	// SETTINGS MENU
 	Menu* settings_menu = new Menu(platform_, *state_manager_, false);
+	
+	settings_menu->AddUIElement(menuBkg_img);
 	state_manager_->SetSettingsMenu(settings_menu);
 	settings_menu->AddUIElement(new Text({0.5,0.25}, "Settings"));
 	Button* settingsBackButton = new Button({0.5,0.4}, platform_, "Back", 200.f, 50.f, gef::Colour(1,1,1,1));
@@ -182,19 +193,11 @@ void SceneApp::Init()
 	
 	// MAIN MENU
 	Menu* menu = new Menu(platform_, *state_manager_, false);
-	
-	gef::Sprite* menuBkg = new gef::Sprite();
-	gef::ImageData menu_img_data("space.png");
-	menuBkg->set_texture(gef::Texture::Create(platform_, menu_img_data));
-	menuBkg->set_width(platform_.width());
-	menuBkg->set_height(platform_.height());
-	Image* menuBkg_img = new Image({0.5f,0.5f}, menuBkg, platform_);
 	menu->AddUIElement(menuBkg_img);
-	
 	state_manager_->SetMainMenu(menu);
-	menu->AddUIElement(new Text({0.5,0.25}, "Main Menu"));
-	Button* menuStartButton = new Button({0.5,0.4}, platform_, "Start", 200.f, 50.f, gef::Colour(1,1,1,1));
-	Button* menuSettingsButton = new Button({0.5,0.5}, platform_, "Settings", 200.f, 50.f, gef::Colour(1,1,1,1));
+	menu->AddUIElement(new Text({0.5,0.25}, "Galactic Getaway"));
+	Button* menuStartButton = new Button({0.5,0.5}, platform_, "Start", 200.f, 50.f, gef::Colour(1,1,1,1));
+	Button* menuSettingsButton = new Button({0.5,0.6}, platform_, "Settings", 200.f, 50.f, gef::Colour(1,1,1,1));
 	Button* quitButton = new Button({0.5,0.7}, platform_, "Quit", 200.f, 50.f, gef::Colour(1,0,0,1));
 	menuStartButton->SetOnClick([this]
 	{

@@ -13,10 +13,13 @@ public:
 	void Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) override;
 	void Render(gef::Renderer3D* renderer_3d) override {}
 	void Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_renderer, gef::Font* font) override {Render(sprite_renderer, font);}
+	void SetBkg(Image* image);
+
 private:
 	const float fade_in_time_ = 1.0f;
 	const float fade_out_time_ = 1.0f;
 	float fade_timer_ = 0.0f;
 	float current_element_alpha_ = 0.f;
 	std::queue<UIElement*> ui_elements_;
+	Image* background_ = nullptr;
 };

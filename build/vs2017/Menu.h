@@ -15,6 +15,7 @@ public:
 	void Render(gef::Renderer3D* renderer_3d) override {}
 	void Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) override;
 	void Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_renderer, gef::Font* font) override {Render(sprite_renderer, font);}
+	void SetAlpha(float alpha);
 private:
 	std::vector<UIElement*> ui_elements_;
 	UIElement* selected_element_ = nullptr;
