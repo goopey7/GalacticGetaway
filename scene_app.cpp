@@ -194,7 +194,7 @@ void SceneApp::Render()
 void SceneApp::InitFont()
 {
 	font_ = new gef::Font(platform_);
-	font_->Load("comic_sans");
+	font_->Load("ranger");
 }
 
 void SceneApp::CleanUpFont()
