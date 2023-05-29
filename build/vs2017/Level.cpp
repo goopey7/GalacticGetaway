@@ -257,7 +257,6 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 
 void Level::CleanUp()
 {
-	audio_manager_->UnloadAllSamples();
 	for(auto& object : static_game_objects_)
 	{
 		delete object;

@@ -1,8 +1,10 @@
 #include "Door.h"
+
+#include "audio/audio_manager.h"
 #include "graphics/renderer_3d.h"
 
 Door::Door(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::AudioManager* am, gef::Mesh* door_wall, gef::Mesh* door_frame, gef::Mesh* door) {
-
+	audio_manager_ = am;
 	gef::Matrix44 transform_matrix;
 	transform_matrix.SetIdentity();
 	transform_matrix.SetTranslation(pos);
@@ -60,12 +62,16 @@ void Door::Open() {
 	start_pos_ = door_->transform().GetTranslation();
 	lerp_time_ = 0.f;
 	current_state_ = State::OPENING;
+	if(!audio_manager_->sample_voice_playing(6))
+		audio_manager_->PlaySample(6);
 }
 
 void Door::Close() {
 	start_pos_ = door_->transform().GetTranslation();
 	lerp_time_ = 0.f;
 	current_state_ = State::CLOSING;
+	if(!audio_manager_->sample_voice_playing(6))
+		audio_manager_->PlaySample(6);
 }
 
 void Door::Render(gef::Renderer3D* renderer_3d) const {

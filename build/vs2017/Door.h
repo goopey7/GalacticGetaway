@@ -19,5 +19,6 @@ private:
 	enum class State { OPENING, CLOSING, IDLE };
 	State current_state_ = State::IDLE;
 	float lerp_time_ = 0.f;
+	gef::AudioManager* audio_manager_ = nullptr;
 };
 

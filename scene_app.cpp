@@ -52,6 +52,7 @@ void SceneApp::Init()
 	audio_manager_->LoadSample("sounds/enemy_lazer.ogg", platform_); // found here: https://www.soundfishing.eu/sound/laser-gun
 	audio_manager_->LoadSample("sounds/player_death.ogg", platform_); // found here: https://pixabay.com/sound-effects/search/death/?pagi=2
 	audio_manager_->LoadSample("sounds/enemy_death.ogg", platform_); // found here: https://pixabay.com/sound-effects/search/death/?pagi=2
+	audio_manager_->LoadSample("sounds/door.ogg", platform_); // found here: https://pixabay.com/sound-effects/search/death/?pagi=2
 
 	// initialise input action manager
 	iam_ = new InputActionManager(platform_);
@@ -159,7 +160,7 @@ void SceneApp::Init()
 		{
 			volume = 0;
 		}
-		for(int i=0; i < 6; i++)
+		for(int i=0; i < 7; i++)
 		{
 			gef::VolumeInfo vi;
 			audio_manager_->GetSampleVoiceVolumeInfo(i, vi);
@@ -178,7 +179,7 @@ void SceneApp::Init()
 		{
 			volume = 100;
 		}
-		for(int i=0; i < 6; i++)
+		for(int i=0; i < 7; i++)
 		{
 			gef::VolumeInfo vi;
 			audio_manager_->GetSampleVoiceVolumeInfo(i, vi);
