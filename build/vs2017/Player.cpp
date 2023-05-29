@@ -5,9 +5,12 @@
 #include "system/debug_log.h"
 #include "Level.h"
 #include "InputActionManager.h"
+#include "audio/audio_manager.h"
 
-void Player::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, SpriteAnimator3D* sprite_animator, Camera* cam, Level* lev) {
+void Player::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, SpriteAnimator3D* sprite_animator, gef
+				::AudioManager* am, Camera* cam, Level* lev) {
 	tag = Tag::Player;
+	audio_manager_ = am;
 	camera_ = cam;
 	platform_ = sprite_animator->GetPlatform();
 	level_ = lev;
@@ -40,8 +43,9 @@ void Player::Init(float size_x, float size_y, float size_z, float pos_x, float p
 	UpdateBox2d();
 }
 
-void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator, Camera* cam, Level* lev) {
-	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, sprite_animator, cam, lev);
+void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator, gef::AudioManager* am, Camera*
+				cam, Level* lev) {
+	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, sprite_animator, am, cam, lev);
 }
 
 void Player::Update(InputActionManager* iam, float frame_time) {
@@ -249,6 +253,7 @@ void Player::BeginCollision(GameObject* other) {
 	{
      	Bullet* bullet = dynamic_cast<Bullet*>(other);
 		if (bullet->getTarget() == GameObject::Tag::Player && bullet->getDamage() > 0) {
+			audio_manager_->PlaySample(4);
 			if(health_ > 0)
 			{
 				health_--;

@@ -9,9 +9,9 @@
 #include <thread>
 #include <system/debug_log.h>
 
-void PlayerGun::Update(gef::Vector4 translation, GravityDirection grav_dir, InputActionManager* input, gef::Platform* platform, Camera* cam, float dt) {
+#include "audio/audio_manager.h"
 
-	
+void PlayerGun::Update(gef::Vector4 translation, GravityDirection grav_dir, InputActionManager* input, gef::Platform* platform, Camera* cam, float dt) {
 
 	if (input->getUsingKeyboard()) {
 		gef::Vector2 mouse_pos = input->getMousePos();
@@ -27,7 +27,22 @@ void PlayerGun::Update(gef::Vector4 translation, GravityDirection grav_dir, Inpu
 
 	if (input->getInputManager()->touch_manager()->is_button_down(0) || input->isHeld(Action::Fire)) {
 		Fire(dt, GameObject::Tag::Enemy);
-		if(ammo_loaded_ > 0) cam->Shake();
+		if(ammo_loaded_ > 0)
+		{
+			cam->Shake();
+			if(!am_->sample_voice_playing(2))
+			{
+				am_->PlaySample(2, true);
+			}
+		}
+		else if(am_->sample_voice_playing(2))
+		{
+			am_->StopPlayingSampleVoice(2);
+		}
+	}
+	else if(am_->sample_voice_playing(2))
+	{
+		am_->StopPlayingSampleVoice(2);
 	}
 
 	if (input->isPressed(Action::Reload)) {

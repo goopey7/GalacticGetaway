@@ -33,12 +33,12 @@ protected:
 	bool reloading_ = false;
 
 	BulletManager bullet_manager_;
+	gef::AudioManager* am_;
 private:
 
 	int ammo_reserve_ = INT_MAX;
 	int ammo_loaded_ = INT_MAX;
 	int damage_ = 1;
 	float fire_rate_ = 1;
-	gef::AudioManager* am_;
 };
 

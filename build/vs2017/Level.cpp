@@ -93,8 +93,13 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 	// LOAD AUDIO
 	loading_screen->SetStatusText("Loading Music...");
 	loading_screen->SetStatusText("Loading SFX...");
+	audio_manager_->LoadSample("sounds/MaxAmmo.ogg", *platform_); // made in house
 	audio_manager_->LoadSample("sounds/MaxAmmo.ogg", *platform_);
 	//audio_manager_->LoadSample("sounds/Health.ogg", *platform_);
+	audio_manager_->LoadSample("sounds/lazer.ogg", *platform_); // found here: https://www.soundfishing.eu/sound/laser-gun
+	audio_manager_->LoadSample("sounds/enemy_lazer.ogg", *platform_); // found here: https://www.soundfishing.eu/sound/laser-gun
+	audio_manager_->LoadSample("sounds/player_death.ogg", *platform_); // found here: https://pixabay.com/sound-effects/search/death/?pagi=2
+	audio_manager_->LoadSample("sounds/enemy_death.ogg", *platform_); // found here: https://pixabay.com/sound-effects/search/death/?pagi=2
 	
 	// LOAD 3D MODELS
 	loading_screen->SetStatusText("Loading 3D meshes...");
@@ -231,7 +236,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 			{
 				loading_screen->SetStatusText("Creating player...");
 				auto playerJson = layer["objects"][0];
-				player_.Init(1, 1, 1, playerJson["x"], 0-playerJson["y"], b2_world_, sprite_animator3D_, &camera_, this);
+				player_.Init(1, 1, 1, playerJson["x"], 0-playerJson["y"], b2_world_, sprite_animator3D_, audio_manager_, &camera_, this);
 				camera_.SetPosition(gef::Vector4(playerJson["x"], 1-playerJson["y"], 30));
 			}
 			if(layer["name"] == "DynamicSpawns")

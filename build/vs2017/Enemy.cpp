@@ -7,6 +7,7 @@
 #include <maths/math_utils.h>
 
 #include "Pickup.h"
+#include "audio/audio_manager.h"
 
 void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world,
 				PrimitiveBuilder* builder, SpriteAnimator3D* sprite_animator, gef::AudioManager* am, const Player* player, std::vector<GameObject*>&
@@ -57,20 +58,18 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 	{
 		auto pos = GetBody()->GetPosition();
 		pickup_ = new Pickup();
-		Pickup::Type type;
 		if(dist(gen) < 0.7f)
 		{
-			type = Pickup::Type::Health;
+			pickup_->SetType(Pickup::Type::Health);
 			pickup_->set_mesh(sprite_animator3D_->CreateMesh("Pickups/Health/frame1.png", gef::Vector4(0.3, 0.3, 0.3)));
 		}
 		else
 		{
-			type = Pickup::Type::MaxAmmo;
+			pickup_->SetType(Pickup::Type::MaxAmmo);
 			pickup_->set_mesh(sprite_animator3D_->CreateMesh("Pickups/MaxAmmo/frame1.png", gef::Vector4(0.3, 0.3, 0.3)));
 		}
 		pickup_->Init(0.3,0.3,0.3, pos.x, pos.y, physics_world_, primitive_builder_, am, true);
 		pickup_->SetTargetBody(GetBody());
-		pickup_->SetType(type);
 		dynamic_game_objects_->push_back(pickup_);
 	}
 }
@@ -168,10 +167,12 @@ void Enemy::Update(float frame_time)
 		set_mesh(sprite_animator3D_->UpdateAnimation(anim_time_, mesh_, "EnemyRunning"));
 		break;
 	case DEATH:
-		if (!sprite_animator3D_->ReachedEnd("EnemyDeath")) set_mesh(sprite_animator3D_->UpdateAnimation(anim_time_, mesh_, "EnemyDeath"));
-		else {
-			sprite_animator3D_->Reset("EnemyDeath");
-			Kill();
+		{
+			if (!sprite_animator3D_->ReachedEnd("EnemyDeath")) set_mesh(sprite_animator3D_->UpdateAnimation(anim_time_, mesh_, "EnemyDeath"));
+			else {
+				sprite_animator3D_->Reset("EnemyDeath");
+				Kill();
+			}
 		}
 	default:
 		break;
@@ -227,6 +228,7 @@ void Enemy::BeginCollision(GameObject* other)
 				{
 					pickup_->Activate();
 				}
+				audio_manager_->PlaySample(5);
 				animation_state_ = DEATH;
 				set_mesh(sprite_animator3D_->GetFirstFrame("EnemyDeath"));
 			}

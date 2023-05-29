@@ -9,6 +9,8 @@
 #include <thread>
 #include <system/debug_log.h>
 
+#include "audio/audio_manager.h"
+
 void Gun::Init(gef::Vector4 size, b2World* world, SpriteAnimator3D* sprite_animator, gef::AudioManager* am, const char* filename)
 {
 	am_ = am;
@@ -98,6 +100,10 @@ void Gun::Fire(float dt, GameObject::Tag target) {
 		if (fire_time_ >= GetFireRate() && *load > 0) {
 			gef::Vector2 pos(transform().GetTranslation().x(), transform().GetTranslation().y());
 			bullet_manager_.Fire(target_vector_, pos, damage_, target, 40.f);
+			if(target == GameObject::Tag::Player)
+			{
+				am_->PlaySample(3, false);
+			}
 			fire_time_ = 0;
 			decreaseLoaded();
 			if (*load == 0) Reload(&reloading_);

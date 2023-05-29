@@ -1,5 +1,4 @@
 #pragma once
-#include "graphics/mesh_instance.h"
 #include <system/platform.h>
 #include "BulletManager.h"
 #include "Gun.h"
@@ -31,4 +30,3 @@ protected:
 	int damage_ = 5;
 	float fire_rate_ = 1.f / 15.f;
 };
-
