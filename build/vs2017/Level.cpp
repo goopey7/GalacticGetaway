@@ -72,6 +72,7 @@ Level::~Level()
 
 void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OBJMeshLoader& obj_loader)
 {
+	
 	loading_screen->SetStatusText("Reading level file...");
 	// load level from file
 	std::ifstream i(std::string("levels/") + std::string(filename));
@@ -90,11 +91,15 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 	Init();
 	camera_.GetBackground()->set_mesh(sprite_animator3D_->CreateMesh("space.png", gef::Vector4(960, 540, 0)));
 	
-	// LOAD AUDIO
-	loading_screen->SetStatusText("Loading Music...");
+	
 	loading_screen->SetStatusText("Loading SFX...");
 	audio_manager_->LoadSample("sounds/MaxAmmo.ogg", *platform_); // made in house
+	gef::VolumeInfo volume_info;
+	audio_manager_->GetSampleVoiceVolumeInfo(0, volume_info);
+	volume_info.volume = 200.f;
+	audio_manager_->SetSampleVoiceVolumeInfo(0, volume_info);
 	audio_manager_->LoadSample("sounds/MaxAmmo.ogg", *platform_);
+	audio_manager_->SetSampleVoiceVolumeInfo(1, volume_info);
 	//audio_manager_->LoadSample("sounds/Health.ogg", *platform_);
 	audio_manager_->LoadSample("sounds/lazer.ogg", *platform_); // found here: https://www.soundfishing.eu/sound/laser-gun
 	audio_manager_->LoadSample("sounds/enemy_lazer.ogg", *platform_); // found here: https://www.soundfishing.eu/sound/laser-gun

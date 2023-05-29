@@ -5,6 +5,11 @@
 
 #include "obj_mesh_loader.h"
 
+namespace gef
+{
+	class AudioManager;
+}
+
 class Menu;
 class LoadingScreen;
 class Level;
@@ -22,7 +27,8 @@ class Scene;
 class StateManager
 {
 public:
-	StateManager(LoadingScreen* loading_screen, bool* should_run);
+	StateManager(LoadingScreen* loading_screen, bool* should_run, gef::AudioManager* audio_manager,
+				gef::Platform* platform);
 	void SetMainMenu(Menu* main_menu) {main_menu_ = main_menu;}
 	void Update(InputActionManager* iam, float frame_time);
 	void Render(gef::Renderer3D* renderer_3d);
@@ -48,4 +54,7 @@ private:
 	bool on_main_menu_ = true;
 	Menu* pause_menu_ = nullptr;
 	bool* should_run_;
+
+	gef::AudioManager* audio_manager_ = nullptr;
+	gef::Platform* platform_ = nullptr;
 };
