@@ -74,37 +74,79 @@ void SceneApp::Init()
 	Image* logo2 = new Image({0.5,0.5}, logo2_sprite, platform_);
 	splash_screen->AddUIElement(logo2);
 	
+	// SETTINGS MENU
+	Menu* settings_menu = new Menu(platform_, *state_manager_, false);
+	state_manager_->SetSettingsMenu(settings_menu);
+	settings_menu->AddUIElement(new Text({0.5,0.25}, "Settings"));
+	Button* settingsBackButton = new Button({0.5,0.4}, platform_, "Back", 200.f, 50.f, gef::Colour(1,1,1,1));
+	settingsBackButton->SetOnClick([this]
+	{
+		state_manager_->SwitchToMainMenu();
+	});
+	settings_menu->AddUIElement(settingsBackButton);
+
+	settings_menu->AddUIElement(new Text({0.25,0.5}, "Music Volume"));
+	Button* music_volume_down = new Button({0.4,0.5}, platform_, "-", 50.f, 50.f, gef::Colour(1,1,1,1));
+	Text* music_volume_text = new Text({0.5,0.5}, "20", platform_);
+	Button* music_volume_up = new Button({0.6,0.5}, platform_, "+", 50.f, 50.f, gef::Colour(1,1,1,1));
+	music_volume_down->SetOnClick([this, music_volume_text]
+	{
+		std::string text = music_volume_text->GetText();
+		int volume = std::stoi(text) - 10;
+		if(volume - 10 < 0)
+		{
+			volume = 0;
+		}
+		gef::VolumeInfo vi;
+		audio_manager_->GetMusicVolumeInfo(vi);
+		vi.volume = volume;
+		audio_manager_->SetMusicVolumeInfo(vi);
+		text = std::to_string(volume);
+		music_volume_text->UpdateText(text.c_str());
+	});
+	music_volume_up->SetOnClick([this, music_volume_text]
+	{
+		std::string text = music_volume_text->GetText();
+		int volume = std::stoi(text) + 10;
+		if(volume + 10 > 100)
+		{
+			volume = 100;
+		}
+		gef::VolumeInfo vi;
+		audio_manager_->GetMusicVolumeInfo(vi);
+		vi.volume = volume;
+		audio_manager_->SetMusicVolumeInfo(vi);
+		text = std::to_string(volume);
+		music_volume_text->UpdateText(text.c_str());
+	});
+	settings_menu->AddUIElement(music_volume_down);
+	settings_menu->AddUIElement(music_volume_text);
+	settings_menu->AddUIElement(music_volume_up);
+	
 	// MAIN MENU
 	Menu* menu = new Menu(platform_, *state_manager_, false);
 	state_manager_->SetMainMenu(menu);
 	menu->AddUIElement(new Text({0.5,0.25}, "Main Menu"));
 	Button* menuStartButton = new Button({0.5,0.4}, platform_, "Start", 200.f, 50.f, gef::Colour(1,1,1,1));
-	Button* menuEnemyButton = new Button({0.5,0.5}, platform_, "Enemy Testing", 200.f, 50.f, gef::Colour(1,1,0,1));
-	Button* menuPuzzleButton = new Button({0.5,0.6}, platform_, "Puzzle Testing", 200.f, 50.f, gef::Colour(1,1,0,1));
+	Button* menuSettingsButton = new Button({0.5,0.5}, platform_, "Settings", 200.f, 50.f, gef::Colour(1,1,1,1));
 	Button* quitButton = new Button({0.5,0.7}, platform_, "Quit", 200.f, 50.f, gef::Colour(1,0,0,1));
 	menuStartButton->SetOnClick([this]
 	{
 		state_manager_->PushLevel(new Level(platform_, *state_manager_, audio_manager_), "lvl_1.json", mesh_loader_);
 		state_manager_->NextScene();
 	});
-	menuEnemyButton->SetOnClick([this]
+	menuSettingsButton->SetOnClick([this]
 	{
-		state_manager_->PushLevel(new Level(platform_, *state_manager_, audio_manager_), "enemy.json", mesh_loader_);
-		state_manager_->NextScene();
-	});
-	menuPuzzleButton->SetOnClick([this]
-	{
-		state_manager_->PushLevel(new Level(platform_, *state_manager_, audio_manager_), "puzzle.json", mesh_loader_);
-		state_manager_->NextScene();
+		state_manager_->SwitchToSettingsMenu();
 	});
 	quitButton->SetOnClick([this]
 	{
 		should_run_ = false;
 	});
 	menu->AddUIElement(menuStartButton);
-	menu->AddUIElement(menuEnemyButton);
-	menu->AddUIElement(menuPuzzleButton);
+	menu->AddUIElement(menuSettingsButton);
 	menu->AddUIElement(quitButton);
+
 
 	// PAUSE MENU
 	Menu* pause = new Menu(platform_, *state_manager_, true);

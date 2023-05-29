@@ -15,7 +15,7 @@ StateManager::StateManager(LoadingScreen* loading_screen, bool* should_run, gef:
 	audio_manager_->LoadMusic("sounds/Karl Casey - Deception.ogg", *platform_); // found here: https://karlcasey.bandcamp.com/track/lethal
 	gef::VolumeInfo music_volume_info;
 	audio_manager_->GetMusicVolumeInfo(music_volume_info);
-	music_volume_info.volume = 25.f;
+	music_volume_info.volume = 20.f;
 	audio_manager_->SetMusicVolumeInfo(music_volume_info);
 	audio_manager_->PlayMusic();
 }
@@ -34,6 +34,10 @@ void StateManager::Update(InputActionManager* iam, float frame_time)
 	{
 		main_menu_->Update(iam, frame_time);
 	}
+	else if(on_settings_menu_ && settings_menu_ != nullptr)
+	{
+		settings_menu_->Update(iam, frame_time);
+	}
 	else if(current_scene_ != nullptr)
 	{
 		current_scene_->Update(iam, frame_time);
@@ -42,7 +46,6 @@ void StateManager::Update(InputActionManager* iam, float frame_time)
 
 void StateManager::Render(gef::Renderer3D* renderer_3d)
 {
-
 }
 
 void StateManager::Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_renderer, gef::Font* font)
@@ -58,6 +61,10 @@ void StateManager::Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* spr
 	else if(on_main_menu_ && main_menu_ != nullptr)
 	{
 		main_menu_->Render(renderer_3d, sprite_renderer, font);
+	}
+	else if(on_settings_menu_ && settings_menu_ != nullptr)
+	{
+		settings_menu_->Render(renderer_3d, sprite_renderer, font);
 	}
 	else if(current_scene_ != nullptr)
 	{
@@ -118,6 +125,7 @@ Scene* StateManager::NextScene()
 
 void StateManager::SwitchToMainMenu()
 {
+	on_settings_menu_ = false;
 	while (!scenes_.empty())
 	{
 		delete scenes_.front();
@@ -129,4 +137,10 @@ void StateManager::SwitchToMainMenu()
 void StateManager::SetPauseMenu(Menu* pause_menu)
 {
 	pause_menu_ = pause_menu;
+}
+
+void StateManager::SwitchToSettingsMenu()
+{
+	on_main_menu_ = false;
+	on_settings_menu_ = true;
 }

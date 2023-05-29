@@ -33,6 +33,7 @@ public:
 				gef::Platform* platform);
 	void SetMainMenu(Menu* main_menu) {main_menu_ = main_menu;}
 	void SetSplashScreen(SplashScreen* splash_screen) {splash_screen_ = splash_screen;}
+	void SetSettingsMenu(Menu* settings_menu) {settings_menu_ = settings_menu;}
 	void Update(InputActionManager* iam, float frame_time);
 	void Render(gef::Renderer3D* renderer_3d);
 	void Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_renderer, gef::Font* font);
@@ -46,6 +47,7 @@ public:
 	void SwitchToMainMenu();
 	void SetPauseMenu(Menu* pause_menu);
 	void SetShouldRun(bool should_run) { *should_run_ = should_run; }
+	void SwitchToSettingsMenu();
 
 private:
 	Scene* current_scene_ = nullptr;
@@ -61,6 +63,9 @@ private:
 
 	SplashScreen* splash_screen_ = nullptr;
 	bool on_splash_screen_ = true;
+
+	Menu* settings_menu_ = nullptr;
+	bool on_settings_menu_ = false;
 	
 	gef::AudioManager* audio_manager_ = nullptr;
 	gef::Platform* platform_ = nullptr;
