@@ -1476,7 +1476,7 @@
                  "y":23
                 }, 
                 {
-                 "height":1,
+                 "height":2,
                  "id":233,
                  "name":"",
                  "properties":[
@@ -1488,9 +1488,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1,
-                 "x":38,
-                 "y":22
+                 "width":3,
+                 "x":36,
+                 "y":21
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1748,7 +1748,7 @@
  "nextobjectid":234,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.10.0",
+ "tiledversion":"1.10.1",
  "tileheight":1,
  "tilesets":[
         {

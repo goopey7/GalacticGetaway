@@ -14,6 +14,7 @@ public:
 	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator, Camera* cam, Level* lev);
 	void Update(InputActionManager* iam, float frame_time);
 	bool GetGravityLock() const { return gravity_lock_; }
+	bool GetTouchingEnd() { return touching_end_object_; }
 	const PlayerGun* GetGun() const { return &gun_; }
 	PlayerGun* GetGun() { return &gun_; }
 	void BeginCollision(GameObject* other) override;

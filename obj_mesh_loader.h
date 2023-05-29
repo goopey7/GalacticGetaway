@@ -38,7 +38,8 @@ enum class MeshResource
 	Window,
 	DoorWall, 
 	DoorFrame,
-	Door
+	Door,
+	Reactor
 };
 
 class OBJMeshLoader

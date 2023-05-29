@@ -134,6 +134,12 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 		gef::DebugOut("\n");
 	}
 
+	if (!obj_loader.Load(MeshResource::Reactor, "Models/Reactor/reactor.obj", "Reactor_Sci_Fi_TX_RT_Sci_Fi_0", *platform_))
+	{
+		gef::DebugOut(obj_loader.GetLastError().c_str());
+		gef::DebugOut("\n");
+	}
+
 
 	/*scene_loader_.ReadSceneFromFile(*platform_, "Models/Window/window.scn");
 	scene_loader_.CreateMaterials(*platform_);
@@ -172,8 +178,8 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 						static_game_objects_.back()->set_mesh(new_mesh);
 					}
 					else if (type == "win") {
-						gef::Vector4 scale = gef::Vector4(obj["width"], obj["height"], 1.f);
-						new_mesh = obj_loader.GetMesh(MeshResource::Level, scale);
+						gef::Vector4 scale = gef::Vector4(obj["width"], obj["height"], 2.f);
+						new_mesh = obj_loader.GetMesh(MeshResource::Reactor, scale);
 						static_game_objects_.emplace_back(new GameObject());
 						static_game_objects_.back()->Init(obj["width"] / 2.f, obj["height"] / 2.f, 1.f, (float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), b2_world_, primitive_builder_, audio_manager_);
 						static_game_objects_.back()->set_mesh(new_mesh);
@@ -299,6 +305,7 @@ void Level::Init()
 	sprite_animator3D_->Init();
 
 	hud_text_[Ammo] = new Text({0.88f, 0.93f}, "", *platform_);
+	hud_text_[EndText] = new Text({0.5f, 0.5f}, "", *platform_);
 }
 
 void Level::Update(InputActionManager* iam_, float frame_time)
@@ -416,6 +423,18 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 			ammoOss << "Ammo: " << player_.GetGun()->getAmmoLoaded() << "/" << player_.GetGun()->getAmmoReserve();
 		}
 		hud_text_[Ammo]->UpdateText(ammoOss.str());
+
+		std::ostringstream endOss;
+		if(player_.GetTouchingEnd())
+		{
+			endOss << "Press " << (iam_->getUsingKeyboard() ? "X" : "B") << " to repair the hyperdrive!";
+		}
+		else
+		{
+			ammoOss << "";
+		}
+		hud_text_[EndText]->UpdateText(endOss.str());
+
 
 		camera_.Update(frame_time, getPlayerPosition());
 	}
