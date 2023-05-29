@@ -76,19 +76,20 @@ void SceneApp::Init()
 	SplashScreen* splash_screen = new SplashScreen(platform_, *state_manager_);
 
 	splash_screen->SetBkg(menuBkg_img);
+	
 	splash_screen->AddUIElement(new Text({0.5,0.5}, "DarkSpace Studios Presents", platform_));
 	
 	gef::Sprite* splash1 = new gef::Sprite();
-	gef::ImageData image_data("menu_images/logo.png");
+	gef::ImageData image_data("gg.png");
 	splash1->set_texture(gef::Texture::Create(platform_, image_data));
-	splash1->set_width(image_data.width());
-	splash1->set_height(image_data.height());
+	splash1->set_width(image_data.width()/2.f);
+	splash1->set_height(image_data.height()/2.f);
 	Image* splash_img = new Image({0.5,0.5}, splash1, platform_);
 	splash_screen->AddUIElement(splash_img);
 	state_manager_->SetSplashScreen(splash_screen);
 	
 	gef::Sprite* logo2_sprite = new gef::Sprite();
-	gef::ImageData menu_image_data("menu_images/logo2.png");
+	gef::ImageData menu_image_data("musician.png");
 	logo2_sprite->set_texture(gef::Texture::Create(platform_, menu_image_data));
 	logo2_sprite->set_width(menu_image_data.width());
 	logo2_sprite->set_height(menu_image_data.height());
