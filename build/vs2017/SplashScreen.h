@@ -16,8 +16,8 @@ public:
 	void SetBkg(Image* image);
 
 private:
-	const float fade_in_time_ = 1.0f;
-	const float fade_out_time_ = 1.0f;
+	const float fade_in_time_ = 2.0f;
+	const float fade_out_time_ = 2.0f;
 	float fade_timer_ = 0.0f;
 	float current_element_alpha_ = 0.f;
 	std::queue<UIElement*> ui_elements_;
