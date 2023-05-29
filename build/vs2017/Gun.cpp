@@ -40,9 +40,7 @@ void Gun::UpdateTransform(gef::Vector4 translation, GravityDirection grav_dir) {
 	//else {
 	//	
 	//}
-	gef::DebugOut("\n");
-	gef::DebugOut(std::to_string(angle).c_str());
-
+	
 	switch (grav_dir)
 	{
 	case GravityDirection::GRAVITY_UP:

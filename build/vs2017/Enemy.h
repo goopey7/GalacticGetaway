@@ -57,7 +57,7 @@ protected:
 	float size_y_ = 0.f;
 	Pickup* pickup_ = nullptr;
 
-	enum AnimationState { IDLE, RUNNING };
+	enum AnimationState { IDLE, RUNNING, DEATH };
 	AnimationState animation_state_ = RUNNING;
 
 	std::vector<GameObject*>* dynamic_game_objects_ = nullptr;

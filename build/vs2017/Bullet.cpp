@@ -28,14 +28,6 @@ void Bullet::Update(float frame_time)
 	GameObject::Update(frame_time);
 }
 
-void Bullet::EndCollision(GameObject* other)
-{
-	if(other->GetTag() != Tag::Player)
-	{
-		damage_ = 0;
-	}
-}
-
 void Bullet::BeginCollision(GameObject* other)
 {
 	if(other->GetTag() == Tag::Bullet || other->GetTag() == Tag::Pickup)

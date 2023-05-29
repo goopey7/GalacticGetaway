@@ -45,166 +45,170 @@ void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAni
 }
 
 void Player::Update(InputActionManager* iam, float frame_time) {
-	if (touching_end_object_) {
-		if (iam->isPressed(UseItem)) level_->SetEndState(WIN);
-	}
-
-	// Movement
-	if (iam->isHeld(MoveLeft)) {
-		switch (player_gravity_direction_)
-		{
-		case GravityDirection::GRAVITY_UP:
-		case GravityDirection::GRAVITY_DOWN:
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(-8 * frame_time, 0), physics_body_->GetAngle());
-			break;
-		case GravityDirection::GRAVITY_LEFT:
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), physics_body_->GetAngle());
-			break;
-		case GravityDirection::GRAVITY_RIGHT:
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), physics_body_->GetAngle());
-			break;
-		default:
-			break;
+	if (animation_state_ != DEATH) {
+		if (touching_end_object_) {
+			if (iam->isPressed(UseItem)) level_->SetEndState(WIN);
 		}
-	}
-	if (iam->isHeld(MoveRight)) {
-		switch (player_gravity_direction_)
-		{
-		case GravityDirection::GRAVITY_UP:
-		case GravityDirection::GRAVITY_DOWN:
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(8 * frame_time, 0), physics_body_->GetAngle());
-			break;
-		case GravityDirection::GRAVITY_LEFT:
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), physics_body_->GetAngle());
-			break;
-		case GravityDirection::GRAVITY_RIGHT:
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), physics_body_->GetAngle());
-			break;
-		default:
-			break;
-		}
-	}
 
-	if (iam->isPressed(GravityLock)) {
-		gravity_lock_ = !gravity_lock_;
-		if (gravity_lock_) physics_body_->SetGravityScale(0);
-		else {
-			physics_body_->SetGravityScale(1);
+		// Movement
+		if (iam->isHeld(MoveLeft)) {
+			switch (player_gravity_direction_)
+			{
+			case GravityDirection::GRAVITY_UP:
+			case GravityDirection::GRAVITY_DOWN:
+				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(-8 * frame_time, 0), physics_body_->GetAngle());
+				break;
+			case GravityDirection::GRAVITY_LEFT:
+				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), physics_body_->GetAngle());
+				break;
+			case GravityDirection::GRAVITY_RIGHT:
+				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), physics_body_->GetAngle());
+				break;
+			default:
+				break;
+			}
+		}
+		if (iam->isHeld(MoveRight)) {
+			switch (player_gravity_direction_)
+			{
+			case GravityDirection::GRAVITY_UP:
+			case GravityDirection::GRAVITY_DOWN:
+				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(8 * frame_time, 0), physics_body_->GetAngle());
+				break;
+			case GravityDirection::GRAVITY_LEFT:
+				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, -8 * frame_time), physics_body_->GetAngle());
+				break;
+			case GravityDirection::GRAVITY_RIGHT:
+				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, 8 * frame_time), physics_body_->GetAngle());
+				break;
+			default:
+				break;
+			}
+		}
+
+		if (iam->isPressed(GravityLock)) {
+			gravity_lock_ = !gravity_lock_;
+			if (gravity_lock_) physics_body_->SetGravityScale(0);
+			else {
+				physics_body_->SetGravityScale(1);
+				b2Vec2 grav = world_gravity_;
+				grav *= 0.01;
+				physics_body_->ApplyLinearImpulseToCenter(grav, true);
+				player_gravity_direction_ = world_gravity_direction_;
+			}
+		}
+
+		if (iam->isPressed(Jump) && !gravity_lock_ && !jumping_) {
+			jumping_ = true;
+			animation_state_ = JUMPING;
+			set_mesh(sprite_animator3D_->GetFirstFrame("PlayerJumping"));
 			b2Vec2 grav = world_gravity_;
-			grav *= 0.01;
-			physics_body_->ApplyLinearImpulseToCenter(grav, true);
-			player_gravity_direction_ = world_gravity_direction_;
+			grav *= 40;
+			physics_body_->ApplyLinearImpulseToCenter(-grav, true);
 		}
-	}
 
-	if (iam->isPressed(Jump) && !gravity_lock_ && !jumping_) {
-		jumping_ = true;
-		animation_state_ = JUMPING;
-		set_mesh(sprite_animator3D_->GetFirstFrame("PlayerJumping"));
+		if (iam->isPressed(GravityUp)) {
+			camera_->Warp();
+			world_gravity_ = b2Vec2(0, 1);
+			physics_world_->SetAllowSleeping(false);
+			world_gravity_direction_ = GravityDirection::GRAVITY_UP;
+			if (!gravity_lock_) {
+				player_gravity_direction_ = GravityDirection::GRAVITY_UP;
+				camera_->SetAbovePlayer(false);
+			}
+		}
+		else if (iam->isPressed(GravityDown)) {
+			camera_->Warp();
+			world_gravity_ = b2Vec2(0, -1);
+			physics_world_->SetAllowSleeping(false);
+			world_gravity_direction_ = GravityDirection::GRAVITY_DOWN;
+			if (!gravity_lock_) {
+				player_gravity_direction_ = GravityDirection::GRAVITY_DOWN;
+				camera_->SetAbovePlayer(true);
+			}
+		}
+		else if (iam->isPressed(GravityLeft)) {
+			camera_->Warp();
+			world_gravity_ = b2Vec2(-1, 0);
+			physics_world_->SetAllowSleeping(false);
+			world_gravity_direction_ = GravityDirection::GRAVITY_LEFT;
+			if (!gravity_lock_) {
+				player_gravity_direction_ = GravityDirection::GRAVITY_LEFT;
+			}
+		}
+		else if (iam->isPressed(GravityRight)) {
+			camera_->Warp();
+			world_gravity_ = b2Vec2(1, 0);
+			physics_world_->SetAllowSleeping(false);
+			world_gravity_direction_ = GravityDirection::GRAVITY_RIGHT;
+			if (!gravity_lock_) {
+				player_gravity_direction_ = GravityDirection::GRAVITY_RIGHT;
+			}
+		}
+
+		switch (player_gravity_direction_)
+		{
+		case GravityDirection::GRAVITY_UP:
+			physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(180));
+			break;
+		case GravityDirection::GRAVITY_DOWN:
+			physics_body_->SetTransform(physics_body_->GetPosition(), 0);
+			break;
+		case GravityDirection::GRAVITY_LEFT:
+			physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(-90));
+			break;
+		case GravityDirection::GRAVITY_RIGHT:
+			physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(90));
+			break;
+		default:
+			break;
+		}
+
+		if (iam->isPressed(GravityStrenghtUp)) {
+			camera_->Warp();
+			grav_strength_changed_ = true;
+			world_grav_mult = 50.f;
+		}
+		else if (iam->isPressed(GravityStrengthDown)) {
+			camera_->Warp();
+			grav_strength_changed_ = true;
+			world_grav_mult = 0;
+			b2Body* body_list = physics_world_->GetBodyList();
+			while (body_list->GetNext()) {
+				body_list->ApplyLinearImpulseToCenter(-world_gravity_, true);
+				body_list = body_list->GetNext();
+			}
+		}
+
+		if (grav_strength_changed_) {
+			grav_strength_change_time += frame_time;
+			if (grav_strength_change_time >= 5) {
+				grav_strength_changed_ = false;
+				grav_strength_change_time = 0;
+				world_grav_mult = 10.f;
+			}
+		}
+
 		b2Vec2 grav = world_gravity_;
-		grav *= 40;
-		physics_body_->ApplyLinearImpulseToCenter(-grav, true);
-	}
+		grav *= world_grav_mult;
+		physics_world_->SetGravity(grav);
 
-	if (iam->isPressed(GravityUp)) {
-		camera_->Warp();
-		world_gravity_ = b2Vec2(0, 1);
-		physics_world_->SetAllowSleeping(false);
-		world_gravity_direction_ = GravityDirection::GRAVITY_UP;
-		if (!gravity_lock_) {
-			player_gravity_direction_ = GravityDirection::GRAVITY_UP;
-			camera_->SetAbovePlayer(false);
+		UpdateBox2d();
+
+		gun_.Update(transform().GetTranslation(), player_gravity_direction_, iam, platform_, camera_, frame_time);
+
+		if (iam->isHeld(MoveLeft) || iam->isHeld(MoveRight)) {
+			if (iam->isHeld(MoveLeft)) Rotate(gef::Vector4(0, player_gravity_direction_ != GravityDirection::GRAVITY_UP ? FRAMEWORK_PI : 0, 0));
+			else Rotate(gef::Vector4(0, player_gravity_direction_ != GravityDirection::GRAVITY_UP ? 0 : FRAMEWORK_PI, 0));
+			if (animation_state_ != JUMPING) animation_state_ = RUNNING;
+		}
+		else if (iam->isReleased(MoveLeft) || iam->isReleased(MoveRight)) {
+			if (animation_state_ != JUMPING) animation_state_ = IDLE;
 		}
 	}
-	else if (iam->isPressed(GravityDown)) {
-		camera_->Warp();
-		world_gravity_ = b2Vec2(0, -1);
-		physics_world_->SetAllowSleeping(false);
-		world_gravity_direction_ = GravityDirection::GRAVITY_DOWN;
-		if (!gravity_lock_) {
-			player_gravity_direction_ = GravityDirection::GRAVITY_DOWN;
-			camera_->SetAbovePlayer(true);
-		}
-	}
-	else if (iam->isPressed(GravityLeft)) {
-		camera_->Warp();
-		world_gravity_ = b2Vec2(-1, 0);
-		physics_world_->SetAllowSleeping(false);
-		world_gravity_direction_ = GravityDirection::GRAVITY_LEFT;
-		if (!gravity_lock_) {
-			player_gravity_direction_ = GravityDirection::GRAVITY_LEFT;
-		}
-	}
-	else if (iam->isPressed(GravityRight)) {
-		camera_->Warp();
-		world_gravity_ = b2Vec2(1, 0);
-		physics_world_->SetAllowSleeping(false);
-		world_gravity_direction_ = GravityDirection::GRAVITY_RIGHT;
-		if (!gravity_lock_) {
-			player_gravity_direction_ = GravityDirection::GRAVITY_RIGHT;
-		}
-	}
-
-	switch (player_gravity_direction_)
-	{
-	case GravityDirection::GRAVITY_UP:
-		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(180));
-		break;
-	case GravityDirection::GRAVITY_DOWN:
-		physics_body_->SetTransform(physics_body_->GetPosition(), 0);
-		break;
-	case GravityDirection::GRAVITY_LEFT:
-		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(-90));
-		break;
-	case GravityDirection::GRAVITY_RIGHT:
-		physics_body_->SetTransform(physics_body_->GetPosition(), gef::DegToRad(90));
-		break;
-	default:
-		break;
-	}
-
-	if (iam->isPressed(GravityStrenghtUp)) {
-		camera_->Warp();
-		grav_strength_changed_ = true;
-		world_grav_mult = 50.f;
-	}
-	else if (iam->isPressed(GravityStrengthDown)) {
-		camera_->Warp();
-		grav_strength_changed_ = true;
-		world_grav_mult = 0;
-		b2Body* body_list = physics_world_->GetBodyList();
-		while (body_list->GetNext()) {
-			body_list->ApplyLinearImpulseToCenter(-world_gravity_, true);
-			body_list = body_list->GetNext();
-		}
-	}
-
-	if (grav_strength_changed_) {
-		grav_strength_change_time += frame_time;
-		if (grav_strength_change_time >= 5) {
-			grav_strength_changed_ = false;
-			grav_strength_change_time = 0;
-			world_grav_mult = 10.f;
-		}
-	}
-	
-	b2Vec2 grav = world_gravity_;
-	grav *= world_grav_mult;
-	physics_world_->SetGravity(grav);
-
-	UpdateBox2d();
-
-	gun_.Update(transform().GetTranslation(), player_gravity_direction_, iam, platform_, camera_,frame_time);
 
 	anim_time_ += frame_time;
-	if (iam->isHeld(MoveLeft) || iam->isHeld(MoveRight)) {
-		if (iam->isHeld(MoveLeft)) Rotate(gef::Vector4(0, player_gravity_direction_ != GravityDirection::GRAVITY_UP ? FRAMEWORK_PI : 0, 0));
-		else Rotate(gef::Vector4(0, player_gravity_direction_ != GravityDirection::GRAVITY_UP ? 0 : FRAMEWORK_PI, 0));
-		if (animation_state_ != JUMPING) animation_state_ = RUNNING;
-	}
-	else if (iam->isReleased(MoveLeft) || iam->isReleased(MoveRight)) {
-		if (animation_state_ != JUMPING) animation_state_ = IDLE;
-	}
+
 	switch (animation_state_)
 	{
 	case Player::IDLE:
@@ -215,6 +219,12 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 		break;
 	case Player::JUMPING:
 		if(!sprite_animator3D_->ReachedEnd("PlayerJumping")) set_mesh(sprite_animator3D_->UpdateAnimation(anim_time_, mesh_, "PlayerJumping"));
+		break;
+	case DEATH:
+		if (!sprite_animator3D_->ReachedEnd("PlayerDeath")) set_mesh(sprite_animator3D_->UpdateAnimation(anim_time_, mesh_, "PlayerDeath"));
+		else {
+			level_->SetEndState(EndState::LOSE);
+		}
 	default:
 		break;
 	}
@@ -237,11 +247,15 @@ void Player::BeginCollision(GameObject* other) {
 		break;
 	case Tag::Bullet: 
 	{
-		Bullet* bullet = dynamic_cast<Bullet*>(other);
-		if (bullet->getTarget() == Tag::Player && bullet->getDamage() > 0)
+     	Bullet* bullet = dynamic_cast<Bullet*>(other);
+		if (bullet->getTarget() == GameObject::Tag::Player && bullet->getDamage() > 0) {
 			health_--;
+			gef::DebugOut("\nhealth: ");
+			gef::DebugOut(std::to_string(health_).c_str());
+		}
 		if (health_ <= 0) {
-			level_->SetEndState(LOSE);
+			animation_state_ = DEATH;
+			set_mesh(sprite_animator3D_->GetFirstFrame("PlayerDeath"));
 		}
 	}
 	default:

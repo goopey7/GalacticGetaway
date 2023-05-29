@@ -76,76 +76,81 @@ void Enemy::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveB
 
 void Enemy::Update(float frame_time)
 {
-	world_gravity_ = physics_world_->GetGravity();
-	if(world_gravity_.y > 0)
-	{
-		world_gravity_direction_ = GravityDirection::GRAVITY_UP;
-	}
-	else if (world_gravity_.y < 0)
-	{
-		world_gravity_direction_ = GravityDirection::GRAVITY_DOWN;
-	}
-	else if (world_gravity_.x < 0)
-	{
-		world_gravity_direction_ = GravityDirection::GRAVITY_LEFT;
-	}
-	else if (world_gravity_.x > 0)
-	{
-		world_gravity_direction_ = GravityDirection::GRAVITY_RIGHT;
-	}
+	if (animation_state_ != DEATH) {
 
-	// Raycast to check if player is in range
-	b2Vec2 cast_start = GetBody()->GetPosition();
-	//b2Vec2 cast_end = cast_start + (moving_left_ ? -1 : 1)*b2Vec2(player_detection_range_, 0.f);
-	b2Vec2 direction = player_->GetBody()->GetPosition() - GetBody()->GetPosition();
-	direction.Normalize();
-	b2Vec2 cast_end = cast_start +  b2Vec2(direction.x * player_detection_range_, direction.y * player_detection_range_);
-	bPlayerInRange_ = false;
-	closest_fraction_ = 1.f;
-	closest_fixture_ = nullptr;
-	physics_world_->RayCast(this, cast_start, cast_end);
-	InspectClosestFixture();
-	
-	//if(!bSawPlayer || !bPlayerInRange_)
-	if(!bPlayerInRange_)
-	{
-		// TODO Movement depending on gravity. Maybe move like red Koopas?
-		animation_state_ = RUNNING;
-		switch (world_gravity_direction_)
+		world_gravity_ = physics_world_->GetGravity();
+		if (world_gravity_.y > 0)
 		{
-		case GravityDirection::GRAVITY_UP:
-			//...
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2((moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time, 0), gef::DegToRad(180));
-			break;
-		case GravityDirection::GRAVITY_DOWN:
-			//...
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2((moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time, 0), 0);
-			break;
-		case GravityDirection::GRAVITY_LEFT:
-			//...
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? 1.f : -1.f) * move_speed_ * frame_time), gef::DegToRad(-90));
-			break;
-		case GravityDirection::GRAVITY_RIGHT:
-			//...
-			physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time), gef::DegToRad(90));
-			break;
+			world_gravity_direction_ = GravityDirection::GRAVITY_UP;
 		}
-		gun_.SetTargetVector({ moving_left_ ? -1.f : 1.f, 0 });
-		gun_.Update(frame_time, transform().GetTranslation(), world_gravity_direction_);
-	}
-	else
-	{
-		animation_state_ = IDLE;
-		b2Vec2 dir = player_->GetBody()->GetPosition() - GetBody()->GetPosition();
-		gun_.SetTargetVector({ dir.x,-dir.y });
-		gun_.Update(frame_time, transform().GetTranslation(), world_gravity_direction_);
-		gun_.Fire(frame_time, GameObject::Tag::Player);
+		else if (world_gravity_.y < 0)
+		{
+			world_gravity_direction_ = GravityDirection::GRAVITY_DOWN;
+		}
+		else if (world_gravity_.x < 0)
+		{
+			world_gravity_direction_ = GravityDirection::GRAVITY_LEFT;
+		}
+		else if (world_gravity_.x > 0)
+		{
+			world_gravity_direction_ = GravityDirection::GRAVITY_RIGHT;
+		}
+
+		// Raycast to check if player is in range
+		b2Vec2 cast_start = GetBody()->GetPosition();
+		//b2Vec2 cast_end = cast_start + (moving_left_ ? -1 : 1)*b2Vec2(player_detection_range_, 0.f);
+		b2Vec2 direction = player_->GetBody()->GetPosition() - GetBody()->GetPosition();
+		direction.Normalize();
+		b2Vec2 cast_end = cast_start + b2Vec2(direction.x * player_detection_range_, direction.y * player_detection_range_);
+		bPlayerInRange_ = false;
+		closest_fraction_ = 1.f;
+		closest_fixture_ = nullptr;
+		physics_world_->RayCast(this, cast_start, cast_end);
+		InspectClosestFixture();
+
+		//if(!bSawPlayer || !bPlayerInRange_)
+		if (!bPlayerInRange_)
+		{
+			// TODO Movement depending on gravity. Maybe move like red Koopas?
+			animation_state_ = RUNNING;
+			switch (world_gravity_direction_)
+			{
+			case GravityDirection::GRAVITY_UP:
+				//...
+				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2((moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time, 0), gef::DegToRad(180));
+				break;
+			case GravityDirection::GRAVITY_DOWN:
+				//...
+				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2((moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time, 0), 0);
+				break;
+			case GravityDirection::GRAVITY_LEFT:
+				//...
+				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? 1.f : -1.f) * move_speed_ * frame_time), gef::DegToRad(-90));
+				break;
+			case GravityDirection::GRAVITY_RIGHT:
+				//...
+				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time), gef::DegToRad(90));
+				break;
+			}
+			gun_.SetTargetVector({ moving_left_ ? -1.f : 1.f, 0 });
+			gun_.Update(frame_time, transform().GetTranslation(), world_gravity_direction_);
+		}
+		else
+		{
+			animation_state_ = IDLE;
+			b2Vec2 dir = player_->GetBody()->GetPosition() - GetBody()->GetPosition();
+			gun_.SetTargetVector({ dir.x,-dir.y });
+			gun_.Update(frame_time, transform().GetTranslation(), world_gravity_direction_);
+			gun_.Fire(frame_time, GameObject::Tag::Player);
+		}
+
+		UpdateBox2d();
+
+		if (moving_left_) Rotate(gef::Vector4(0, FRAMEWORK_PI, 0));
+		else Rotate(gef::Vector4(0, 0, 0));
+
 	}
 
-	UpdateBox2d();
-
-	if (moving_left_) Rotate(gef::Vector4(0, FRAMEWORK_PI, 0));
-	else Rotate(gef::Vector4(0, 0, 0));
 	anim_time_ += frame_time;
 	switch (animation_state_)
 	{
@@ -155,6 +160,12 @@ void Enemy::Update(float frame_time)
 	case RUNNING:
 		set_mesh(sprite_animator3D_->UpdateAnimation(anim_time_, mesh_, "EnemyRunning"));
 		break;
+	case DEATH:
+		if (!sprite_animator3D_->ReachedEnd("EnemyDeath")) set_mesh(sprite_animator3D_->UpdateAnimation(anim_time_, mesh_, "EnemyDeath"));
+		else {
+			sprite_animator3D_->Reset("EnemyDeath");
+			Kill();
+		}
 	default:
 		break;
 	}
@@ -209,7 +220,8 @@ void Enemy::BeginCollision(GameObject* other)
 				{
 					pickup_->Activate();
 				}
-				Kill();
+				animation_state_ = DEATH;
+				set_mesh(sprite_animator3D_->GetFirstFrame("EnemyDeath"));
 			}
 		}
 	}

@@ -11,7 +11,6 @@ public:
 	bool isAlive() { return is_alive_; }
 	int getDamage() const { return damage_; }
 	void setDamage(int damage) {damage_ = damage;}
-	void EndCollision(GameObject* other) override;
 	void BeginCollision(GameObject* other) override;
 	Tag getTarget() const;
 protected:

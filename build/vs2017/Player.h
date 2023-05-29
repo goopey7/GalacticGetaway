@@ -40,7 +40,7 @@ protected:
 	GravityDirection player_gravity_direction_ = GravityDirection::GRAVITY_DOWN;
 	gef::Platform* platform_;
 
-	enum AnimationState { IDLE, RUNNING, JUMPING };
+	enum AnimationState { IDLE, RUNNING, JUMPING, DEATH };
 	AnimationState animation_state_ = IDLE;
 
 	Level* level_;
