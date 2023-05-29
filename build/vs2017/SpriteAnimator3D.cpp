@@ -4,6 +4,7 @@
 #include <assets/png_loader.h>
 #include <graphics/image_data.h>
 #include <graphics/material.h>
+#include <graphics/image_data.h>
 #include <filesystem>
 #include <string>
 #include "system/debug_log.h"

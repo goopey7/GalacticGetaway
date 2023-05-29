@@ -17,6 +17,7 @@
 #include "maths/math_utils.h"
 #include "system/debug_log.h"
 #include "InputActionManager.h"
+#include "input/sony_controller_input_manager.h"
 #include "LoadingScreen.h"
 #include "Menu.h"
 #include "Button.h"
@@ -239,7 +240,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 						bool fussy = std::find_if(object["properties"].begin(), object["properties"].end(), [](const json& element)
 							{ return element["name"] == "fussy"; }).value()["value"];
 						
-						plate->Init(object["width"]/2.f,object["height"]/2.f,1,object["x"] + object["width"]/2.f, (-(float)object["y"]) - ((float)object["height"]/2.f), b2_world_, primitive_builder_, threshold, fussy);
+						plate->Init(object["width"]/2.f,0.f,1.f,object["x"] + object["width"]/2.f, (-(float)object["y"]), b2_world_, primitive_builder_, threshold, fussy);
 						plate->SetOnActivate([this, door_ID]{ door_objects_[door_ID]->Open(); });
 						plate->SetOnDeactivate([this, door_ID] { door_objects_[door_ID]->Close(); });
 						static_game_objects_.push_back(plate);
@@ -489,7 +490,7 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 		std::ostringstream endOss;
 		if(player_.GetTouchingEnd())
 		{
-			endOss << "Press " << (iam_->getUsingKeyboard() ? "X" : "B") << " to repair the hyperdrive!";
+			endOss << "Press " << (iam_->getUsingKeyboard() ? "X" : "Circle") << " to repair the hyperdrive!";
 		}
 		else
 		{
@@ -497,8 +498,13 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 		}
 		hud_text_[EndText]->UpdateText(endOss.str());
 
-
 		camera_.Update(frame_time, getPlayerPosition());
+
+		if (camera_.GetEffectState() != EffectState::NORMAL) {
+			gef::ControllerOutputData out_data = iam_->getInputManager()->controller_input()->GetController(0)->get_output_data();
+			if (camera_.GetEffectState() == EffectState::SHAKE) out_data.left_rumble = 0.6f;
+			else if (camera_.GetEffectState() != EffectState::WARP)  out_data.right_rumble = 0.6f;
+		}
 	}
 	else if(pause_menu_ != nullptr)
 	{
