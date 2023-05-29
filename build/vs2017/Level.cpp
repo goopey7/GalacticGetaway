@@ -22,6 +22,7 @@
 #include "Menu.h"
 #include "Button.h"
 #include "audio/audio_manager.h"
+#include "input/input_manager.h"
 
 using nlohmann::json;
 
