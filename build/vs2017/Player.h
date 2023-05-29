@@ -20,6 +20,7 @@ public:
 	void BeginCollision(GameObject* other) override;
 	void EndCollision(GameObject* other) override;
 	void Render(gef::Renderer3D* renderer_3d);
+	int GetHealth() const;
 
 protected:
 	Camera* camera_;

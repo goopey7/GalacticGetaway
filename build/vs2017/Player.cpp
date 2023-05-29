@@ -279,3 +279,8 @@ void Player::Render(gef::Renderer3D* renderer_3d) {
 	renderer_3d->DrawMesh(*this);
 	gun_.Render(renderer_3d);
 }
+
+int Player::GetHealth() const
+{
+	return health_;
+}

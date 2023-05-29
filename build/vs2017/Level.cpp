@@ -305,6 +305,7 @@ void Level::Init()
 	sprite_animator3D_->Init();
 
 	hud_text_[Ammo] = new Text({0.88f, 0.93f}, "", *platform_);
+	hud_text_[Health] = new Text({0.88f, 0.85f}, "", *platform_);
 	hud_text_[EndText] = new Text({0.5f, 0.5f}, "", *platform_);
 }
 
@@ -423,6 +424,10 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 			ammoOss << "Ammo: " << player_.GetGun()->getAmmoLoaded() << "/" << player_.GetGun()->getAmmoReserve();
 		}
 		hud_text_[Ammo]->UpdateText(ammoOss.str());
+
+		std::ostringstream healthOss;
+		healthOss << "Health: " << player_.GetHealth();
+		hud_text_[Health]->UpdateText(healthOss.str());
 
 		std::ostringstream endOss;
 		if(player_.GetTouchingEnd())

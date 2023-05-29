@@ -51,6 +51,7 @@ private:
 	enum HudElement
 	{
 		Ammo,
+		Health,
 		EndText
 	};
 	void Init();
