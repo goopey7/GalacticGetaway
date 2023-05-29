@@ -61,12 +61,12 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 		if(dist(gen) < 0.7f)
 		{
 			pickup_->SetType(Pickup::Type::Health);
-			pickup_->set_mesh(sprite_animator3D_->CreateMesh("Pickups/Health/frame1.png", gef::Vector4(0.3, 0.3, 0.3)));
+			pickup_->set_mesh(sprite_animator3D_->CreateMesh("Pickups/Health/health.png", gef::Vector4(0.5, 0.5, 1)));
 		}
 		else
 		{
 			pickup_->SetType(Pickup::Type::MaxAmmo);
-			pickup_->set_mesh(sprite_animator3D_->CreateMesh("Pickups/MaxAmmo/frame1.png", gef::Vector4(0.3, 0.3, 0.3)));
+			pickup_->set_mesh(sprite_animator3D_->CreateMesh("Pickups/MaxAmmo/Bullet.png", gef::Vector4(0.5, 0.5, 1)));
 		}
 		pickup_->Init(0.3,0.3,0.3, pos.x, pos.y, physics_world_, primitive_builder_, am, true);
 		pickup_->SetTargetBody(GetBody());
