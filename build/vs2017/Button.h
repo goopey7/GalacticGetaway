@@ -17,6 +17,7 @@ public:
 	void Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) override;
 	gef::Sprite* GetSprite() {return &button;}
 	void SetText(std::string text) {text_ = std::move(text);}
+	void SetAlpha(float alpha) override {}
 private:
 	std::string text_;
 	gef::Colour color_;

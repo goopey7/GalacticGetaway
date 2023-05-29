@@ -27,6 +27,7 @@ public:
 	void Select();
 	void Deselect();
 	bool IsSelectable();
+	virtual void SetAlpha(float alpha) = 0;
 
 protected:
 	const gef::Platform* platform_ = nullptr;

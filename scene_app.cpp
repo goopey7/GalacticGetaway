@@ -59,7 +59,9 @@ void SceneApp::Init()
 	sprite->set_texture(gef::Texture::Create(platform_, image_data));
 	sprite->set_width(image_data.width());
 	sprite->set_height(image_data.height());
-	menu->AddUIElement(new Image({0.5,0.25}, sprite, platform_));
+	Image* img = new Image({0.5,0.25}, sprite, platform_);
+	img->SetAlpha(0.5f);
+	menu->AddUIElement(img);
 	Button* menuStartButton = new Button({0.5,0.4}, platform_, "Start", 200.f, 50.f, gef::Colour(1,1,1,1));
 	Button* menuEnemyButton = new Button({0.5,0.5}, platform_, "Enemy Testing", 200.f, 50.f, gef::Colour(1,1,0,1));
 	Button* menuPuzzleButton = new Button({0.5,0.6}, platform_, "Puzzle Testing", 200.f, 50.f, gef::Colour(1,1,0,1));

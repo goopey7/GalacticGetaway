@@ -24,5 +24,10 @@ void Text::UpdateText(std::string text)
 
 void Text::Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font)
 {
-	font->RenderText(sprite_renderer, gef::Vector4(platform_->width() * anchor_.x, platform_->height() * anchor_.y, -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE,text_.c_str()); 
+	font->RenderText(sprite_renderer, gef::Vector4(platform_->width() * anchor_.x, platform_->height() * anchor_.y, -0.9f), 1.0f, alpha_color_, gef::TJ_CENTRE,text_.c_str()); 
+}
+
+void Text::SetAlpha(float alpha)
+{
+	alpha_color_ = 0x00ffffff | (static_cast<unsigned int>(alpha * 255) << 24);
 }
