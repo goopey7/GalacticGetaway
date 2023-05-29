@@ -3,13 +3,14 @@
 #include <maths/vector2.h>
 #include <maths/math_utils.h>
 #include "system/debug_log.h"
-
+#include "Level.h"
 #include "InputActionManager.h"
 
-void Player::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, SpriteAnimator3D* sprite_animator, Camera* cam) {
+void Player::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, SpriteAnimator3D* sprite_animator, Camera* cam, Level* lev) {
 	tag = Tag::Player;
 	camera_ = cam;
 	platform_ = sprite_animator->GetPlatform();
+	level_ = lev;
 	sprite_animator3D_ = sprite_animator;
 	set_mesh(sprite_animator3D_->GetFirstFrame("PlayerIdle"));
 
@@ -39,11 +40,15 @@ void Player::Init(float size_x, float size_y, float size_z, float pos_x, float p
 	UpdateBox2d();
 }
 
-void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator, Camera* cam) {
-	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, sprite_animator, cam);
+void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator, Camera* cam, Level* lev) {
+	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, sprite_animator, cam, lev);
 }
 
 void Player::Update(InputActionManager* iam, float frame_time) {
+	if (touching_end_object_) {
+		if (iam->isPressed(UseItem)) level_->SetEndState(WIN);
+	}
+
 	// Movement
 	if (iam->isHeld(MoveLeft)) {
 		switch (player_gravity_direction_)
@@ -218,6 +223,8 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 void Player::BeginCollision(GameObject* other) {
 	switch (other->GetTag())
 	{
+	case Tag::WinObject:
+		touching_end_object_ = true;
 	case Tag::None:
 	case Tag::PressurePlate:
 	case Tag::Crate:
@@ -227,6 +234,26 @@ void Player::BeginCollision(GameObject* other) {
 			animation_state_ = IDLE;
 			sprite_animator3D_->Reset("PlayerJumping");
 		}
+		break;
+	case Tag::Bullet: 
+	{
+		Bullet* bullet = dynamic_cast<Bullet*>(other);
+		if (bullet->getTarget() == Tag::Player && bullet->getDamage() > 0)
+			health_--;
+		if (health_ <= 0) {
+			level_->SetEndState(LOSE);
+		}
+	}
+	default:
+		break;
+	}
+}
+
+void Player::EndCollision(GameObject* other) {
+	switch (other->GetTag())
+	{
+	case Tag::WinObject:
+		touching_end_object_ = false;
 		break;
 	default:
 		break;

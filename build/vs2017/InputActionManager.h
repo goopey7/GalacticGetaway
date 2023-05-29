@@ -34,6 +34,7 @@ DEFINE_ACTIONS(
 	MenuSelect,
 	MenuSelectRight,
 	MenuSelectLeft,
+	UseItem
 	)
 
 	class InputActionManager

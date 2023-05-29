@@ -21,6 +21,7 @@ public:
 		Crate,
 		PressurePlate,
 		Pickup,
+		WinObject
 	};
 	
 	virtual void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::AudioManager* am, bool dynamic = false);

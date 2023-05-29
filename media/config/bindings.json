@@ -32,7 +32,7 @@
             {
               "action": "GravityDown",
               "keys": ["DOWN"],
-              "buttons": ["DOWN", "B"]
+              "buttons": ["DOWN"]
             },
             {
               "action": "GravityRight",
@@ -81,8 +81,13 @@
             },
             {
               "action": "MenuSelectLeft",
-              "keys": [ "LEFT" , "UP"],
-              "buttons": [ "LEFT" , "UP"]
+              "keys": [ "LEFT", "UP" ],
+              "buttons": [ "LEFT", "UP" ]
+            },
+            {
+              "action": "UseItem",
+              "keys": [ "X" ],
+              "buttons": [ "B" ]
             }
           ]
 }

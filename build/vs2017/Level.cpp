@@ -171,6 +171,14 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 						static_game_objects_.back()->Init(obj["width"] / 2.f, obj["height"] / 2.f, 1.f, (float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), b2_world_, primitive_builder_, audio_manager_);
 						static_game_objects_.back()->set_mesh(new_mesh);
 					}
+					else if (type == "win") {
+						gef::Vector4 scale = gef::Vector4(obj["width"], obj["height"], 1.f);
+						new_mesh = obj_loader.GetMesh(MeshResource::Level, scale);
+						static_game_objects_.emplace_back(new GameObject());
+						static_game_objects_.back()->Init(obj["width"] / 2.f, obj["height"] / 2.f, 1.f, (float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), b2_world_, primitive_builder_, audio_manager_);
+						static_game_objects_.back()->set_mesh(new_mesh);
+						static_game_objects_.back()->SetTag(GameObject::Tag::WinObject);
+					}
 					else if (type == "door") {
 						gef::Vector4 scale = gef::Vector4(obj["width"], obj["height"], 10.f);
 						gef::Mesh* door_wall = obj_loader.GetMesh(MeshResource::DoorWall, scale);
@@ -216,7 +224,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 			{
 				loading_screen->SetStatusText("Creating player...");
 				auto playerJson = layer["objects"][0];
-				player_.Init(1, 1, 1, playerJson["x"], 0-playerJson["y"], b2_world_, sprite_animator3D_, &camera_);
+				player_.Init(1, 1, 1, playerJson["x"], 0-playerJson["y"], b2_world_, sprite_animator3D_, &camera_, this);
 				camera_.SetPosition(gef::Vector4(playerJson["x"], 1-playerJson["y"], 30));
 			}
 			if(layer["name"] == "DynamicSpawns")
@@ -299,14 +307,14 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 	{
 		is_paused_ = !is_paused_;
 	}
-	if (iam_->getInputManager()->keyboard()->IsKeyPressed(gef::Keyboard::KC_X))
+	/*if (iam_->getInputManager()->keyboard()->IsKeyPressed(gef::Keyboard::KC_X))
 	{
 		end_state_ = WIN;
 	}
 	else if (iam_->getInputManager()->keyboard()->IsKeyPressed(gef::Keyboard::KC_V))
 	{
 		end_state_ = LOSE;
-	}
+	}*/
 
 	if (end_state_ != NONE) {
 		Menu* end = new Menu(*platform_, *state_manager_, false);

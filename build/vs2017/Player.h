@@ -6,16 +6,18 @@
 #include "Camera.h"
 
 class InputActionManager;
+class Level;
 
 class Player : public GameObject {
 public:
-	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, SpriteAnimator3D* sprite_animator, Camera* cam);
-	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator, Camera* cam);
+	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, SpriteAnimator3D* sprite_animator, Camera* cam, Level* lev);
+	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAnimator3D* sprite_animator, Camera* cam, Level* lev);
 	void Update(InputActionManager* iam, float frame_time);
 	bool GetGravityLock() const { return gravity_lock_; }
 	const PlayerGun* GetGun() const { return &gun_; }
 	PlayerGun* GetGun() { return &gun_; }
 	void BeginCollision(GameObject* other) override;
+	void EndCollision(GameObject* other) override;
 	void Render(gef::Renderer3D* renderer_3d);
 
 protected:
@@ -39,5 +41,8 @@ protected:
 
 	enum AnimationState { IDLE, RUNNING, JUMPING };
 	AnimationState animation_state_ = IDLE;
+
+	Level* level_;
+	bool touching_end_object_ = false;
 };
 

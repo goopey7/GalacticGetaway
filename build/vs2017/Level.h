@@ -14,6 +14,8 @@ class Text;
 class Enemy;
 class GameObject;
 
+enum EndState { NONE, WIN, LOSE };
+
 namespace gef
 {
 	class Platform;
@@ -43,6 +45,7 @@ public:
 	const Player* getPlayer() const;
 	const Gun* getGun() const;
 	std::vector<GameObject*>& getBodiesToDestroy() {return objects_to_destroy_;}
+	void SetEndState(EndState end_state) { end_state_ = end_state; }
 	
 private:
 	enum HudElement
@@ -68,7 +71,6 @@ private:
 
 	Camera camera_;
 
-	enum EndState { NONE, WIN, LOSE };
 	EndState end_state_ = NONE;
 
 	//HUD

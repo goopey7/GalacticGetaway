@@ -1,9 +1,10 @@
 #include "BulletManager.h"
 
-void BulletManager::Init(b2World* world, PrimitiveBuilder* builder, gef::AudioManager* am) {
+void BulletManager::Init(b2World* world, PrimitiveBuilder* builder, gef::AudioManager* am, bool player_gun) {
 	world_ = world;
 	builder_ = builder;
 	am_ = am;
+	is_player_gun_ = player_gun;
 }
  
 void BulletManager::Update(float frame_time)
