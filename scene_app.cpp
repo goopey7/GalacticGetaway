@@ -182,6 +182,15 @@ void SceneApp::Init()
 	
 	// MAIN MENU
 	Menu* menu = new Menu(platform_, *state_manager_, false);
+	
+	gef::Sprite* menuBkg = new gef::Sprite();
+	gef::ImageData menu_img_data("space.png");
+	menuBkg->set_texture(gef::Texture::Create(platform_, menu_img_data));
+	menuBkg->set_width(platform_.width());
+	menuBkg->set_height(platform_.height());
+	Image* menuBkg_img = new Image({0.5f,0.5f}, menuBkg, platform_);
+	menu->AddUIElement(menuBkg_img);
+	
 	state_manager_->SetMainMenu(menu);
 	menu->AddUIElement(new Text({0.5,0.25}, "Main Menu"));
 	Button* menuStartButton = new Button({0.5,0.4}, platform_, "Start", 200.f, 50.f, gef::Colour(1,1,1,1));
