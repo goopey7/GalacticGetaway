@@ -21,11 +21,13 @@ public:
 	void EndCollision(GameObject* other) override;
 	void Render(gef::Renderer3D* renderer_3d);
 	int GetHealth() const;
+	void Heal(int heal_amount);
 
 protected:
 	Camera* camera_;
 
-	int health_ = 10;
+	const int starting_health_ = 10;
+	int health_ = starting_health_;
 	PlayerGun gun_;
 
 	b2World* physics_world_ = nullptr;

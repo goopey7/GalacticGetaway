@@ -249,7 +249,10 @@ void Player::BeginCollision(GameObject* other) {
 	{
      	Bullet* bullet = dynamic_cast<Bullet*>(other);
 		if (bullet->getTarget() == GameObject::Tag::Player && bullet->getDamage() > 0) {
-			health_--;
+			if(health_ > 0)
+			{
+				health_--;
+			}
 			gef::DebugOut("\nhealth: ");
 			gef::DebugOut(std::to_string(health_).c_str());
 		}
@@ -283,4 +286,16 @@ void Player::Render(gef::Renderer3D* renderer_3d) {
 int Player::GetHealth() const
 {
 	return health_;
+}
+
+void Player::Heal(int heal_amount)
+{
+	if(health_ + heal_amount <= starting_health_)
+	{
+		health_ += heal_amount;
+	}
+	else
+	{
+		health_ += starting_health_ - health_;
+	}
 }

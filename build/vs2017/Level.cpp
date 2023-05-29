@@ -94,6 +94,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 	loading_screen->SetStatusText("Loading Music...");
 	loading_screen->SetStatusText("Loading SFX...");
 	audio_manager_->LoadSample("sounds/MaxAmmo.ogg", *platform_);
+	//audio_manager_->LoadSample("sounds/Health.ogg", *platform_);
 	
 	// LOAD 3D MODELS
 	loading_screen->SetStatusText("Loading 3D meshes...");

@@ -76,6 +76,11 @@ void Pickup::BeginCollision(GameObject* other)
 			player->GetGun()->maxAmmo();
 			audio_manager_->PlaySample(0);
 		}
+		else if(type_ == Health)
+		{
+			player->Heal(5);
+			audio_manager_->PlaySample(1);
+		}
 		Kill();
 	}
 }

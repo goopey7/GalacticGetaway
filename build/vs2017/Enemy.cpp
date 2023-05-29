@@ -57,12 +57,19 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 	{
 		auto pos = GetBody()->GetPosition();
 		pickup_ = new Pickup();
-		//pickup_->set_mesh(sprite_animator3D_->GetFirstFrame("MaxAmmoPickup"));
-		pickup_->set_mesh(sprite_animator3D_->CreateMesh("Pickups/MaxAmmo/frame1.png", gef::Vector4(0.3, 0.3, 0.3)));
+		Pickup::Type type;
+		if(dist(gen) < 0.7f)
+		{
+			type = Pickup::Type::Health;
+			pickup_->set_mesh(sprite_animator3D_->CreateMesh("Pickups/Health/frame1.png", gef::Vector4(0.3, 0.3, 0.3)));
+		}
+		else
+		{
+			type = Pickup::Type::MaxAmmo;
+			pickup_->set_mesh(sprite_animator3D_->CreateMesh("Pickups/MaxAmmo/frame1.png", gef::Vector4(0.3, 0.3, 0.3)));
+		}
 		pickup_->Init(0.3,0.3,0.3, pos.x, pos.y, physics_world_, primitive_builder_, am, true);
 		pickup_->SetTargetBody(GetBody());
-		Pickup::Type type;
-		type = Pickup::Type::MaxAmmo;
 		pickup_->SetType(type);
 		dynamic_game_objects_->push_back(pickup_);
 	}
