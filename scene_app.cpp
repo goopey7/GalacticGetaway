@@ -40,6 +40,18 @@ void SceneApp::Init()
 	renderer_3d_ = gef::Renderer3D::Create(platform_);
 
 	audio_manager_ = gef::AudioManager::Create();
+	audio_manager_->LoadSample("sounds/MaxAmmo.ogg", platform_); // made in house
+	gef::VolumeInfo volume_info;
+	audio_manager_->GetSampleVoiceVolumeInfo(0, volume_info);
+	volume_info.volume = 200.f;
+	audio_manager_->SetSampleVoiceVolumeInfo(0, volume_info);
+	audio_manager_->LoadSample("sounds/MaxAmmo.ogg", platform_);
+	audio_manager_->SetSampleVoiceVolumeInfo(1, volume_info);
+	//audio_manager_->LoadSample("sounds/Health.ogg", *platform_);
+	audio_manager_->LoadSample("sounds/lazer.ogg", platform_); // found here: https://www.soundfishing.eu/sound/laser-gun
+	audio_manager_->LoadSample("sounds/enemy_lazer.ogg", platform_); // found here: https://www.soundfishing.eu/sound/laser-gun
+	audio_manager_->LoadSample("sounds/player_death.ogg", platform_); // found here: https://pixabay.com/sound-effects/search/death/?pagi=2
+	audio_manager_->LoadSample("sounds/enemy_death.ogg", platform_); // found here: https://pixabay.com/sound-effects/search/death/?pagi=2
 
 	// initialise input action manager
 	iam_ = new InputActionManager(platform_);
@@ -122,6 +134,51 @@ void SceneApp::Init()
 	settings_menu->AddUIElement(music_volume_down);
 	settings_menu->AddUIElement(music_volume_text);
 	settings_menu->AddUIElement(music_volume_up);
+
+	settings_menu->AddUIElement(new Text({0.25,0.6}, "SFX Volume"));
+	Button* sfx_volume_down = new Button({0.4,0.6}, platform_, "-", 50.f, 50.f, gef::Colour(1,1,1,1));
+	Text* sfx_volume_text = new Text({0.5,0.6}, "20", platform_);
+	Button* sfx_volume_up = new Button({0.6,0.6}, platform_, "+", 50.f, 50.f, gef::Colour(1,1,1,1));
+	sfx_volume_down->SetOnClick([this, sfx_volume_text]
+	{
+		std::string text = sfx_volume_text->GetText();
+		int volume = std::stoi(text) - 10;
+		if(volume - 10 < 0)
+		{
+			volume = 0;
+		}
+		for(int i=0; i < 6; i++)
+		{
+			gef::VolumeInfo vi;
+			audio_manager_->GetSampleVoiceVolumeInfo(i, vi);
+			vi.volume = volume;
+			audio_manager_->SetSampleVoiceVolumeInfo(i, vi);
+		}
+		text = std::to_string(volume);
+		sfx_volume_text->UpdateText(text.c_str());
+	});
+
+	sfx_volume_up->SetOnClick([this, sfx_volume_text]
+	{
+		std::string text = sfx_volume_text->GetText();
+		int volume = std::stoi(text) + 10;
+		if(volume + 10 > 100)
+		{
+			volume = 100;
+		}
+		for(int i=0; i < 6; i++)
+		{
+			gef::VolumeInfo vi;
+			audio_manager_->GetSampleVoiceVolumeInfo(i, vi);
+			vi.volume = volume;
+			audio_manager_->SetSampleVoiceVolumeInfo(i, vi);
+		}
+		text = std::to_string(volume);
+		sfx_volume_text->UpdateText(text.c_str());
+	});
+	settings_menu->AddUIElement(sfx_volume_down);
+	settings_menu->AddUIElement(sfx_volume_text);
+	settings_menu->AddUIElement(sfx_volume_up);
 	
 	// MAIN MENU
 	Menu* menu = new Menu(platform_, *state_manager_, false);
