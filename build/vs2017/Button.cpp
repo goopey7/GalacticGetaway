@@ -66,7 +66,7 @@ void Button::Update(InputActionManager* iam, float frame_time)
 	}
 }
 
-void Button::Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font)
+void Button::Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) const
 {
 	sprite_renderer->DrawSprite(button);
 	font->RenderText(sprite_renderer, gef::Vector4(platform_->width() * anchor_.x, platform_->height() * anchor_.y - button.height() / 4.f, -0.9f), 1.0f, text_color_.GetABGR(), gef::TJ_CENTRE,text_.c_str()); 

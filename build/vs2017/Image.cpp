@@ -10,7 +10,7 @@ Image::Image(const gef::Vector2& anchor, gef::Sprite* sprite, const gef::Platfor
 	sprite_->set_position(platform.width() * anchor_.x, platform.height() * anchor_.y, -0.9f);
 }
 
-void Image::Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font)
+void Image::Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) const
 {
 	sprite_renderer->DrawSprite(*sprite_);
 }

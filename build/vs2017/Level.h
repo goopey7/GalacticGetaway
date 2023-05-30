@@ -31,7 +31,7 @@ class Gun;
 class Level : public Scene
 {
 public:
-	Level(gef::Platform& platform, StateManager& state_manager, gef::AudioManager* am) : Scene(platform, state_manager), audio_manager_(am) {}
+	Level(gef::Platform& platform, gef::SpriteRenderer* sr, gef::Font* font, StateManager& state_manager, gef::AudioManager* am) : Scene(platform, state_manager), audio_manager_(am), sprite_renderer_(sr), font_(font) {}
 	~Level();
 	void LoadFromFile(const char* filename, LoadingScreen* loading_screen, OBJMeshLoader& obj_loader);
 	void CleanUp();
@@ -86,4 +86,6 @@ private:
 	gef::AudioManager* audio_manager_ = nullptr;
 	const char* file_name_ = nullptr;
 	OBJMeshLoader* obj_loader_ = nullptr;
+	gef::SpriteRenderer* sprite_renderer_ = nullptr;
+	gef::Font* font_ = nullptr;
 };

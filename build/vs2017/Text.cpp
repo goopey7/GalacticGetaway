@@ -27,7 +27,7 @@ std::string Text::GetText() const
 	return text_;
 }
 
-void Text::Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font)
+void Text::Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) const
 {
 	font->RenderText(sprite_renderer, gef::Vector4(platform_->width() * anchor_.x, platform_->height() * anchor_.y, -0.9f), 1.0f, alpha_color_, gef::TJ_CENTRE,text_.c_str()); 
 }

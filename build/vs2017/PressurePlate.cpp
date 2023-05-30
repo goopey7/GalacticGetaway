@@ -1,9 +1,18 @@
 ﻿#include "PressurePlate.h"
-#include "graphics/renderer_3d.h"
 
-void PressurePlate::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, float
-						threshold, bool is_fussy)
+#include <sstream>
+
+#include "graphics/font.h"
+#include "graphics/renderer_3d.h"
+#include "graphics/sprite_renderer.h"
+
+void PressurePlate::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::
+						SpriteRenderer* sr, gef::Font* font, float
+						threshold, gef::Platform* platform, bool is_fussy)
 {
+	platform_ = platform;
+	sprite_renderer_ = sr;
+	font_ = font;
  	tag = Tag::PressurePlate;
 	threshold_ = threshold;
 	is_fussy_ = is_fussy;
@@ -31,11 +40,16 @@ void PressurePlate::Init(float size_x, float size_y, float size_z, float pos_x, 
  	physics_body_->SetFixedRotation(true);
  
  	UpdateBox2d();
+
 }
 
 void PressurePlate::Update(float frame_time)
 {
 	const bool wasActivated = (current_load_ >= threshold_ && !is_fussy_) || (current_load_ == threshold_ && is_fussy_);
+
+	std::ostringstream oss;
+	oss << current_load_ << " / " << threshold_;
+	hud_ = oss.str();
 	
 	if(GetBody()->GetContactList() == nullptr)
 	{
@@ -65,11 +79,16 @@ void PressurePlate::Update(float frame_time)
 void PressurePlate::Render(gef::Renderer3D* renderer_3d) const
 {
 	renderer_3d->DrawMesh(*this);
+	sprite_renderer_->Begin(false);
+		font_->RenderText(sprite_renderer_, {platform_->width() - 200.f, 96.f, -0.9f}, 1.f, 0xffffffff, gef::TJ_CENTRE, hud_.c_str());
+		font_->RenderText(sprite_renderer_, {platform_->width() - 200.f, 64.f, -0.9f},1.f, 0xffffffff, gef::TJ_CENTRE, "Pressure Plate");
+	sprite_renderer_->End();
 }
 
-void PressurePlate::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, float threshold, bool is_fussy)
+void PressurePlate::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, float threshold, gef::SpriteRenderer*
+						sr, gef::Font* font, gef::Platform* platform_, bool is_fussy)
 {
-	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, builder, threshold, is_fussy);
+	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, builder, sr, font, threshold, platform_, is_fussy);
 }
 
 void PressurePlate::TraverseContactChain(GameObject* game_object, std::set<GameObject*>& visited_objects, float& total_weight)

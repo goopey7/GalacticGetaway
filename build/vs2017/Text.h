@@ -9,7 +9,7 @@ public:
 	Text(const gef::Vector2& anchor, std::string text, const gef::Platform& platform);
 	void UpdateText(std::string text);
 	std::string GetText() const;
-	void Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) override;
+	void Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) const override;
 	void SetAlpha(float alpha) override;
 private:
 	std::string text_;

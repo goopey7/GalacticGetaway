@@ -203,7 +203,7 @@ void SceneApp::Init()
 	Button* quitButton = new Button({0.5,0.7}, platform_, "Quit", 200.f, 50.f, gef::Colour(1,0,0,1));
 	menuStartButton->SetOnClick([this]
 	{
-		state_manager_->PushLevel(new Level(platform_, *state_manager_, audio_manager_), "lvl_1.json", mesh_loader_);
+		state_manager_->PushLevel(new Level(platform_, sprite_renderer_, font_, *state_manager_, audio_manager_ ), "lvl_1.json", mesh_loader_);
 		state_manager_->NextScene();
 	});
 	menuSettingsButton->SetOnClick([this]

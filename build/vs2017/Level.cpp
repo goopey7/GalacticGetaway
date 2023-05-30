@@ -228,7 +228,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 						bool fussy = std::find_if(object["properties"].begin(), object["properties"].end(), [](const json& element)
 							{ return element["name"] == "fussy"; }).value()["value"];
 						
-						plate->Init(object["width"]/2.f,0.f,1.f,object["x"] + object["width"]/2.f, (-(float)object["y"]), b2_world_, primitive_builder_, threshold, fussy);
+						plate->Init(object["width"]/2.f,0.f,1.f,object["x"] + object["width"]/2.f, (-(float)object["y"]), b2_world_, primitive_builder_, sprite_renderer_, font_, threshold, platform_, fussy);
 						plate->SetOnActivate([this, door_ID]{ door_objects_[door_ID]->Open(); });
 						plate->SetOnDeactivate([this, door_ID] { door_objects_[door_ID]->Close(); });
 						static_game_objects_.push_back(plate);
@@ -366,7 +366,7 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 				nextLevelButton->SetOnClick([this, nlf]
 					{
 						CleanUp();
-						state_manager_->PushLevel(new Level(*platform_, *state_manager_, audio_manager_), nlf.c_str(), *obj_loader_);
+						state_manager_->PushLevel(new Level(*platform_, sprite_renderer_, font_, *state_manager_, audio_manager_), nlf.c_str(), *obj_loader_);
 						state_manager_->NextScene();
 						delete this;
 					});
@@ -379,7 +379,7 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 			restartButton->SetOnClick([this]
 				{
 					CleanUp();
-					state_manager_->PushLevel(new Level(*platform_, *state_manager_, audio_manager_), file_name_, *obj_loader_);
+					state_manager_->PushLevel(new Level(*platform_, sprite_renderer_, font_, *state_manager_, audio_manager_), file_name_, *obj_loader_);
 					state_manager_->NextScene();
 					delete this;
 				});

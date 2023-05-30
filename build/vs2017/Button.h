@@ -14,7 +14,7 @@ public:
 	void Selected(InputActionManager* iam);
 	void SetOnClick(std::function<void()> onClick) { OnClick_ = onClick; }
 	void Update(InputActionManager* iam, float frame_time) override;
-	void Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) override;
+	void Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) const override;
 	gef::Sprite* GetSprite() {return &button;}
 	void SetText(std::string text) {text_ = std::move(text);}
 	void SetAlpha(float alpha) override;
