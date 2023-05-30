@@ -48,7 +48,7 @@ public:
 	const Gun* getGun() const;
 	std::vector<GameObject*>& getBodiesToDestroy() {return objects_to_destroy_;}
 	void SetEndState(EndState end_state) { end_state_ = end_state; }
-	void Reset();
+	const char* GetFileName() const;
 
 private:
 	enum HudElement

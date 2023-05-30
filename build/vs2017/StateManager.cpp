@@ -11,7 +11,8 @@
 StateManager::StateManager(LoadingScreen* loading_screen, bool* should_run, gef::AudioManager* audio_manager, gef::Platform* platform)
 	: loading_screen_(loading_screen),
 	should_run_(should_run),
-	audio_manager_(audio_manager)
+	audio_manager_(audio_manager),
+	platform_(platform)
 {
 	audio_manager_->LoadMusic("sounds/Karl Casey - Deception.ogg", *platform_); // found here: https://karlcasey.bandcamp.com/track/lethal
 	gef::VolumeInfo music_volume_info;
@@ -23,7 +24,7 @@ StateManager::StateManager(LoadingScreen* loading_screen, bool* should_run, gef:
 
 void StateManager::Update(InputActionManager* iam, float frame_time)
 {
-	if(is_loading_)
+	if(is_loading_ && loading_screen_ != nullptr)
 	{
 		loading_screen_->Update(iam, frame_time);
 	}
@@ -61,7 +62,7 @@ void StateManager::Render(gef::Renderer3D* renderer_3d)
 
 void StateManager::Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_renderer, gef::Font* font)
 {
-	if(is_loading_)
+	if(is_loading_ && loading_screen_ != nullptr)
 	{
 		loading_screen_->Render(renderer_3d, sprite_renderer, font);
 	}
@@ -92,7 +93,7 @@ void StateManager::PushScene(Scene* scene)
 void StateManager::PushLevel(Level* level, const char* file_name, OBJMeshLoader& mesh_loader)
 {
 	level->SetPauseMenu(pause_menu_);
-	
+
 	loading_thread_ = std::thread([this, level, file_name, &mesh_loader]
 	{
 		is_loading_ = true;
@@ -159,4 +160,14 @@ void StateManager::SwitchToSettingsMenu()
 {
 	on_main_menu_ = false;
 	on_settings_menu_ = true;
+}
+
+void StateManager::RestartLevel(gef::SpriteRenderer* sprite_renderer_, gef::Font* font_, OBJMeshLoader* ml)
+{
+	is_loading_ = true;
+	loading_screen_->SetStatusText("Restarting...");
+	Level* lvl = reinterpret_cast<Level*>(scenes_.front());
+	lvl->CleanUp();
+	PushLevel(new Level(*platform_, sprite_renderer_, font_, *this, audio_manager_), lvl->GetFileName(), *ml);
+	NextScene();
 }

@@ -230,13 +230,18 @@ void SceneApp::Init()
 			state_manager_->Unpause();
 		});
 	pause->AddUIElement(resumeButton);
-	Button* mainMenuButton = new Button({ 0.5,0.6 }, platform_, "Main Menu", 200.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
+	Button* restartButton = new Button({ 0.5,0.6 }, platform_, "Restart", 200.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
+	restartButton->SetOnClick([this]
+		{
+			state_manager_->RestartLevel(sprite_renderer_, font_, &mesh_loader_);
+		});
+	pause->AddUIElement(restartButton);
+	Button* mainMenuButton = new Button({ 0.5,0.7 }, platform_, "Main Menu", 200.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
 	mainMenuButton->SetOnClick([this]
 	{
 		state_manager_->SwitchToMainMenu();
 	});
 	pause->AddUIElement(mainMenuButton);
-	pause->AddUIElement(quitButton);
 
 
 	//Level* next_level = new Level(platform_, *state_manager_);

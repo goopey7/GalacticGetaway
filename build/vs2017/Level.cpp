@@ -321,11 +321,9 @@ void Level::CleanUp()
 	sprite_animator3D_ = nullptr;
 }
 
-void Level::Reset()
+const char* Level::GetFileName() const
 {
-	end_state_ = NONE;
-	CleanUp();
-	Init();
+	return file_name_;
 }
 
 void Level::Init()

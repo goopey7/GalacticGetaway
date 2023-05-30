@@ -48,6 +48,7 @@ public:
 	void SetPauseMenu(Menu* pause_menu);
 	void SetShouldRun(bool should_run) { *should_run_ = should_run; }
 	void SwitchToSettingsMenu();
+	void RestartLevel(gef::SpriteRenderer* sprite_renderer_, gef::Font* font_, OBJMeshLoader* mesh_loader_);
 
 private:
 	Scene* current_scene_ = nullptr;
@@ -72,4 +73,6 @@ private:
 	float main_menu_alpha_ = 1.f;
 	const float main_menu_fade_speed_ = 1.0f;
 	float main_menu_fade_timer_ = main_menu_fade_speed_;
+
+	OBJMeshLoader* mesh_loader_ = nullptr;
 };
