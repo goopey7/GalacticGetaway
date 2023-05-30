@@ -57,8 +57,8 @@ protected:
 	gef::Vector4 translate_ = gef::Vector4(0, 0, 0);
 	gef::Vector4 rotate_ = gef::Vector4(0, 0, 0);
 	SpriteAnimator3D* sprite_animator3D_;
-	float weight_ = 1;
 	float anim_time_ = 0;
+	float weight_ = 1; //For pressure plates
 	gef::AudioManager* audio_manager_ = nullptr;
 };
 

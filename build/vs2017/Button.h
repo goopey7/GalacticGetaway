@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include <functional>
 #include <string>
-
 #include "UIElement.h"
 #include "graphics/colour.h"
 #include "graphics/sprite.h"
@@ -20,7 +19,7 @@ public:
 	void SetAlpha(float alpha) override;
 private:
 	std::string text_;
-	gef::Colour color_;
+	gef::Colour default_color_;
 	gef::Colour hover_color_;
 	gef::Colour text_color_;
 	gef::Sprite button;

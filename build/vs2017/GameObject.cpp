@@ -95,15 +95,12 @@ void GameObject::UpdateBox2d() {
 	gef::Matrix44 transform;
 	transform.SetIdentity();
 
-	//gef::Matrix44 rotation;
 	gef::Matrix44 rotationX;
 	rotationX.RotationX(rotate_.x());
 	gef::Matrix44 rotationZ;
 	rotationZ.RotationZ(rotate_.z() + physics_body_->GetAngle());
 	gef::Matrix44 rotationY;
 	rotationY.RotationY(rotate_.y());
-	/*gef::DebugOut("\n");
-	gef::DebugOut(std::to_string(rotate_.y()).c_str());*/
 	gef::Matrix44 rotation = rotationX * rotationY * rotationZ;
 
 	gef::Matrix44 translation1;

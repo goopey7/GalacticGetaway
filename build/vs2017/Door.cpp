@@ -5,12 +5,13 @@
 
 Door::Door(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, gef::AudioManager* am, gef::Mesh* door_wall, gef::Mesh* door_frame, gef::Mesh* door) {
 	audio_manager_ = am;
+
+	//Door is made of 2 meshes and 1 game object
 	gef::Matrix44 transform_matrix;
 	transform_matrix.SetIdentity();
 	transform_matrix.SetTranslation(pos);
 	door_wall_.set_transform(transform_matrix);
 	door_frame_.set_transform(transform_matrix);
-
 	door_wall_.set_mesh(door_wall);
 	door_frame_.set_mesh(door_frame);
 
@@ -26,7 +27,7 @@ void Door::Update(float dt) {
 	gef::Vector4 translation;
 	switch (current_state_)
 	{
-	case Door::State::OPENING:
+	case Door::State::OPENING: //Lerp to open position 
 		lerp_time_ += dt;
 		translation;
 		translation.Lerp(start_pos_, open_pos_, lerp_time_);
@@ -38,8 +39,8 @@ void Door::Update(float dt) {
 		door_->GetBody()->SetTransform(b2Vec2(translation.x(), translation.y()), door_->GetBody()->GetAngle());
 		door_->UpdateBox2d();
 		break;
-	case Door::State::CLOSING:
-		door_->GetBody()->SetEnabled(true);
+	case Door::State::CLOSING: //Lerp to closed position
+		door_->GetBody()->SetEnabled(true); //Top of mesh will still be poking through floor so disable physics body so player can pass easily 
 		lerp_time_ += dt;
 		translation;
 		translation.Lerp(start_pos_, closed_pos_, lerp_time_);

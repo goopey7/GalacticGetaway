@@ -1,5 +1,4 @@
 ﻿#pragma once
-
 #include "json.h"
 #include "input/keyboard.h"
 #include <maths/vector2.h>
@@ -47,14 +46,12 @@ public:
 	bool isHeld(Action action);
 	bool isReleased(Action action);
 	void Update();
-
 	float getLeftStickX();
 	float getLeftStickY();
 	float getRightStickX();
 	float getRightStickY();
 	gef::Vector2 getMousePos() { return mouse_pos_; }
 	gef::InputManager* getInputManager() { return inputManager; }
-
 	bool getUsingKeyboard() { return using_keyboard_; }
 
 private:

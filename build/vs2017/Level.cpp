@@ -6,7 +6,7 @@
 #include "Enemy.h"
 #include "GameObject.h"
 #include "json.h"
-#include "obj_mesh_loader.h"
+
 #include "PressurePlate.h"
 #include "primitive_builder.h"
 #include "Text.h"
@@ -40,10 +40,10 @@ Level::~Level()
 
 void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OBJMeshLoader& obj_loader)
 {
+	// load level from file
 	obj_loader_ = &obj_loader;
 	file_name_ = filename;
 	loading_screen->SetStatusText("Reading level file...");
-	// load level from file
 	std::ifstream i(std::string("levels/") + std::string(filename));
 
 	// handle error if file not found
@@ -129,7 +129,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 	}
 
 		
-	// initialize all layers
+	// Parse level layers from json and build level accordingly 
 	for(const auto& layer : levelJson["layers"])
 	{
 		if (layer["type"] == "objectgroup")
@@ -137,7 +137,6 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 			if(layer["name"] == "StaticLevelCollisions")
 			{
 				loading_screen->SetStatusText("Creating static game objects...");
-				gef::Mesh* new_mesh;
 				gef::Vector4 old_scale;
 
 				for(const auto& obj : layer["objects"])
@@ -150,29 +149,16 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 
 					if (type == "level") {
 						gef::Vector4 scale = gef::Vector4(obj["width"], obj["height"], 10.f);
-						if (scale.x() != old_scale.x() || scale.y() != old_scale.y()) {
-							old_scale.set_x(scale.x());
-							old_scale.set_y(scale.y());
-							new_mesh = obj_loader.GetMesh(MeshResource::Level, scale);
-						}
-						static_game_objects_.emplace_back(new GameObject());
-						static_game_objects_.back()->Init(obj["width"] / 2.f, obj["height"] / 2.f, 1.f, (float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), b2_world_, primitive_builder_, audio_manager_);
-						static_game_objects_.back()->set_mesh(new_mesh);
+						LoadObject(obj, MeshResource::Level, obj_loader, scale);
 					}
 					else if (type == "next") {
 						gef::Vector4 scale = gef::Vector4(obj["width"], obj["height"], 1.f);
-						new_mesh = obj_loader.GetMesh(MeshResource::Consol, scale);
-						static_game_objects_.emplace_back(new GameObject());
-						static_game_objects_.back()->Init(obj["width"] / 2.f, obj["height"] / 2.f, 1.f, (float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), b2_world_, primitive_builder_, audio_manager_);
-						static_game_objects_.back()->set_mesh(new_mesh);
+						LoadObject(obj, MeshResource::Consol, obj_loader, scale);
 						static_game_objects_.back()->SetTag(GameObject::Tag::NextObject);
 					}
 					else if (type == "win") {
 						gef::Vector4 scale = gef::Vector4(obj["width"], obj["height"], 2.f);
-						new_mesh = obj_loader.GetMesh(MeshResource::Reactor, scale);
-						static_game_objects_.emplace_back(new GameObject());
-						static_game_objects_.back()->Init(obj["width"] / 2.f, obj["height"] / 2.f, 1.f, (float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), b2_world_, primitive_builder_, audio_manager_);
-						static_game_objects_.back()->set_mesh(new_mesh);
+						LoadObject(obj, MeshResource::Reactor, obj_loader, scale);
 						static_game_objects_.back()->SetTag(GameObject::Tag::WinObject);
 					}
 					else if (type == "door") {
@@ -192,17 +178,13 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 				gef::Matrix44 transform_matrix;
 				transform_matrix.SetIdentity();
 				gef::Mesh* new_mesh;
-				gef::Vector4 old_scale;
 
 				for (const auto& obj : layer["objects"])
 				{
 					std::string type = std::find_if(obj["properties"].begin(), obj["properties"].end(), [](const json& element)
 						{ return element["name"] == "type"; }).value()["value"];
 					gef::Vector4 scale = gef::Vector4(obj["width"], obj["height"], 1.f);
-					if (scale.x() != old_scale.x() || scale.y() != old_scale.y()) {
-						old_scale.set_x(scale.x());
-						old_scale.set_y(scale.y());
-					}
+					
 					if (type == "wall") {
 						new_mesh = obj_loader.GetMesh(MeshResource::BackWall, scale);
 					}
@@ -256,7 +238,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 						bool fussy = std::find_if(object["properties"].begin(), object["properties"].end(), [](const json& element)
 							{ return element["name"] == "fussy"; }).value()["value"];
 						
-						plate->Init(object["width"]/2.f,0.f,1.f,object["x"] + object["width"]/2.f, (-(float)object["y"]), b2_world_, primitive_builder_, sprite_renderer_, font_, threshold, platform_, audio_manager_, fussy);
+						plate->Init(object["width"]/2.f,0.f,1.f,object["x"] + object["width"]/2.f, (-(float)object["y"]), b2_world_, primitive_builder_, sprite_renderer_, font_, threshold, platform_, fussy);
 						plate->SetOnActivate([this, door_ID] { door_objects_[door_ID]->Open(); gef::DebugOut("\n"); gef::DebugOut(std::to_string(door_ID).c_str()); });
 						plate->SetOnDeactivate([this, door_ID] { door_objects_[door_ID]->Close(); });
 						static_game_objects_.push_back(plate);
@@ -281,6 +263,13 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 			}
 		}
 	}
+}
+
+void Level::LoadObject(auto obj, MeshResource mr, OBJMeshLoader& obj_loader, gef::Vector4& scale) {
+	gef::Mesh* new_mesh = obj_loader.GetMesh(mr, scale);
+	static_game_objects_.emplace_back(new GameObject());
+	static_game_objects_.back()->Init(obj["width"] / 2.f, obj["height"] / 2.f, 1.f, (float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), b2_world_, primitive_builder_, audio_manager_);
+	static_game_objects_.back()->set_mesh(new_mesh);
 }
 
 void Level::CleanUp()
@@ -351,14 +340,6 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 	{
 		is_paused_ = !is_paused_;
 	}
-	/*if (iam_->getInputManager()->keyboard()->IsKeyPressed(gef::Keyboard::KC_X))
-	{
-		end_state_ = WIN;
-	}
-	else if (iam_->getInputManager()->keyboard()->IsKeyPressed(gef::Keyboard::KC_V))
-	{
-		end_state_ = LOSE;
-	}*/
 
 	if (end_state_ != NONE) {
 		Menu* end = new Menu(*platform_, *state_manager_, false);
@@ -419,19 +400,6 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 
 	else if(!is_paused_)
 	{
-		// Fixed Time Step caused weird jumpy physics issues
-		/*
-		//--------------- Adapted from Stack Overflow - remudada (2014) : https://stackoverflow.com/a/23038284 (Accessed: 22 March 2023)
-		float maximumStep = 1.0f / 60.0f;
-		float progress = 0.0;
-		while (progress < frame_time)
-		{
-			float step = min((frame_time - progress), maximumStep);
-			b2_world_->Step(step, 20, 20);
-			progress += step;
-		}
-		//---------------
-		*/
 		
 		b2_world_->Step(frame_time, 20, 20);
 		b2_world_->ClearForces();

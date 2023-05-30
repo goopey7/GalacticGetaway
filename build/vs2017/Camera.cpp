@@ -14,7 +14,7 @@ void Camera::Update(float dt, gef::Vector2 target_pos) {
 	switch (move_state_)
 	{
 	case Camera::MoveState::STATIONARY:
-		if ((target_pos_ - camera_lookat_).LengthSqr() >= 5) {
+		if ((target_pos_ - camera_lookat_).LengthSqr() >= 5) { //If player moves certain distance from centre of screen, start lerping to player
 			move_state_ = MoveState::LERP;
 			lerp_time_ = 0.0f;
 			lerp_start_ = camera_lookat_;
@@ -23,7 +23,7 @@ void Camera::Update(float dt, gef::Vector2 target_pos) {
 	case Camera::MoveState::LERP:
 		lerp_time_ += dt;
 		camera_lookat_.Lerp(lerp_start_, target_pos_, lerp_time_);
-		if ((target_pos_ - camera_lookat_).LengthSqr() <= 0.01) {
+		if ((target_pos_ - camera_lookat_).LengthSqr() <= 0.01) { //If camera has caught up to player, start tracking them 
 			move_state_ = MoveState::TRACK;
 			camera_lookat_ = target_pos_;
 			prev_lookats_.push(camera_lookat_);
@@ -36,7 +36,7 @@ void Camera::Update(float dt, gef::Vector2 target_pos) {
 			gef::Vector4 prev_lookat_ = prev_lookats_.front();
 			prev_lookats_.pop();
 			if (effect_state_ == EffectState::NORMAL) {
-				if (prev_lookat_.x() == camera_lookat_.x() && prev_lookat_.y() == camera_lookat_.y()) {
+				if (prev_lookat_.x() == camera_lookat_.x() && prev_lookat_.y() == camera_lookat_.y()) { //If player has stayed still for 3 frames, stop tracking them
 					move_state_ = MoveState::STATIONARY;
 				}
 			}
@@ -48,7 +48,8 @@ void Camera::Update(float dt, gef::Vector2 target_pos) {
 
 	camera_pos_ = camera_lookat_ + gef::Vector4(0, 0, 30);
 
-	if (effect_state_ != EffectState::NORMAL) {
+	// Camera shaking effects
+	if (effect_state_ != EffectState::NORMAL) { 
 		if (shake_time_ <= 0.0f) {
 			effect_state_ = EffectState::NORMAL;
 			shake_time_ = 0.2f;
