@@ -74,6 +74,7 @@ void Button::Render(gef::SpriteRenderer* sprite_renderer, gef::Font* font) const
 
 void Button::SetAlpha(float alpha)
 {
+	if (alpha > color_.a) return;
 	button.set_colour(0x00ffffff | (static_cast<unsigned int>(alpha * 255) << 24));
 	text_color_.SetFromAGBR(text_color_.GetABGR() | static_cast<unsigned int>(alpha * 255) << 24);
 }

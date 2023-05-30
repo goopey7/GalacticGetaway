@@ -352,8 +352,8 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 
 	if (end_state_ != NONE) {
 		Menu* end = new Menu(*platform_, *state_manager_, false);
-		Button* mainMenuButton = new Button({ 0.5,0.6 }, *platform_, "Main Menu", 200.f, 50.f, gef::Colour(1, 1, 1, 1));
-		Button* quitButton = new Button({ 0.5,0.7 }, *platform_, "Quit", 200.f, 50.f, gef::Colour(1, 0, 0, 1));
+		Button* mainMenuButton = new Button({ 0.5,0.6 }, *platform_, "Main Menu", 200.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
+		Button* quitButton = new Button({ 0.5,0.7 }, *platform_, "Quit", 200.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
 		mainMenuButton->SetOnClick([this]
 			{
 				state_manager_->SwitchToMainMenu();
@@ -374,7 +374,7 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 			else
 			{
 				end->AddUIElement(new Text({ 0.5,0.25 }, "Level Complete"));
-				Button* nextLevelButton = new Button({ 0.5,0.5 }, *platform_, "Next Level", 200.f, 50.f, gef::Colour(1, 1, 1, 1));
+				Button* nextLevelButton = new Button({ 0.5,0.5 }, *platform_, "Next Level", 200.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
 
 				std::string nlf = file_name_;
 				nlf = nlf.substr(nlf.find(".json") - 1, 1);
@@ -391,7 +391,7 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 		}
 		else if(end_state_ == LOSE)
 		{
-			Button* restartButton = new Button({ 0.5,0.5 }, *platform_, "Restart Level", 200.f, 50.f, gef::Colour(1, 1, 1, 1));
+			Button* restartButton = new Button({ 0.5,0.5 }, *platform_, "Restart Level", 200.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
 			restartButton->SetOnClick([this]
 				{
 					CleanUp();

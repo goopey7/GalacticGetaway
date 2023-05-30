@@ -103,96 +103,96 @@ void SceneApp::Init()
 	settings_menu->AddUIElement(menuBkg_img);
 	state_manager_->SetSettingsMenu(settings_menu);
 	settings_menu->AddUIElement(new Text({0.5,0.25}, "Settings"));
-	Button* settingsBackButton = new Button({0.5,0.4}, platform_, "Back", 200.f, 50.f, gef::Colour(1,1,1,1));
+	Button* settingsBackButton = new Button({0.5,0.4}, platform_, "Back", 200.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
 	settingsBackButton->SetOnClick([this]
-	{
-		state_manager_->SwitchToMainMenu();
-	});
+		{
+			state_manager_->SwitchToMainMenu();
+		});
 	settings_menu->AddUIElement(settingsBackButton);
 
-	settings_menu->AddUIElement(new Text({0.25,0.5}, "Music Volume"));
-	Button* music_volume_down = new Button({0.4,0.5}, platform_, "-", 50.f, 50.f, gef::Colour(1,1,1,1));
-	Text* music_volume_text = new Text({0.5,0.5}, "20", platform_);
-	Button* music_volume_up = new Button({0.6,0.5}, platform_, "+", 50.f, 50.f, gef::Colour(1,1,1,1));
+	settings_menu->AddUIElement(new Text({ 0.25,0.5 }, "Music Volume"));
+	Button* music_volume_down = new Button({ 0.4,0.5 }, platform_, "-", 50.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
+	Text* music_volume_text = new Text({ 0.5,0.5 }, "20", platform_);
+	Button* music_volume_up = new Button({ 0.6,0.5 }, platform_, "+", 50.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
 	music_volume_down->SetOnClick([this, music_volume_text]
-	{
-		std::string text = music_volume_text->GetText();
-		int volume = std::stoi(text) - 10;
-		if(volume - 10 < 0)
 		{
-			volume = 0;
-		}
-		gef::VolumeInfo vi;
-		audio_manager_->GetMusicVolumeInfo(vi);
-		vi.volume = volume;
-		audio_manager_->SetMusicVolumeInfo(vi);
-		text = std::to_string(volume);
-		music_volume_text->UpdateText(text.c_str());
-	});
+			std::string text = music_volume_text->GetText();
+			int volume = std::stoi(text) - 10;
+			if (volume - 10 < 0)
+			{
+				volume = 0;
+			}
+			gef::VolumeInfo vi;
+			audio_manager_->GetMusicVolumeInfo(vi);
+			vi.volume = volume;
+			audio_manager_->SetMusicVolumeInfo(vi);
+			text = std::to_string(volume);
+			music_volume_text->UpdateText(text.c_str());
+		});
 	music_volume_up->SetOnClick([this, music_volume_text]
-	{
-		std::string text = music_volume_text->GetText();
-		int volume = std::stoi(text) + 10;
-		if(volume + 10 > 100)
 		{
-			volume = 100;
-		}
-		gef::VolumeInfo vi;
-		audio_manager_->GetMusicVolumeInfo(vi);
-		vi.volume = volume;
-		audio_manager_->SetMusicVolumeInfo(vi);
-		text = std::to_string(volume);
-		music_volume_text->UpdateText(text.c_str());
-	});
+			std::string text = music_volume_text->GetText();
+			int volume = std::stoi(text) + 10;
+			if (volume + 10 > 100)
+			{
+				volume = 100;
+			}
+			gef::VolumeInfo vi;
+			audio_manager_->GetMusicVolumeInfo(vi);
+			vi.volume = volume;
+			audio_manager_->SetMusicVolumeInfo(vi);
+			text = std::to_string(volume);
+			music_volume_text->UpdateText(text.c_str());
+		});
 	settings_menu->AddUIElement(music_volume_down);
 	settings_menu->AddUIElement(music_volume_text);
 	settings_menu->AddUIElement(music_volume_up);
 
-	settings_menu->AddUIElement(new Text({0.25,0.6}, "SFX Volume"));
-	Button* sfx_volume_down = new Button({0.4,0.6}, platform_, "-", 50.f, 50.f, gef::Colour(1,1,1,1));
-	Text* sfx_volume_text = new Text({0.5,0.6}, "20", platform_);
-	Button* sfx_volume_up = new Button({0.6,0.6}, platform_, "+", 50.f, 50.f, gef::Colour(1,1,1,1));
+	settings_menu->AddUIElement(new Text({ 0.25,0.6 }, "SFX Volume"));
+	Button* sfx_volume_down = new Button({ 0.4,0.6 }, platform_, "-", 50.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
+	Text* sfx_volume_text = new Text({ 0.5,0.6 }, "20", platform_);
+	Button* sfx_volume_up = new Button({ 0.6,0.6 }, platform_, "+", 50.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
 	sfx_volume_down->SetOnClick([this, sfx_volume_text]
-	{
-		std::string text = sfx_volume_text->GetText();
-		int volume = std::stoi(text) - 10;
-		if(volume - 10 < 0)
 		{
-			volume = 0;
-		}
-		for(int i=0; i < 7; i++)
-		{
-			gef::VolumeInfo vi;
-			audio_manager_->GetSampleVoiceVolumeInfo(i, vi);
-			vi.volume = volume;
-			audio_manager_->SetSampleVoiceVolumeInfo(i, vi);
-		}
-		text = std::to_string(volume);
-		sfx_volume_text->UpdateText(text.c_str());
-	});
+			std::string text = sfx_volume_text->GetText();
+			int volume = std::stoi(text) - 10;
+			if (volume - 10 < 0)
+			{
+				volume = 0;
+			}
+			for (int i = 0; i < 7; i++)
+			{
+				gef::VolumeInfo vi;
+				audio_manager_->GetSampleVoiceVolumeInfo(i, vi);
+				vi.volume = volume;
+				audio_manager_->SetSampleVoiceVolumeInfo(i, vi);
+			}
+			text = std::to_string(volume);
+			sfx_volume_text->UpdateText(text.c_str());
+		});
 
 	sfx_volume_up->SetOnClick([this, sfx_volume_text]
-	{
-		std::string text = sfx_volume_text->GetText();
-		int volume = std::stoi(text) + 10;
-		if(volume + 10 > 100)
 		{
-			volume = 100;
-		}
-		for(int i=0; i < 7; i++)
-		{
-			gef::VolumeInfo vi;
-			audio_manager_->GetSampleVoiceVolumeInfo(i, vi);
-			vi.volume = volume;
-			audio_manager_->SetSampleVoiceVolumeInfo(i, vi);
-		}
-		text = std::to_string(volume);
-		sfx_volume_text->UpdateText(text.c_str());
-	});
+			std::string text = sfx_volume_text->GetText();
+			int volume = std::stoi(text) + 10;
+			if (volume + 10 > 100)
+			{
+				volume = 100;
+			}
+			for (int i = 0; i < 7; i++)
+			{
+				gef::VolumeInfo vi;
+				audio_manager_->GetSampleVoiceVolumeInfo(i, vi);
+				vi.volume = volume;
+				audio_manager_->SetSampleVoiceVolumeInfo(i, vi);
+			}
+			text = std::to_string(volume);
+			sfx_volume_text->UpdateText(text.c_str());
+		});
 	settings_menu->AddUIElement(sfx_volume_down);
 	settings_menu->AddUIElement(sfx_volume_text);
 	settings_menu->AddUIElement(sfx_volume_up);
-	
+
 	// MAIN MENU
 	Menu* menu = new Menu(platform_, *state_manager_, false);
 	menu->AddUIElement(menuBkg_img);
@@ -207,22 +207,22 @@ void SceneApp::Init()
 	Image* logo_img = new Image({ 0.5,0.35 }, logo, platform_);
 	menu->AddUIElement(logo_img);
 
-	Button* menuStartButton = new Button({0.5,0.5}, platform_, "Start", 200.f, 50.f, gef::Colour(1,1,1,1));
-	Button* menuSettingsButton = new Button({0.5,0.6}, platform_, "Settings", 200.f, 50.f, gef::Colour(1,1,1,1));
-	Button* quitButton = new Button({0.5,0.7}, platform_, "Quit", 200.f, 50.f, gef::Colour(1,0,0,1));
+	Button* menuStartButton = new Button({ 0.5,0.5 }, platform_, "Start", 200.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
+	Button* menuSettingsButton = new Button({ 0.5,0.6 }, platform_, "Settings", 200.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
+	Button* quitButton = new Button({ 0.5,0.7 }, platform_, "Quit", 200.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
 	menuStartButton->SetOnClick([this]
-	{
-		state_manager_->PushLevel(new Level(platform_, sprite_renderer_, font_, *state_manager_, audio_manager_ ), "lvl_1.json", mesh_loader_);
-		state_manager_->NextScene();
-	});
+		{
+			state_manager_->PushLevel(new Level(platform_, sprite_renderer_, font_, *state_manager_, audio_manager_), "lvl_1.json", mesh_loader_);
+			state_manager_->NextScene();
+		});
 	menuSettingsButton->SetOnClick([this]
-	{
-		state_manager_->SwitchToSettingsMenu();
-	});
+		{
+			state_manager_->SwitchToSettingsMenu();
+		});
 	quitButton->SetOnClick([this]
-	{
-		should_run_ = false;
-	});
+		{
+			should_run_ = false;
+		});
 	menu->AddUIElement(menuStartButton);
 	menu->AddUIElement(menuSettingsButton);
 	menu->AddUIElement(quitButton);
@@ -231,14 +231,14 @@ void SceneApp::Init()
 	// PAUSE MENU
 	Menu* pause = new Menu(platform_, *state_manager_, true);
 	state_manager_->SetPauseMenu(pause);
-	pause->AddUIElement(new Text({0.5,0.25}, "Paused"));
-	Button* resumeButton = new Button({0.5,0.5}, platform_, "Resume", 200.f, 50.f, gef::Colour(1,1,1,1));
+	pause->AddUIElement(new Text({ 0.5,0.4 }, "Paused"));
+	Button* resumeButton = new Button({ 0.5,0.5 }, platform_, "Resume", 200.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
 	resumeButton->SetOnClick([this]
-	{
-		state_manager_->Unpause();
-	});
+		{
+			state_manager_->Unpause();
+		});
 	pause->AddUIElement(resumeButton);
-	Button* mainMenuButton = new Button({0.5,0.6}, platform_, "Main Menu", 200.f, 50.f, gef::Colour(1,1,1,1));
+	Button* mainMenuButton = new Button({ 0.5,0.6 }, platform_, "Main Menu", 200.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
 	mainMenuButton->SetOnClick([this]
 	{
 		state_manager_->SwitchToMainMenu();

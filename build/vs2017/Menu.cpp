@@ -12,7 +12,6 @@ void Menu::AddUIElement(UIElement* element)
 	{
 		selectable_indices_.push_back(ui_elements_.size() - 1);
 		selected_element_index_ = selectable_indices_[0];
-		ui_elements_[selected_element_index_]->Select();
 	}
 }
 
