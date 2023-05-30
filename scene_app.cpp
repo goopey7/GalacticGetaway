@@ -89,14 +89,6 @@ void SceneApp::Init()
 	splash_screen->AddUIElement(splash_img);
 	state_manager_->SetSplashScreen(splash_screen);
 	
-	/*gef::Sprite* logo2_sprite = new gef::Sprite();
-	gef::ImageData menu_image_data("musician.png");
-	logo2_sprite->set_texture(gef::Texture::Create(platform_, menu_image_data));
-	logo2_sprite->set_width(menu_image_data.width());
-	logo2_sprite->set_height(menu_image_data.height());
-	Image* logo2 = new Image({0.5,0.5}, logo2_sprite, platform_);
-	splash_screen->AddUIElement(logo2);*/
-	
 	// SETTINGS MENU
 	Menu* settings_menu = new Menu(platform_, *state_manager_, false);
 	

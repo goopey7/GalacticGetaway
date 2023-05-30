@@ -54,7 +54,8 @@ private:
 	enum HudElement
 	{
 		Ammo,
-		EndText
+		EndText,
+		GravLock
 	};
 	void Init();
 	b2World* b2_world_;

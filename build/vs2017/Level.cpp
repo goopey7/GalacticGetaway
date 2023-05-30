@@ -65,10 +65,10 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 	for (int i = 0; i < 10; i++) {
 		gef::Sprite* heart = new gef::Sprite();
 		heart->set_texture(gef::Texture::Create(*platform_, image_data));
-		heart->set_width(50);
-		heart->set_height(50);
+		heart->set_width(25);
+		heart->set_height(25);
 		healthbar_.push_back(Image({ 0.1, 0.1 }, heart, *platform_));
-		healthbar_.back().GetSprite()->set_position(healthbar_.back().GetSprite()->position() + gef::Vector4(i * 60, 0, 0));
+		healthbar_.back().GetSprite()->set_position(healthbar_.back().GetSprite()->position() + gef::Vector4(i * 30, 0, 0));
 	}
 	
 	// LOAD 3D MODELS
@@ -342,8 +342,9 @@ void Level::Init()
 	sprite_animator3D_ = new SpriteAnimator3D(platform_, primitive_builder_, gef::Vector4(1, 1, 1));
 	sprite_animator3D_->Init();
 
-	hud_text_[Ammo] = new Text({0.88f, 0.93f}, "", *platform_);
+	hud_text_[Ammo] = new Text({0.9f, 0.9f}, "", *platform_);
 	hud_text_[EndText] = new Text({0.5f, 0.5f}, "", *platform_);
+	hud_text_[GravLock] = new Text({0.5f, 0.9f}, "", *platform_);
 }
 
 void Level::Update(InputActionManager* iam_, float frame_time)
@@ -378,7 +379,7 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 		
 		if(end_state_ == WIN)
 		{
-			if(std::string(file_name_) == std::string("lvl_2.json"))
+			if(std::string(file_name_) == std::string("lvl_3.json"))
 			{
 				end->AddUIElement(new Text({ 0.5,0.25 }, "Thanks For Playing!"));
 			}
@@ -510,6 +511,17 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 			ammoOss << "";
 		}
 		hud_text_[EndText]->UpdateText(endOss.str());
+
+		std::ostringstream gravOss;
+		if (player_.GetGravityLock())
+		{
+			gravOss << "Gravity Lock ON";
+		}
+		else
+		{
+			gravOss << "";
+		}
+		hud_text_[GravLock]->UpdateText(gravOss.str());
 
 		camera_.Update(frame_time, getPlayerPosition());
 
