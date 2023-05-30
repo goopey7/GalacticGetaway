@@ -12,9 +12,9 @@ namespace gef
 class PressurePlate : public GameObject
 {
 public:
-	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, float threshold, gef::SpriteRenderer* sr, gef::Font* font, gef::Platform* platform, gef::AudioManager* am, bool is_fussy = false);
+	void Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, float threshold, gef::SpriteRenderer* sr, gef::Font* font, gef::Platform* platform, gef::AudioManager* am, float offset_y=0.f, bool is_fussy = false);
 	void TraverseContactChain(GameObject* game_object, std::set<GameObject*>& visited_objects, float& total_weight);
-	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::SpriteRenderer* sr, gef::Font* font, float threshold, gef::Platform* platform,gef::AudioManager* am, bool is_fussy = false);
+	void Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::SpriteRenderer* sr, gef::Font* font, float threshold, gef::Platform* platform,gef::AudioManager* am, float offset_y=0.f, bool is_fussy = false);
 	void Update(float frame_time) override;
 	void Render(gef::Renderer3D* renderer_3d) const override;
 	void SetOnActivate(const std::function<void()>& on_activate) { on_activate_ = on_activate; }
@@ -30,4 +30,5 @@ private:
 	gef::SpriteRenderer* sprite_renderer_ = nullptr;
 	gef::Font* font_ = nullptr;
 	gef::Platform* platform_ = nullptr;
+	float offset_y_ = 0.f;
 };

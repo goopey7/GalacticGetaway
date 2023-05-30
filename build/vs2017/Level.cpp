@@ -211,6 +211,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 				gef::Mesh* crate_mesh;
 				gef::Vector4 scale = gef::Vector4(1.f, 1.f, 1.f);
 				crate_mesh = obj_loader.GetMesh(MeshResource::Crate, scale);
+				float plate_offset_ = 0.f;
 				for(const auto& object : layer["objects"])
 				{
 					if(!object.contains("properties"))
@@ -238,7 +239,8 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 						bool fussy = std::find_if(object["properties"].begin(), object["properties"].end(), [](const json& element)
 							{ return element["name"] == "fussy"; }).value()["value"];
 						
-						plate->Init(object["width"]/2.f,0.f,1.f,object["x"] + object["width"]/2.f, (-(float)object["y"]), b2_world_, primitive_builder_, sprite_renderer_, font_, threshold, platform_, fussy);
+						plate->Init(object["width"]/2.f,0.f,1.f,object["x"] + object["width"]/2.f, (-(float)object["y"]), b2_world_, primitive_builder_, sprite_renderer_, font_, threshold, platform_, audio_manager_, plate_offset_, fussy);
+						plate_offset_ += 32.f;
 						plate->SetOnActivate([this, door_ID] { door_objects_[door_ID]->Open(); gef::DebugOut("\n"); gef::DebugOut(std::to_string(door_ID).c_str()); });
 						plate->SetOnDeactivate([this, door_ID] { door_objects_[door_ID]->Close(); });
 						static_game_objects_.push_back(plate);
