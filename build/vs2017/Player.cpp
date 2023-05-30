@@ -50,7 +50,7 @@ void Player::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, SpriteAni
 
 void Player::Update(InputActionManager* iam, float frame_time) {
 	if (animation_state_ != DEATH) {
-		if (touching_end_object_) {
+		if (touching_end_object_ || touching_next_object_) {
 			if (iam->isPressed(UseItem)) level_->SetEndState(WIN);
 		}
 
@@ -235,10 +235,12 @@ void Player::Update(InputActionManager* iam, float frame_time) {
 }
 
 void Player::BeginCollision(GameObject* other) {
+	if(other->GetTag() == Tag::WinObject) touching_end_object_ = true;
+	else if(other->GetTag() == Tag::NextObject) touching_next_object_ = true;
 	switch (other->GetTag())
 	{
 	case Tag::WinObject:
-		touching_end_object_ = true;
+	case Tag::NextObject:
 	case Tag::None:
 	case Tag::PressurePlate:
 	case Tag::Crate:
@@ -274,6 +276,9 @@ void Player::EndCollision(GameObject* other) {
 	{
 	case Tag::WinObject:
 		touching_end_object_ = false;
+		break;
+	case Tag::NextObject:
+		touching_next_object_ = false;
 		break;
 	default:
 		break;

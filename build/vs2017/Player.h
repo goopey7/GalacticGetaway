@@ -15,6 +15,7 @@ public:
 	void Update(InputActionManager* iam, float frame_time);
 	bool GetGravityLock() const { return gravity_lock_; }
 	bool GetTouchingEnd() { return touching_end_object_; }
+	bool GetTouchingNext() { return touching_next_object_; }
 	const PlayerGun* GetGun() const { return &gun_; }
 	PlayerGun* GetGun() { return &gun_; }
 	void BeginCollision(GameObject* other) override;
@@ -47,6 +48,7 @@ protected:
 	AnimationState animation_state_ = IDLE;
 
 	Level* level_;
+	bool touching_next_object_ = false;
 	bool touching_end_object_ = false;
 };
 

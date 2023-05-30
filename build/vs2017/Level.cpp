@@ -121,6 +121,13 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 		gef::DebugOut(obj_loader.GetLastError().c_str());
 		gef::DebugOut("\n");
 	}
+
+	if (!obj_loader.Load(MeshResource::Consol, "Models/Generic/consol/consol.obj", "SciFi_RemoteConrol_00_SciFi_RemoteConrol_00_0", *platform_))
+	{
+		gef::DebugOut(obj_loader.GetLastError().c_str());
+		gef::DebugOut("\n");
+	}
+
 		
 	// initialize all layers
 	for(const auto& layer : levelJson["layers"])
@@ -151,6 +158,14 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 						static_game_objects_.emplace_back(new GameObject());
 						static_game_objects_.back()->Init(obj["width"] / 2.f, obj["height"] / 2.f, 1.f, (float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), b2_world_, primitive_builder_, audio_manager_);
 						static_game_objects_.back()->set_mesh(new_mesh);
+					}
+					else if (type == "next") {
+						gef::Vector4 scale = gef::Vector4(obj["width"], obj["height"], 1.f);
+						new_mesh = obj_loader.GetMesh(MeshResource::Consol, scale);
+						static_game_objects_.emplace_back(new GameObject());
+						static_game_objects_.back()->Init(obj["width"] / 2.f, obj["height"] / 2.f, 1.f, (float)obj["x"] + ((float)obj["width"] / 2.f), (-(float)obj["y"]) - ((float)obj["height"] / 2.f), b2_world_, primitive_builder_, audio_manager_);
+						static_game_objects_.back()->set_mesh(new_mesh);
+						static_game_objects_.back()->SetTag(GameObject::Tag::NextObject);
 					}
 					else if (type == "win") {
 						gef::Vector4 scale = gef::Vector4(obj["width"], obj["height"], 2.f);
@@ -486,6 +501,9 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 		if(player_.GetTouchingEnd())
 		{
 			endOss << "Press " << (iam_->getUsingKeyboard() ? "X" : "Circle") << " to repair the hyperdrive!";
+		}
+		else if (player_.GetTouchingNext()) {
+			endOss << "Press " << (iam_->getUsingKeyboard() ? "X" : "Circle") << " to complete level.";
 		}
 		else
 		{

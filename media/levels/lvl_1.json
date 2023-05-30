@@ -565,13 +565,13 @@
                         {
                          "name":"type",
                          "type":"string",
-                         "value":"win"
+                         "value":"next"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":3.46875,
-                 "x":80,
+                 "width":1.453125,
+                 "x":82.015625,
                  "y":21
                 }, 
                 {
@@ -1476,8 +1476,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":52,
-                 "y":22.5
+                 "x":53,
+                 "y":22.453125
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1486,7 +1486,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":352,
+ "nextobjectid":354,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.1",
