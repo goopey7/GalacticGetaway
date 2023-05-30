@@ -1,6 +1,5 @@
 #pragma once
 #include "GameObject.h"
-#include "maths/vector2.h"
 
 class Bullet : public GameObject {
 public:

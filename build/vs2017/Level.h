@@ -9,6 +9,7 @@
 #include "graphics/scene.h"
 #include "Door.h"
 #include "Image.h"
+#include "obj_mesh_loader.h"
 
 class Menu;
 class Text;
@@ -51,6 +52,8 @@ public:
 	const char* GetFileName() const;
 
 private:
+	void LoadObject(auto obj, MeshResource mr, OBJMeshLoader& obj_loader, gef::Vector4& scale);
+
 	enum HudElement
 	{
 		Ammo,
@@ -61,33 +64,33 @@ private:
 	b2World* b2_world_;
 	PrimitiveBuilder* primitive_builder_;
 	
+	Camera camera_;
+
+	//Objects
 	std::vector<GameObject*> static_game_objects_;
 	std::vector<GameObject*> dynamic_game_objects_;
 	std::vector<gef::MeshInstance*> background_objects_;
 	std::unordered_map<int, Door*> door_objects_;
 	Player player_;
 	std::vector<Enemy*> enemies_;
+
+	//Scene loading etc
 	SpriteAnimator3D* sprite_animator3D_;
 	gef::Scene scene_loader_;
-
-	std::vector<GameObject*> objects_to_destroy_;
-	
-	CollisionManager collision_manager_;
-
-	Camera camera_;
-
 	EndState end_state_ = NONE;
+	std::vector<GameObject*> objects_to_destroy_;
+	CollisionManager collision_manager_;
+	const char* file_name_ = nullptr;
+	OBJMeshLoader* obj_loader_ = nullptr;
 
 	//HUD
 	std::map<HudElement, Text*> hud_text_;
 	std::vector<Image> healthbar_;
-
+	gef::SpriteRenderer* sprite_renderer_ = nullptr;
+	gef::Font* font_ = nullptr;
 	Menu* pause_menu_ = nullptr;
 	bool is_paused_ = false;
 
+	//Audio
 	gef::AudioManager* audio_manager_ = nullptr;
-	const char* file_name_ = nullptr;
-	OBJMeshLoader* obj_loader_ = nullptr;
-	gef::SpriteRenderer* sprite_renderer_ = nullptr;
-	gef::Font* font_ = nullptr;
 };

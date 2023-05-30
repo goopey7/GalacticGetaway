@@ -3,7 +3,6 @@
 #include "maths/vector4.h"
 #include "maths/matrix44.h"
 #include "graphics/mesh_instance.h"
-
 #include <queue>
 
 enum class EffectState { NORMAL, SHAKE, WARP };

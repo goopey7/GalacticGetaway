@@ -16,7 +16,6 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 {
 	audio_manager_ = am;
 	sprite_animator_ = sprite_animator;
-	size_y_ = size_y;
 	player_ = player;
 	tag = Tag::Enemy;
 	platform_ = sprite_animator->GetPlatform();
@@ -51,13 +50,10 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 	dynamic_game_objects_ = &dynamic_game_objects;
 	primitive_builder_ = builder;
 
-	//const float random_float_between_0_and_1 = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+	//Decide if this enemy will drop loot and if so, what
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution dist(0.f, 1.f);
-	float chance = dist(gen);
-	gef::DebugOut("\nchance: ");
-	gef::DebugOut(std::to_string(chance).c_str());
 	if(dist(gen) < drop_probability_)
 	{
 		auto pos = GetBody()->GetPosition();
@@ -108,7 +104,6 @@ void Enemy::Update(float frame_time)
 
 		// Raycast to check if player is in range
 		b2Vec2 cast_start = GetBody()->GetPosition();
-		//b2Vec2 cast_end = cast_start + (moving_left_ ? -1 : 1)*b2Vec2(player_detection_range_, 0.f);
 		b2Vec2 direction = player_->GetBody()->GetPosition() - GetBody()->GetPosition();
 		direction.Normalize();
 		b2Vec2 cast_end = cast_start + b2Vec2(direction.x * player_detection_range_, direction.y * player_detection_range_);
@@ -116,29 +111,23 @@ void Enemy::Update(float frame_time)
 		closest_fraction_ = 1.f;
 		closest_fixture_ = nullptr;
 		physics_world_->RayCast(this, cast_start, cast_end);
-		InspectClosestFixture();
+		InspectClosestFixture(); //Check if player was the closest object intersected by the ray
 
-		//if(!bSawPlayer || !bPlayerInRange_)
-		if (!bPlayerInRange_)
+		if (!bPlayerInRange_) //If player not in range run back and forth in direction depending on gravity direction
 		{
-			// TODO Movement depending on gravity. Maybe move like red Koopas?
 			animation_state_ = RUNNING;
 			switch (world_gravity_direction_)
 			{
 			case GravityDirection::GRAVITY_UP:
-				//...
 				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2((moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time, 0), gef::DegToRad(180));
 				break;
 			case GravityDirection::GRAVITY_DOWN:
-				//...
 				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2((moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time, 0), 0);
 				break;
 			case GravityDirection::GRAVITY_LEFT:
-				//...
 				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? 1.f : -1.f) * move_speed_ * frame_time), gef::DegToRad(-90));
 				break;
 			case GravityDirection::GRAVITY_RIGHT:
-				//...
 				physics_body_->SetTransform(physics_body_->GetPosition() + b2Vec2(0, (moving_left_ ? -1.f : 1.f) * move_speed_ * frame_time), gef::DegToRad(90));
 				break;
 			}
@@ -147,6 +136,7 @@ void Enemy::Update(float frame_time)
 		}
 		else
 		{
+			//Stop and shoot player
 			animation_state_ = IDLE;
 			b2Vec2 dir = player_->GetBody()->GetPosition() - GetBody()->GetPosition();
 			gun_.SetTargetVector({ dir.x,-dir.y });
@@ -161,6 +151,7 @@ void Enemy::Update(float frame_time)
 
 	}
 
+	//Animation
 	anim_time_ += frame_time;
 	switch (animation_state_)
 	{
@@ -193,6 +184,7 @@ float Enemy::ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2
 	return 1;
 }
 
+
 void Enemy::InspectClosestFixture() {
 	if (closest_fixture_) {
 		auto* object = reinterpret_cast<::GameObject*>(closest_fixture_->GetBody()->GetUserData().pointer);
@@ -204,7 +196,6 @@ void Enemy::InspectClosestFixture() {
 				if (closest_fraction_ <= 1.f)
 				{
 					bPlayerInRange_ = true;
-					//bSawPlayer = true;
 				}
 			}
 		}
@@ -244,5 +235,4 @@ void Enemy::Render(gef::Renderer3D* renderer_3d) const
 {
 	renderer_3d->DrawMesh(*this);
 	gun_.Render(renderer_3d);
-	//bullet_manager_.Render(renderer_3d);
 }

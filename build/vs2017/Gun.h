@@ -26,7 +26,6 @@ protected:
 	virtual void decreaseLoaded() { ammo_loaded_--; }
 	virtual float GetFireRate() { return fire_rate_; }
 	void UpdateTransform(gef::Vector4 translation, GravityDirection grav_dir);
-	gef::Vector4 WorldToScreen(const gef::Vector4 pos, gef::Platform* platform);
 	gef::Vector2 target_vector_;
 
 	float fire_time_ = 0;
@@ -36,7 +35,7 @@ protected:
 	gef::AudioManager* am_;
 private:
 
-	int ammo_reserve_ = INT_MAX;
+	int ammo_reserve_ = INT_MAX; //Default (enemies) have infinite ammo
 	int ammo_loaded_ = INT_MAX;
 	int damage_ = 1;
 	float fire_rate_ = 1;

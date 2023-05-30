@@ -32,29 +32,18 @@ protected:
 
 	b2World* physics_world_ = nullptr;
 	b2Vec2 world_gravity_ = b2Vec2(0, -1);
-	float world_grav_mult = 10;
-	bool grav_strength_changed_ = false;
-	float grav_strength_change_time = 2;
 
-	bool gravity_lock_ = false;
-	bool jumping_ = false;
-	//enum GravityDirection { GRAVITY_UP, GRAVITY_DOWN, GRAVITY_LEFT, GRAVITY_RIGHT };
 	GravityDirection world_gravity_direction_ = GravityDirection::GRAVITY_DOWN;
 	const gef::Platform* platform_;
 
 	const ::Player* player_ = nullptr;
 	bool bPlayerInRange_ = false;
-	bool bSawPlayer = false;
 	float player_detection_range_ = 10.f;
 	float closest_fraction_ = 1.0f;
 	b2Fixture* closest_fixture_ = nullptr;
 
-	
-	//BulletManager bullet_manager_;
-	//float fire_timer_ = 0.f;
 	Gun gun_;
 
-	float size_y_ = 0.f;
 	Pickup* pickup_ = nullptr;
 
 	enum AnimationState { IDLE, RUNNING, DEATH };

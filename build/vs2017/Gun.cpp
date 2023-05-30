@@ -36,17 +36,11 @@ void Gun::UpdateTransform(gef::Vector4 translation, GravityDirection grav_dir) {
 
 	gef::Matrix44 translate1;
 	translate1.SetIdentity();
-	//if (grav_dir == GravityDirection::GRAVITY_UP) {
-	//	
-	//}
-	//else {
-	//	
-	//}
 	
-	switch (grav_dir)
+	switch (grav_dir) //Depending on gravity direction, player/enemy will be transformed differently, so have to transform gun to look right
 	{
 	case GravityDirection::GRAVITY_UP:
-		translate1.SetTranslation(gef::Vector4(0, -1.f, (angle <= 0) ? 0.1 : -0.1));
+		translate1.SetTranslation(gef::Vector4(0, -1.f, (angle <= 0) ? 0.1 : -0.1)); //Depending on angle, gun flipped so it looks like it's being held the right way up
 		if (angle > 0) {
 			gef::Matrix44 rotation_y;
 			rotation_y.RotationY(FRAMEWORK_PI);
@@ -80,9 +74,6 @@ void Gun::UpdateTransform(gef::Vector4 translation, GravityDirection grav_dir) {
 	default:
 		break;
 	}
-
-
-
 
 	gef::Matrix44 translate2;
 	translate2.SetIdentity();
@@ -119,13 +110,4 @@ void Gun::Render(gef::Renderer3D* renderer_3d) const
 
 Gun::~Gun()
 {
-}
-
-gef::Vector4 Gun::WorldToScreen(const gef::Vector4 pos, gef::Platform* platform) {
-	gef::Vector4 screen_pos = pos;
-	gef::DebugOut(("\npos: " + std::to_string(pos.x()) + ", " + std::to_string(pos.y())).c_str());
-	screen_pos *= 33;
-	screen_pos += gef::Vector4(platform->width() * 0.5f, -platform->height() * 0.5f, 0);
-	screen_pos.set_y(-screen_pos.y());
-	return screen_pos;
 }
