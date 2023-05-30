@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <map>
-
+#include <vector>
 #include "CollisionManager.h"
 #include "Player.h"
 #include "Scene.h"
@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "graphics/scene.h"
 #include "Door.h"
+#include "Image.h"
 
 class Menu;
 class Text;
@@ -53,7 +54,6 @@ private:
 	enum HudElement
 	{
 		Ammo,
-		Health,
 		EndText
 	};
 	void Init();
@@ -79,6 +79,7 @@ private:
 
 	//HUD
 	std::map<HudElement, Text*> hud_text_;
+	std::vector<Image> healthbar_;
 
 	Menu* pause_menu_ = nullptr;
 	bool is_paused_ = false;
