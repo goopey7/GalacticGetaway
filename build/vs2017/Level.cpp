@@ -128,6 +128,9 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 
 				for(const auto& obj : layer["objects"])
 				{
+					if(!obj.contains("properties"))
+						continue;
+					
 					std::string type = std::find_if(obj["properties"].begin(), obj["properties"].end(), [](const json& element)
 						{ return element["name"] == "type"; }).value()["value"];
 
@@ -206,6 +209,9 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 				crate_mesh = obj_loader.GetMesh(MeshResource::Crate, scale);
 				for(const auto& object : layer["objects"])
 				{
+					if(!object.contains("properties"))
+						continue;
+					
 					std::string type = std::find_if(object["properties"].begin(), object["properties"].end(), [](const json& element)
 						{ return element["name"] == "type";}).value()["value"];
 					
