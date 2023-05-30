@@ -257,7 +257,7 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 							{ return element["name"] == "fussy"; }).value()["value"];
 						
 						plate->Init(object["width"]/2.f,0.f,1.f,object["x"] + object["width"]/2.f, (-(float)object["y"]), b2_world_, primitive_builder_, sprite_renderer_, font_, threshold, platform_, fussy);
-						plate->SetOnActivate([this, door_ID]{ door_objects_[door_ID]->Open(); });
+						plate->SetOnActivate([this, door_ID] { door_objects_[door_ID]->Open(); gef::DebugOut("\n"); gef::DebugOut(std::to_string(door_ID).c_str()); });
 						plate->SetOnDeactivate([this, door_ID] { door_objects_[door_ID]->Close(); });
 						static_game_objects_.push_back(plate);
 					}
@@ -379,13 +379,13 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 		
 		if(end_state_ == WIN)
 		{
-			if(std::string(file_name_) == std::string("lvl_3.json"))
+			if(std::string(file_name_) == std::string("lvl_4.json"))
 			{
-				end->AddUIElement(new Text({ 0.5,0.25 }, "Thanks For Playing!"));
+				end->AddUIElement(new Text({ 0.5,0.3 }, "Thanks For Playing!"));
 			}
 			else
 			{
-				end->AddUIElement(new Text({ 0.5,0.25 }, "Level Complete"));
+				end->AddUIElement(new Text({ 0.5,0.3 }, "Level Complete"));
 				Button* nextLevelButton = new Button({ 0.5,0.5 }, *platform_, "Next Level", 200.f, 50.f, gef::Colour(1, 1, 1, 0.5f));
 
 				std::string nlf = file_name_;
