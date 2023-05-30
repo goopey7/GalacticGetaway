@@ -87,8 +87,15 @@ PlayerGun::~PlayerGun()
 {
 }
 
-void PlayerGun::maxAmmo()
+void PlayerGun::addAmmo()
 {
-	ammo_loaded_ = max_ammo_loaded_;
-	ammo_reserve_ = max_ammo_reserve_;
+	int to_add = 50;
+	if (ammo_loaded_ < max_ammo_loaded_) {
+		to_add -= ammo_loaded_;
+		ammo_loaded_ = max_ammo_loaded_;
+	}
+	if (ammo_reserve_ < max_ammo_reserve_) {
+		ammo_reserve_ += to_add;
+		if (ammo_reserve_ > max_ammo_reserve_) ammo_reserve_ = max_ammo_reserve_;
+	}
 }

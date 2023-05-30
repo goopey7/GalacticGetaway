@@ -232,7 +232,7 @@ void Enemy::BeginCollision(GameObject* other)
 				{
 					pickup_->Activate();
 				}
-				audio_manager_->PlaySample(5);
+				if(!audio_manager_->sample_voice_playing(5)) audio_manager_->PlaySample(5);
 				animation_state_ = DEATH;
 				set_mesh(sprite_animator3D_->GetFirstFrame("EnemyDeath"));
 			}

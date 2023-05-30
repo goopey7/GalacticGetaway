@@ -76,13 +76,14 @@ void Pickup::BeginCollision(GameObject* other)
 		auto* player = dynamic_cast<Player*>(other);
 		if(type_ == MaxAmmo)
 		{
-			player->GetGun()->maxAmmo();
-			audio_manager_->PlaySample(0);
+			player->GetGun()->addAmmo();
+			if(player->GetGun()->isMax()) audio_manager_->PlaySample(1);
+			else audio_manager_->PlaySample(0);
 		}
 		else if(type_ == Health)
 		{
-			player->Heal(5);
-			audio_manager_->PlaySample(1);
+			player->Heal(3);
+			audio_manager_->PlaySample(0);
 		}
 		Kill();
 	}

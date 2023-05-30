@@ -15,7 +15,8 @@ public:
 	bool getReloading() const { return reloading_; }
 	void setReloading(bool r) { reloading_ = r; }
 	~PlayerGun();
-	void maxAmmo();
+	void addAmmo();
+	bool isMax() { return (ammo_reserve_ == max_ammo_reserve_ && ammo_loaded_ == max_ammo_loaded_); }
 
 protected:
 	void reloadThreadFunc();

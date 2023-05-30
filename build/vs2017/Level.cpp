@@ -116,10 +116,6 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 		gef::DebugOut("\n");
 	}
 
-
-	/*scene_loader_.ReadSceneFromFile(*platform_, "Models/Window/window.scn");
-	scene_loader_.CreateMaterials(*platform_);
-	scene_loader_.CreateMeshes(*platform_);*/
 	if (!obj_loader.Load(MeshResource::Window, "Models/Window2/window.obj", "defaultMaterial.001", *platform_))
 	{
 		gef::DebugOut(obj_loader.GetLastError().c_str());

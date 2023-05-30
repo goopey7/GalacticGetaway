@@ -253,13 +253,11 @@ void Player::BeginCollision(GameObject* other) {
 	{
      	Bullet* bullet = dynamic_cast<Bullet*>(other);
 		if (bullet->getTarget() == GameObject::Tag::Player && bullet->getDamage() > 0) {
-			audio_manager_->PlaySample(4);
+			if (!audio_manager_->sample_voice_playing(4)) audio_manager_->PlaySample(4);
 			if(health_ > 0)
 			{
 				health_--;
 			}
-			gef::DebugOut("\nhealth: ");
-			gef::DebugOut(std::to_string(health_).c_str());
 		}
 		if (health_ <= 0) {
 			animation_state_ = DEATH;

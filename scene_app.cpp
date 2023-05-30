@@ -40,7 +40,7 @@ void SceneApp::Init()
 	renderer_3d_ = gef::Renderer3D::Create(platform_);
 
 	audio_manager_ = gef::AudioManager::Create();
-	audio_manager_->LoadSample("sounds/MaxAmmo.ogg", platform_); // made in house
+	audio_manager_->LoadSample("sounds/pickup.ogg", platform_); // made in house
 	gef::VolumeInfo volume_info;
 	audio_manager_->GetSampleVoiceVolumeInfo(0, volume_info);
 	volume_info.volume = 200.f;
