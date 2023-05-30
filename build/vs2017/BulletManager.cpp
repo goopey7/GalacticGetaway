@@ -27,7 +27,7 @@ void BulletManager::Update(float frame_time)
 
 void BulletManager::Fire(gef::Vector2 target_vector, gef::Vector2 start_pos, int damage, GameObject::Tag target, float speed) {
 	bullets_.push_back(new Bullet);
-	bullets_.back()->Init(0.2, 0.1, 0.1, 0, 0, world_, builder_, am_, true);
+	bullets_.back()->Init(0.1, 0.5, 0.1, 0, 0, world_, builder_, am_, true);
 	bullets_.back()->GetBody()->SetGravityScale(0.f);
 	bullets_.back()->Fire(target_vector, start_pos, damage, target, speed);
 }

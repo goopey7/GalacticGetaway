@@ -1,4 +1,5 @@
 #include "Bullet.h"
+#include <cmath>
 
 #include "system/debug_log.h"
 
@@ -15,8 +16,9 @@ void Bullet::Fire(gef::Vector2 target_vector, gef::Vector2 start_pos, int damage
 	b2Vec2 b2_target_vector(target_vector.x * speed, -target_vector.y * speed);
 	b2Vec2 b2_start_pos(start_pos.x, start_pos.y);
 	setAlive(true);
+	Translate(gef::Vector4(0, 0, -0.1));
 	physics_body_->SetEnabled(true);
-	physics_body_->SetTransform(b2_start_pos, 0);
+	physics_body_->SetTransform(b2_start_pos, atan2(target_vector.x, target_vector.y));
 	//physics_body_->ApplyLinearImpulseToCenter(b2_target_vector, true);
 	physics_body_->SetLinearVelocity({b2_target_vector.x, b2_target_vector.y});
 	EnableCollisionResolution(bCollisionEnabled);
