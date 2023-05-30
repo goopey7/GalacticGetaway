@@ -62,7 +62,7 @@ void Enemy::Init(float size_x, float size_y, float size_z, float pos_x, float po
 	{
 		auto pos = GetBody()->GetPosition();
 		pickup_ = new Pickup();
-		if(dist(gen) < 0.7f)
+		if(dist(gen) < 0.5f)
 		{
 			pickup_->SetType(Pickup::Type::Health);
 			pickup_->set_mesh(sprite_animator3D_->CreateMesh("Pickups/Health/health.png", gef::Vector4(0.5, 0.5, 1)));
