@@ -189,7 +189,7 @@ void SceneApp::Init()
 	Menu* menu = new Menu(platform_, *state_manager_, false);
 	menu->AddUIElement(menuBkg_img);
 	state_manager_->SetMainMenu(menu);
-	//menu->AddUIElement(new Text({0.5,0.25}, "Galactic Getaway"));
+	menu->AddUIElement(new Text({0.5,0.27}, "Pirates are attacking. reach and repair your hyperdrive to make a"));
 
 	gef::Sprite* logo = new gef::Sprite();
 	gef::ImageData logo_image_data("logo.png");
