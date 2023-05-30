@@ -2,14 +2,16 @@
 
 #include <sstream>
 
+#include "audio/audio_manager.h"
 #include "graphics/font.h"
 #include "graphics/renderer_3d.h"
 #include "graphics/sprite_renderer.h"
 
 void PressurePlate::Init(float size_x, float size_y, float size_z, float pos_x, float pos_y, b2World* world, PrimitiveBuilder* builder, gef::
 						SpriteRenderer* sr, gef::Font* font, float
-						threshold, gef::Platform* platform, bool is_fussy)
+						threshold, gef::Platform* platform, gef::AudioManager* am, bool is_fussy)
 {
+	audio_manager_ = am;
 	platform_ = platform;
 	sprite_renderer_ = sr;
 	font_ = font;
@@ -55,6 +57,10 @@ void PressurePlate::Update(float frame_time)
 	{
 		current_load_ = 0.f;
 		on_deactivate_();
+		if(wasActivated)
+		{
+			audio_manager_->PlaySample(6);
+		}
 		return;
 	}
 	
@@ -65,10 +71,12 @@ void PressurePlate::Update(float frame_time)
 
 	if(!wasActivated && ((current_load_ >= threshold_ && !is_fussy_) || (current_load_ == threshold_ && is_fussy_)))
 	{
+		audio_manager_->PlaySample(6);
 		on_activate_();
 	}
 	else if(wasActivated && (current_load_ < threshold_ || (current_load_ != threshold_ && is_fussy_)))
 	{
+		audio_manager_->PlaySample(6);
 		on_deactivate_();
 	}
 }
@@ -83,9 +91,9 @@ void PressurePlate::Render(gef::Renderer3D* renderer_3d) const
 }
 
 void PressurePlate::Init(gef::Vector4 size, gef::Vector4 pos, b2World* world, PrimitiveBuilder* builder, float threshold, gef::SpriteRenderer*
-						sr, gef::Font* font, gef::Platform* platform_, bool is_fussy)
+						sr, gef::Font* font, gef::Platform* platform, gef::AudioManager* am, bool is_fussy)
 {
-	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, builder, sr, font, threshold, platform_, is_fussy);
+	Init(size.x(), size.y(), size.z(), pos.x(), pos.y(), world, builder, sr, font, threshold, platform, am, is_fussy);
 }
 
 void PressurePlate::TraverseContactChain(GameObject* game_object, std::set<GameObject*>& visited_objects, float& total_weight)

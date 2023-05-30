@@ -62,14 +62,12 @@ void Door::Open() {
 	start_pos_ = door_->transform().GetTranslation();
 	lerp_time_ = 0.f;
 	current_state_ = State::OPENING;
-	if (!audio_manager_->sample_voice_playing(6)) audio_manager_->PlaySample(6);
 }
 
 void Door::Close() {
 	start_pos_ = door_->transform().GetTranslation();
 	lerp_time_ = 0.f;
 	current_state_ = State::CLOSING;
-	if (!audio_manager_->sample_voice_playing(6)) audio_manager_->PlaySample(6);
 }
 
 void Door::Render(gef::Renderer3D* renderer_3d) const {
