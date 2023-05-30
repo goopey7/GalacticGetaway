@@ -47,7 +47,6 @@ void SceneApp::Init()
 	audio_manager_->SetSampleVoiceVolumeInfo(0, volume_info);
 	audio_manager_->LoadSample("sounds/MaxAmmo.ogg", platform_);
 	audio_manager_->SetSampleVoiceVolumeInfo(1, volume_info);
-	//audio_manager_->LoadSample("sounds/Health.ogg", *platform_);
 	audio_manager_->LoadSample("sounds/lazer.ogg", platform_); // found here: https://www.soundfishing.eu/sound/laser-gun
 	audio_manager_->LoadSample("sounds/enemy_lazer.ogg", platform_); // found here: https://www.soundfishing.eu/sound/laser-gun
 	audio_manager_->LoadSample("sounds/player_death.ogg", platform_); // found here: https://pixabay.com/sound-effects/search/death/?pagi=2
@@ -243,18 +242,6 @@ void SceneApp::Init()
 	});
 	pause->AddUIElement(mainMenuButton);
 
-
-	//Level* next_level = new Level(platform_, *state_manager_);
-
-	
-	//level_->GetB2World()->SetAllowSleeping(false);
-
-	// setup the player and crate
-
-	/*
-	crate_.Init(0.6f, 0.6f, 0.6f, 10, 4, level_->GetB2World(), level_->GetPrimitiveBuilder(), true);
-	*/
-
 	InitFont();
 	SetupLights();
 }
@@ -262,11 +249,6 @@ void SceneApp::Init()
 void SceneApp::CleanUp()
 {
 	CleanUpFont();
-
-	/*
-	delete level_->GetPrimitiveBuilder();
-	level_->GetPrimitiveBuilder() = NULL;
-	*/
 
 	delete renderer_3d_;
 	renderer_3d_ = NULL;
@@ -278,28 +260,12 @@ void SceneApp::CleanUp()
 bool SceneApp::Update(float frame_time)
 {
 	// CAUSES MEMORY LEAK
-	/*
-	if(platform_d3d_)
-	{
-		RECT rect;
-		GetClientRect(platform_d3d_->hwnd(), &rect);
-		float width = rect.right - rect.left;
-		float height = rect.bottom - rect.top;
-		if(currentWidth != width || currentHeight != height)
-		{
-			platform_d3d_->Resize(width, height);
-			sprite_renderer_->set_projection_matrix(platform_.OrthographicFrustum(0.0f, (float)platform_.width(), 0.0f, (float)platform_.height(), -1.0f, 1.0f));
-		}
-	}
-	*/
 
 	iam_->Update();
-	//if (iam_->isPressed(Quit)) return false;
 
 	fps_ = 1.0f / frame_time;
 
 	state_manager_->Update(iam_, frame_time);
-	//crate_.Update();
 
 	return should_run_;
 }
