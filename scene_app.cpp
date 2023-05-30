@@ -52,7 +52,7 @@ void SceneApp::Init()
 	audio_manager_->LoadSample("sounds/enemy_lazer.ogg", platform_); // found here: https://www.soundfishing.eu/sound/laser-gun
 	audio_manager_->LoadSample("sounds/player_death.ogg", platform_); // found here: https://pixabay.com/sound-effects/search/death/?pagi=2
 	audio_manager_->LoadSample("sounds/enemy_death.ogg", platform_); // found here: https://pixabay.com/sound-effects/search/death/?pagi=2
-	audio_manager_->LoadSample("sounds/door.ogg", platform_); // found here: https://pixabay.com/sound-effects/search/death/?pagi=2
+	audio_manager_->LoadSample("sounds/door.ogg", platform_); // found here: https://pixabay.com/sound-effects/search/spaceship-doors/
 
 	// initialise input action manager
 	iam_ = new InputActionManager(platform_);
