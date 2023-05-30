@@ -89,13 +89,13 @@ void SceneApp::Init()
 	splash_screen->AddUIElement(splash_img);
 	state_manager_->SetSplashScreen(splash_screen);
 	
-	gef::Sprite* logo2_sprite = new gef::Sprite();
+	/*gef::Sprite* logo2_sprite = new gef::Sprite();
 	gef::ImageData menu_image_data("musician.png");
 	logo2_sprite->set_texture(gef::Texture::Create(platform_, menu_image_data));
 	logo2_sprite->set_width(menu_image_data.width());
 	logo2_sprite->set_height(menu_image_data.height());
 	Image* logo2 = new Image({0.5,0.5}, logo2_sprite, platform_);
-	splash_screen->AddUIElement(logo2);
+	splash_screen->AddUIElement(logo2);*/
 	
 	// SETTINGS MENU
 	Menu* settings_menu = new Menu(platform_, *state_manager_, false);
@@ -197,7 +197,16 @@ void SceneApp::Init()
 	Menu* menu = new Menu(platform_, *state_manager_, false);
 	menu->AddUIElement(menuBkg_img);
 	state_manager_->SetMainMenu(menu);
-	menu->AddUIElement(new Text({0.5,0.25}, "Galactic Getaway"));
+	//menu->AddUIElement(new Text({0.5,0.25}, "Galactic Getaway"));
+
+	gef::Sprite* logo = new gef::Sprite();
+	gef::ImageData logo_image_data("logo.png");
+	logo->set_texture(gef::Texture::Create(platform_, logo_image_data));
+	logo->set_width(logo_image_data.width());
+	logo->set_height(logo_image_data.height());
+	Image* logo_img = new Image({ 0.5,0.35 }, logo, platform_);
+	menu->AddUIElement(logo_img);
+
 	Button* menuStartButton = new Button({0.5,0.5}, platform_, "Start", 200.f, 50.f, gef::Colour(1,1,1,1));
 	Button* menuSettingsButton = new Button({0.5,0.6}, platform_, "Settings", 200.f, 50.f, gef::Colour(1,1,1,1));
 	Button* quitButton = new Button({0.5,0.7}, platform_, "Quit", 200.f, 50.f, gef::Colour(1,0,0,1));

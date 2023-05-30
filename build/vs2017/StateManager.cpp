@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "SplashScreen.h"
 #include "audio/audio_manager.h"
+#include "system/debug_log.h"
 
 StateManager::StateManager(LoadingScreen* loading_screen, bool* should_run, gef::AudioManager* audio_manager, gef::Platform* platform)
 	: loading_screen_(loading_screen),
@@ -36,6 +37,9 @@ void StateManager::Update(InputActionManager* iam, float frame_time)
 		{
 			main_menu_fade_timer_ += frame_time;
 			main_menu_alpha_ = main_menu_fade_timer_ / main_menu_fade_speed_;
+			if (main_menu_alpha_ > 1.0f) main_menu_alpha_ = 1.0f;
+			/*gef::DebugOut("\n");
+			gef::DebugOut(std::to_string(main_menu_alpha_).c_str());*/
 			main_menu_->SetAlpha(main_menu_alpha_);
 		}
 		else
