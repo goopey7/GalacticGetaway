@@ -53,11 +53,8 @@ void PressurePlate::Update(float frame_time)
 	
 	if(GetBody()->GetContactList() == nullptr)
 	{
-		if(wasActivated)
-		{
-			current_load_ = 0.f;
-			on_deactivate_();
-		}
+		current_load_ = 0.f;
+		on_deactivate_();
 		return;
 	}
 	
