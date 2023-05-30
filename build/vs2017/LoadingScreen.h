@@ -1,14 +1,16 @@
 ﻿#pragma once
 #include "Scene.h"
 #include "graphics/sprite.h"
+#include "SpriteAnimator3D.h"
 
 class LoadingScreen : public Scene
 {
 	public:
     	LoadingScreen(gef::Platform& platform, StateManager& state_manager) : Scene(platform, state_manager)
     	{
-			sprite_.set_width(20);
-			sprite_.set_height(20);
+			sprite_.set_width(50);
+			sprite_.set_height(50);
+			sprite_.set_texture(SpriteAnimator3D::CreateTexture("loading.png", &platform));
     		offsets_.push_back(-spacing_);
     		offsets_.push_back(0);
     		offsets_.push_back(spacing_);
