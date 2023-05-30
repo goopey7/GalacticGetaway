@@ -81,7 +81,7 @@ void SceneApp::Init()
 	splash_screen->AddUIElement(new Text({0.5,0.5}, "DarkSpace Studios Presents", platform_));
 	
 	gef::Sprite* splash1 = new gef::Sprite();
-	gef::ImageData image_data("gg.png");
+	gef::ImageData image_data("menu_images/gg.png");
 	splash1->set_texture(gef::Texture::Create(platform_, image_data));
 	splash1->set_width(image_data.width()/2.f);
 	splash1->set_height(image_data.height()/2.f);
@@ -189,10 +189,10 @@ void SceneApp::Init()
 	Menu* menu = new Menu(platform_, *state_manager_, false);
 	menu->AddUIElement(menuBkg_img);
 	state_manager_->SetMainMenu(menu);
-	menu->AddUIElement(new Text({0.5,0.27}, "Pirates are attacking. reach and repair your hyperdrive to make a"));
+	menu->AddUIElement(new Text({0.5,0.27}, "Pirates are attacking! reach and repair your hyperdrive to make a"));
 
 	gef::Sprite* logo = new gef::Sprite();
-	gef::ImageData logo_image_data("logo.png");
+	gef::ImageData logo_image_data("menu_images/logo.png");
 	logo->set_texture(gef::Texture::Create(platform_, logo_image_data));
 	logo->set_width(logo_image_data.width());
 	logo->set_height(logo_image_data.height());

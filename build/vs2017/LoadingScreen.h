@@ -10,7 +10,7 @@ class LoadingScreen : public Scene
     	{
 			sprite_.set_width(50);
 			sprite_.set_height(50);
-			sprite_.set_texture(SpriteAnimator3D::CreateTexture("loading.png", &platform));
+			sprite_.set_texture(SpriteAnimator3D::CreateTexture("menu_images/loading.png", &platform));
     		offsets_.push_back(-spacing_);
     		offsets_.push_back(0);
     		offsets_.push_back(spacing_);
