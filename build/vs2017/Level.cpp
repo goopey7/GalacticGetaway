@@ -23,6 +23,8 @@
 #include "Button.h"
 #include "audio/audio_manager.h"
 #include "input/input_manager.h"
+#include "graphics/image_data.h"
+#include "graphics/texture.h"
 
 using nlohmann::json;
 
@@ -59,6 +61,30 @@ void Level::LoadFromFile(const char* filename, LoadingScreen* loading_screen, OB
 	camera_.GetBackground()->set_mesh(sprite_animator3D_->CreateMesh("space.png", gef::Vector4(960, 540, 0)));
 	
 	
+	loading_screen->SetStatusText("Loading SFX...");
+	audio_manager_->LoadSample("sounds/MaxAmmo.ogg", *platform_); // made in house
+	gef::VolumeInfo volume_info;
+	audio_manager_->GetSampleVoiceVolumeInfo(0, volume_info);
+	volume_info.volume = 200.f;
+	audio_manager_->SetSampleVoiceVolumeInfo(0, volume_info);
+	audio_manager_->LoadSample("sounds/MaxAmmo.ogg", *platform_);
+	audio_manager_->SetSampleVoiceVolumeInfo(1, volume_info);
+	//audio_manager_->LoadSample("sounds/Health.ogg", *platform_);
+	audio_manager_->LoadSample("sounds/lazer.ogg", *platform_); // found here: https://www.soundfishing.eu/sound/laser-gun
+	audio_manager_->LoadSample("sounds/enemy_lazer.ogg", *platform_); // found here: https://www.soundfishing.eu/sound/laser-gun
+	audio_manager_->LoadSample("sounds/player_death.ogg", *platform_); // found here: https://pixabay.com/sound-effects/search/death/?pagi=2
+	audio_manager_->LoadSample("sounds/enemy_death.ogg", *platform_); // found here: https://pixabay.com/sound-effects/search/death/?pagi=2
+
+	loading_screen->SetStatusText("Loading HUD...");
+	gef::ImageData image_data("UI/heart.png");
+	for (int i = 0; i < 10; i++) {
+		gef::Sprite* heart = new gef::Sprite();
+		heart->set_texture(gef::Texture::Create(*platform_, image_data));
+		heart->set_width(50);
+		heart->set_height(50);
+		healthbar_.push_back(Image({ 0.1, 0.1 }, heart, *platform_));
+		healthbar_.back().GetSprite()->set_position(healthbar_.back().GetSprite()->position() + gef::Vector4(i * 60, 0, 0));
+	}
 	
 	// LOAD 3D MODELS
 	loading_screen->SetStatusText("Loading 3D meshes...");
@@ -315,7 +341,6 @@ void Level::Init()
 	sprite_animator3D_->Init();
 
 	hud_text_[Ammo] = new Text({0.88f, 0.93f}, "", *platform_);
-	hud_text_[Health] = new Text({0.88f, 0.85f}, "", *platform_);
 	hud_text_[EndText] = new Text({0.5f, 0.5f}, "", *platform_);
 }
 
@@ -470,10 +495,6 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 		}
 		hud_text_[Ammo]->UpdateText(ammoOss.str());
 
-		std::ostringstream healthOss;
-		healthOss << "Health: " << player_.GetHealth();
-		hud_text_[Health]->UpdateText(healthOss.str());
-
 		std::ostringstream endOss;
 		if(player_.GetTouchingEnd())
 		{
@@ -488,9 +509,11 @@ void Level::Update(InputActionManager* iam_, float frame_time)
 		camera_.Update(frame_time, getPlayerPosition());
 
 		if (camera_.GetEffectState() != EffectState::NORMAL) {
-			gef::ControllerOutputData out_data = iam_->getInputManager()->controller_input()->GetController(0)->get_output_data();
+			const gef::SonyController* controller = iam_->getInputManager()->controller_input()->GetController(0);
+			gef::ControllerOutputData out_data = controller->get_output_data();
 			if (camera_.GetEffectState() == EffectState::SHAKE) out_data.left_rumble = 0.6f;
 			else if (camera_.GetEffectState() != EffectState::WARP)  out_data.right_rumble = 0.6f;
+			controller->set_output_data(out_data);
 		}
 	}
 	else if(pause_menu_ != nullptr)
@@ -551,6 +574,11 @@ void Level::Render(gef::Renderer3D* renderer_3d, gef::SpriteRenderer* sprite_ren
 		for(auto hud : hud_text_)
 		{
 			hud.second->Render(sprite_renderer, font);
+		}
+		if (!healthbar_.empty()) {
+			for (int i = 0; i < player_.GetHealth(); i++) {
+				healthbar_[i].Render(sprite_renderer, font);
+			}
 		}
 	sprite_renderer->End();
 	if(is_paused_ && pause_menu_ != nullptr)
