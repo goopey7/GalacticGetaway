@@ -1,8 +1,9 @@
-# galactic_getaway
+# Galactic Getaway
 ### CMP208 Final Coursework
-a polished 2D puzzle-platformer
-![Screenshot](https://cdn.discordapp.com/attachments/526352803321610250/1172519134408478761/Screenshot_2023-11-10_12-52-50.png?ex=65609c89&is=654e2789&hm=f9784d0baa45e0f4eec7410f8dc490e53d10a19927b7b9e08afe03eb96800ffe&)
-Developed by Sam Collier and George Fyles
+a polished 2D puzzle-platformer developed by Sam Collier and George Fyles
+
+## Video
+[![Video](https://cdn.discordapp.com/attachments/526352803321610250/1172519134408478761/Screenshot_2023-11-10_12-52-50.png?ex=65609c89&is=654e2789&hm=f9784d0baa45e0f4eec7410f8dc490e53d10a19927b7b9e08afe03eb96800ffe&)](https://www.youtube.com/watch?v=e5uoP1604do)
 
 # References
 ## Visual Art
@@ -34,3 +35,4 @@ Casey, K. (2021). Deception. On White Bat IV [Audio recording]. Available at: ka
 
 ## Additional CPP Libraries
 Lohmann, N. (2013). Json for Modern C++ [Software]. Available at: https://github.com/nlohmann/json
+
