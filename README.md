@@ -23,13 +23,13 @@ Flixberry Entertainment (2017) Heart Pixel Art. Available at: opengameart.org/co
 wwwtyro.net (no date) Space 3D. Available at : tools.wwwtyro.net/space-3d/index.html (Accessed: 27 May 2023).
 Logo created using FlamingText: flamingtext.com/ (Accessed: 29 May 2023)
 
-### SFX
+## SFX
 Soundfishing.eu. (no date). Laser Gun. Available at: soundfishing.eu/sound/laser-gun (Accessed: 28 May 2023)
 Pixabay. (no date). Death Sound Effects (Page 2). Available at: pixabay.com/sound-effects/search/death/?pagi=2 (Accessed: 28 May 2023)
 Pixabay. (no date). Spaceship Doors Sound Effects. Available at: pixabay.com/sound-effects/search/spaceship-doors/ (Accessed: 28 May 2023)
 
-### Music
+## Music
 Casey, K. (2021). Deception. On White Bat IV [Audio recording]. Available at: karlcasey.bandcamp.com/track/deception (Accessed: 28 May 2023)
 
-### Additional CPP Libraries
+## Additional CPP Libraries
 Lohmann, N. (2013). Json for Modern C++ [Software]. Available at: https://github.com/nlohmann/json
