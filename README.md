@@ -11,23 +11,35 @@ Fotor. (2023, May 29). A blue and white astronaut running away from green humano
 
 ## 3D Models
 Andreas9343 (2019) Sci-fi cargo crate. Available at: skfb.ly/6RQZr (Accessed 27 May 2023)
+
 Forest_cat (2018) Sci Fi Crate 1. Available at: skfb.ly/6vFLH (Accessed 26 May 2023)
+
 Inuhitman (2021) Sci Fi Remote Conrol 00. Available at: https://skfb.ly/6YxxB (Accessed: 29 May 2023)
+
 Kraffing Studio (2021) Reactor. Available at: skfb.ly/o7ELR (Accessed: 28 May 2023)
+
 Poole (2019) Sci-fi Crate V2. Available at: https://skfb.ly/6TNVo (Accessed: 21 March 2023)
+
 TooManyDemons (2021) Sci-Fi Door Opening Animation. Available at: skfb.ly/opVqY (Accessed 27 May 2023)
 
 ## Sprites and UI
 Iconian Fonts (2013) Space Ranger. Available at: dafont.com/space-ranger.font (Accessed 29 May 2023)
+
 MattWalkden (2020) Space Runner Asset Pack. Available at: mattwalkden.itch.io/free-space-runner-pack (Accessed 26 February 2023)
+
 MMJP (2019) Bullet?. Available at reddit.com/r/PixelArt/comments/dx8oyi/bullet/ (Accessed 29 May 2023)
+
 Flixberry Entertainment (2017) Heart Pixel Art. Available at: opengameart.org/content/heart-pixel-art (Accessed 29 May 2023)
+
 wwwtyro.net (no date) Space 3D. Available at : tools.wwwtyro.net/space-3d/index.html (Accessed: 27 May 2023).
+
 Logo created using FlamingText: flamingtext.com/ (Accessed: 29 May 2023)
 
 ## SFX
 Soundfishing.eu. (no date). Laser Gun. Available at: soundfishing.eu/sound/laser-gun (Accessed: 28 May 2023)
+
 Pixabay. (no date). Death Sound Effects (Page 2). Available at: pixabay.com/sound-effects/search/death/?pagi=2 (Accessed: 28 May 2023)
+
 Pixabay. (no date). Spaceship Doors Sound Effects. Available at: pixabay.com/sound-effects/search/spaceship-doors/ (Accessed: 28 May 2023)
 
 ## Music
